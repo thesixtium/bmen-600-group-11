@@ -64,8 +64,9 @@ The computing power to train and evaluate the model could be a big problem. This
 
 
 
-\### Background Papers
+\### Background Research
 
 * motorSRNN: A spiking recurrent neural network inspired by brain topology for the effective and efficient decoding of cortical spike trains
 * Surrogate Gradient Learning in Spiking Neural Networks
+* https://github.com/fmi-basel/neural-decoding-RSNN
 
