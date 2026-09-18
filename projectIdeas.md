@@ -4,7 +4,7 @@
 
 Do RSSNs outperform current EEG Motor Imagery classifiers on accuracy and power efficiency?
 
-
+* motorSRNN: A spiking recurrent neural network inspired by brain topology for the effective and efficient decoding of cortical spike trains
 
 
 
