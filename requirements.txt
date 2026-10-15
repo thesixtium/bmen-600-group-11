@@ -1,0 +1,15 @@
+# Core (needed for the current progress check and evaluation code)
+moabb
+mne
+numpy
+scipy
+scikit-learn
+pandas
+matplotlib
+seaborn
+jupyter
+pytest
+
+# Planned for model code (not used yet)
+# torch
+# snntorch
