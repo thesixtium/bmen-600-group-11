@@ -11,7 +11,7 @@ Lex
 
 Mahyar
 
-## Candidate Project
+## Candidate Project - GO — We are proceeding with this research question and dataset
 
 ### Biomedical Problem
 
