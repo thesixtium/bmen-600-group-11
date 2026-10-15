@@ -2,4 +2,7 @@
 dataset
 results_part2-1.csv
 tutorial_1_simple_example_motor_imagery copy.ipynb
-~*
+Results
+.gitignore
+noisy_tials.csv
+tutorial_1_simple_example_motor_imagery.ipynb
