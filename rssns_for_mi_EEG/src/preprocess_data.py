@@ -7,18 +7,13 @@ from numpy.typing import NDArray
 
 from download_data import RawData
 
-# EEGNet preprocessing (Lawhern et al. 2018, Sec. 2.1.4)
+# EEGNet preprocessing parameters
 LOW_HZ: float = 4.0
 HIGH_HZ: float = 40.0
 SFREQ: int = 128
 EPOCH_START_S: float = 0.5  # seconds after cue onset
 EPOCH_END_S: float = 2.5
-
-# Seconds from the annotation onset to the cue. The annotations are 4 s long, which
-# suggests they start at the cue (offset 0.0). If BNCI2014_001().interval is [2, 6],
-# they start at the trial beep instead and this must be 2.0. VERIFY.
-CUE_OFFSET_S: float = 0.0
-
+CUE_OFFSET_S: float = 0.0   # Seconds from the annotation onset to the cue.
 EVENT_ID: dict[str, int] = {"left_hand": 1, "right_hand": 2, "feet": 3, "tongue": 4}
 
 
@@ -29,10 +24,10 @@ class SessionData:
     Trial i of the session is X[i], y[i], run[i].
     """
 
-    subject: int
-    session: str  # "0train" or "1test"
+    subject: int            # Subject number
+    session: str            # "0train" or "1test"
     X: NDArray[np.float32]  # (n_trials, 22, 256)
-    y: NDArray[np.int64]  # (n_trials,) 0=left hand, 1=right hand, 2=feet, 3=tongue
+    y: NDArray[np.int64]    # (n_trials,) 0=left hand, 1=right hand, 2=feet, 3=tongue
     run: NDArray[np.int64]  # (n_trials,) run index (0-5) each trial came from
 
 

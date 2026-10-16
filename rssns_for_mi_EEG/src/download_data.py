@@ -11,13 +11,15 @@ RawData = dict[int, dict[str, dict[str, BaseRaw]]]
 
 
 def download_data(redo: bool) -> RawData:
-    """Download BCI Competition IV 2a (BNCI2014_001) into <project>/data and return it raw.
+    """
+    Download BNCI2014_001 into <project>/data and return it raw.
 
     redo=True  -> re-download every file, even if already cached.
     redo=False -> only download files that are not already cached.
 
     Returns unprocessed MNE Raw objects: data[subject][session][run].
     """
+
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     # Make MOABB/MNE read from and write to our data folder (this process only)
