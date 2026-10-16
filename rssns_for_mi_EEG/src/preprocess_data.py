@@ -14,8 +14,10 @@ SFREQ: int = 128
 EPOCH_START_S: float = 0.5  # seconds after cue onset
 EPOCH_END_S: float = 2.5
 
-# MOABB places each event at the START of a Graz trial; the cue appears 2 s later.
-CUE_OFFSET_S: float = 2.0
+# Seconds from the annotation onset to the cue. The annotations are 4 s long, which
+# suggests they start at the cue (offset 0.0). If BNCI2014_001().interval is [2, 6],
+# they start at the trial beep instead and this must be 2.0. VERIFY.
+CUE_OFFSET_S: float = 0.0
 
 EVENT_ID: dict[str, int] = {"left_hand": 1, "right_hand": 2, "feet": 3, "tongue": 4}
 
@@ -38,10 +40,12 @@ ProcessedData = dict[int, dict[str, SessionData]]  # subject -> session -> data
 
 
 def _process_run(raw: BaseRaw) -> tuple[NDArray[np.float32], NDArray[np.int64]]:
-    events = mne.find_events(raw, stim_channel="stim", shortest_event=1, verbose=False)
-    events = events[np.isin(events[:, 2], list(EVENT_ID.values()))]
+    events, _ = mne.events_from_annotations(raw, event_id=EVENT_ID, verbose=False)
 
-    raw = raw.copy().pick("eeg")  # 22 EEG channels only (drops EOG and stim)
+    # 22 EEG channels only (drops the 3 EOG channels and the STI channel)
+    eeg_channels = [c for c in raw.ch_names if not c.startswith("EOG") and c != "STI"]
+    assert len(eeg_channels) == 22, eeg_channels
+    raw = raw.copy().pick(eeg_channels)
     raw.filter(LOW_HZ, HIGH_HZ, verbose=False)
     raw, events = raw.resample(SFREQ, events=events, verbose=False)
 

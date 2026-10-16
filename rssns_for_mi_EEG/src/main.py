@@ -25,6 +25,20 @@ processed = preprocess_data( data )
 s = processed[1]["0train"]   # subject 1, session 1
 print(s.X.shape)
 
+import numpy as np
+import preprocess_data as pp
+
+c3, c4 = 7, 11  # indices from your ch_names list
+for offset in (0.0, 2.0):
+    pp.CUE_OFFSET_S = offset
+    diffs = []
+    for subject, sessions in pp.preprocess_data(data).items():
+        s = sessions["0train"]
+        power = np.log((s.X ** 2).mean(axis=-1))   # (trials, channels)
+        lat = power[:, c3] - power[:, c4]
+        diffs.append(lat[s.y == 0].mean() - lat[s.y == 1].mean())  # left - right
+    print(offset, np.mean(diffs), np.mean(np.array(diffs) > 0))
+
 # Demonstrate it's prefiltered
 #data_statistics()
 
