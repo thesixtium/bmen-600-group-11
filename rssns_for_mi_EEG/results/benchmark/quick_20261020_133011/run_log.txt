@@ -1,0 +1,12 @@
+Job ID    : 50056721
+Node      : fg2
+Started   : Tue Oct 20 13:30:11 MDT 2026
+Project   : /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG
+Run ID    : quick_20261020_133011
+Log file  : /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/quick_20261020_133011/run_log.txt
+Git commit: 6903efa
+BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0
+-----------------------------------------------------------------------
+System python: 3.6.8
+ERROR: need Python 3.10-3.12 (the code uses 'int | None' syntax; torch 2.4.0 has no 3.13 wheels).
+Run `module avail python` on ARC and set PY_MODULE at the top of this script.
