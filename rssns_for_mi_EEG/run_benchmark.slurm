@@ -27,12 +27,13 @@
 # Optional overrides (sbatch passes your shell environment through):
 #   BENCH_RUN_ID=20261020_120000 sbatch run_benchmark.slurm   resume a run (finished folds are skipped)
 #   BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0 sbatch run_benchmark.slurm   fast smoke test
-#   PY_MODULE=python/3.11.x sbatch run_benchmark.slurm        python module to load (see `module avail python`)
+#   PY_MODULE=python/3.11.x sbatch run_benchmark.slurm        force a python module (see `module avail python`)
+#                                                             if unset, a 3.10-3.12 module is auto-detected
 # -----------------------------------------------------------------------------
 
 # ----------------------------- settings --------------------------------------
 PROJECT_DIR="${PROJECT_DIR:-/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG}"
-PY_MODULE="${PY_MODULE:-}"      # leave empty if python3 on the node is already 3.10-3.12
+PY_MODULE="${PY_MODULE:-}"      # empty = use python3 if it is 3.10-3.12, else auto-detect a module
 
 # ----------------------------- sanity check ----------------------------------
 if [ ! -f "$PROJECT_DIR/src/main.py" ]; then
@@ -62,9 +63,33 @@ echo "Git commit: $(git -C "$PROJECT_DIR" rev-parse --short HEAD 2>/dev/null || 
 echo "BENCH_QUICK=${BENCH_QUICK:-0} BENCH_TARGETS=${BENCH_TARGETS:-all} BENCH_REPEATS=${BENCH_REPEATS:-all}"
 echo "-----------------------------------------------------------------------"
 
-# ----------------------------- fresh environment -----------------------------
-# ARC is treated as a clean slate every job: a new venv on the node-local disk
-# (/tmp is wiped when the job ends), everything pip-installed from scratch.
+# ----------------------------- python selection ------------------------------
+# Make sure the `module` command exists inside the batch shell.
+if ! type module >/dev/null 2>&1; then
+    for f in /etc/profile.d/modules.sh /etc/profile.d/lmod.sh /usr/share/lmod/lmod/init/bash; do
+        [ -f "$f" ] && source "$f" && break
+    done
+fi
+
+python_ok() {   # true if the current python3 is 3.10-3.12
+    python3 -c 'import sys; v=sys.version_info[:2]; sys.exit(0 if (3,10)<=v<=(3,12) else 1)' 2>/dev/null
+}
+
+if [ -z "$PY_MODULE" ] && ! python_ok; then
+    echo "python3 is $(python3 --version 2>&1), not 3.10-3.12: searching for a module..."
+    # newest python/3.10.x - 3.12.x listed by `module avail`
+    PY_MODULE="$(module -t avail python 2>&1 \
+        | grep -E '^python/3\.(10|11|12)(\.|$)' \
+        | sed 's/(.*//' | sort -V | tail -1)"
+    if [ -z "$PY_MODULE" ]; then
+        echo "ERROR: no python 3.10-3.12 module found. Output of 'module avail python':"
+        module avail python 2>&1
+        echo "Set PY_MODULE explicitly, or create a conda env with python 3.11."
+        exit 1
+    fi
+    echo "Auto-detected module: $PY_MODULE"
+fi
+
 if [ -n "$PY_MODULE" ]; then
     module load "$PY_MODULE" || { echo "ERROR: could not load module $PY_MODULE"; exit 1; }
 fi
@@ -79,6 +104,9 @@ if not ((3, 10) <= v <= (3, 12)):
     sys.exit(1)
 EOF
 
+# ----------------------------- fresh environment -----------------------------
+# ARC is treated as a clean slate every job: a new venv on the node-local disk
+# (/tmp is wiped when the job ends), everything pip-installed from scratch.
 VENV_DIR="/tmp/venv_${SLURM_JOB_ID}"
 python3 -m venv "$VENV_DIR" || { echo "ERROR: venv creation failed"; exit 1; }
 source "$VENV_DIR/bin/activate"
