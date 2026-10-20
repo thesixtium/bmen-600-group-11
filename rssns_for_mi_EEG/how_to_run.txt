@@ -1,0 +1,43 @@
+HOW TO RUN THE BENCHMARK ON ARC
+===============================
+
+1. CONNECT (on campus, or on the UCalgary General VPN)
+   ssh aleksander.berezowsk@arc.ucalgary.ca
+
+2. GET THE CODE (first time only, from your home folder)
+   cd ~
+   git clone <your bmen-600-group-11 repo URL>
+   cd bmen-600-group-11/rssns_for_mi_EEG
+   (later runs: cd there and run "git pull" instead of cloning)
+
+3. PUT THE SLURM SCRIPT IN THE PROJECT FOLDER
+   run_benchmark.slurm must sit in rssns_for_mi_EEG/ (commit it, or scp it up).
+   If you edited it on Windows, fix line endings:
+   sed -i 's/\r$//' run_benchmark.slurm
+
+4. FIND A PYTHON 3.10-3.12 MODULE (first time only)
+   python3 --version
+   module avail python
+   If python3 is not 3.10-3.12, set PY_MODULE near the top of
+   run_benchmark.slurm, e.g. PY_MODULE="python/3.11.x"
+
+5. SMOKE TEST (optional but recommended, runs 1 fold, 2 epochs)
+   BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0 sbatch run_benchmark.slurm
+
+6. FULL RUN (always submit from rssns_for_mi_EEG/)
+   sbatch run_benchmark.slurm
+
+7. WATCH IT
+   squeue -u $USER                                  job state
+   ls results/benchmark/                            find the run id
+   tail -f results/benchmark/<run id>/run_log.txt   follow live (Ctrl+C to stop)
+   cat results/benchmark/<run id>/run_log.txt       print everything
+   scancel <jobid>                                  cancel the job
+
+8. IF IT HITS THE 24 H LIMIT, RESUME (finished folds are skipped)
+   BENCH_RUN_ID=<same run id> sbatch run_benchmark.slurm
+
+RESULTS: results/benchmark/<run id>/
+   results.csv, comparison/ (tables + figures), figures/, run_log.txt
+   Download to your PC, e.g. from PowerShell:
+   scp -r aleksander.berezowsk@arc.ucalgary.ca:~/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/<run id> .
