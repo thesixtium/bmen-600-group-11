@@ -2,24 +2,25 @@
 
 Implements the Midterm Research Plan, Section 4 (metrics, chance, comparisons):
   * per-fold accuracy (primary), Cohen's kappa, macro-F1, 4x4 confusion matrix
-  * chance: binomial threshold from the real number of test trials (Combrisson &
-    Jerbi 2015, plan ref [10]) AND a 10,000-permutation label test; "above chance"
-    only if both pass
   * subject = unit of analysis: 10 repeats averaged -> 9 paired values per model/metric
+  * chance, PER SUBJECT: the subject-level mean of each
+    metric is compared with a label-permutation null (10,000 shuffles). One shuffle
+    of the 288 session-2 labels is shared by all 10 repeats, because the repeats
+    predict the same trials. Accuracy must also exceed the binomial threshold for
+    n = 288 (Combrisson & Jerbi 2015). Kappa and macro-F1 have no binomial
+    threshold, so the permutation test alone decides for them.
   * exact two-sided Wilcoxon signed-rank, Holm across the 3 comparisons (per metric)
   * median paired difference with a percentile bootstrap 95% CI over subjects
   * spread: per-subject mean +/- SD over repeats, and mean +/- SD across subjects
 
-Every statistic is a pure function of predictions and labels. Training code only
-has to save one record per fold (see `load_predictions` for the file format).
-
-Metrics are written out in NumPy (a few lines each, so they can be explained in
-class); test_eval_stats.py checks them against scikit-learn when it is installed.
+Input is a run folder written by the team pipeline (rssns_for_mi_EEG/src/benchmark.py),
+read by `load_run`. Every statistic is a pure function of labels and predictions.
 """
 from __future__ import annotations
 
 import json
 import platform
+import re
 from pathlib import Path
 
 import numpy as np
@@ -39,9 +40,7 @@ DEFAULT_CONFIG = {
     "n_bootstrap": 10_000,
     "seed": 0,
     "pairs": [list(p) for p in DEFAULT_PAIRS],
-    # OPEN TEAM DECISION: level of the chance test ("fold" or "subject").
-    # Both are computed; this only marks which one the report treats as primary.
-    "chance_level": "fold",
+    "chance_level": "subject",  # chance is tested on subject-level means; recorded for the log
 }
 
 
@@ -62,18 +61,28 @@ def confusion(y_true, y_pred, labels=(0, 1, 2, 3)) -> np.ndarray:
     return cm
 
 
-def metrics_from_cm(cm: np.ndarray) -> dict:
+def metrics_batch(cm) -> np.ndarray:
+    """Accuracy, kappa and macro-F1 from one or many confusion matrices.
+
+    cm has shape (..., C, C); the result has shape (..., 3) in METRICS order.
+    The batched form lets the permutation test score thousands of shuffles at once.
+    """
     cm = np.asarray(cm, dtype=float)
-    n = cm.sum()
-    tp = np.diag(cm)
-    acc = tp.sum() / n
+    n = cm.sum(axis=(-2, -1))
+    tp = np.diagonal(cm, axis1=-2, axis2=-1)
+    true_n, pred_n = cm.sum(axis=-1), cm.sum(axis=-2)
+    acc = tp.sum(axis=-1) / n
     # Cohen's kappa: (p_o - p_e) / (1 - p_e), p_e from the row and column marginals
-    p_e = (cm.sum(axis=1) * cm.sum(axis=0)).sum() / n**2
-    kappa = (acc - p_e) / (1 - p_e) if p_e < 1 else float("nan")
-    # macro-F1: per-class F1 = 2TP / (2TP + FP + FN), 0 if the class never appears
-    denom = 2 * tp + (cm.sum(axis=0) - tp) + (cm.sum(axis=1) - tp)
+    p_e = (true_n * pred_n).sum(axis=-1) / n**2
+    kappa = np.divide(acc - p_e, 1 - p_e, out=np.full_like(acc, np.nan), where=(1 - p_e) > 1e-12)
+    # macro-F1: per-class F1 = 2TP / (2TP + FP + FN) = 2TP / (true_n + pred_n), 0 if empty
+    denom = true_n + pred_n
     f1 = np.divide(2 * tp, denom, out=np.zeros_like(tp), where=denom > 0)
-    return {"accuracy": float(acc), "kappa": float(kappa), "macro_f1": float(f1.mean())}
+    return np.stack([acc, kappa, f1.mean(axis=-1)], axis=-1)
+
+
+def metrics_from_cm(cm) -> dict:
+    return dict(zip(METRICS, (float(v) for v in metrics_batch(cm))))
 
 
 def fold_metrics(y_true, y_pred, labels=(0, 1, 2, 3)) -> dict:
@@ -92,67 +101,68 @@ def row_normalize(cm) -> np.ndarray:
 
 
 # --------------------------------------------------------------------------- #
-# 2. Chance level
+# 2. Chance level (per subject)
 # --------------------------------------------------------------------------- #
 def binomial_threshold(n_trials: int, n_classes: int = 4, alpha: float = 0.05) -> float:
     """Accuracy a classifier must EXCEED to be significant under pure guessing.
 
     k = binom.ppf(1 - alpha) is the largest count with P(X > k) <= alpha, so the
     rule is `accuracy > k / n` (strict). For n = 288, p = 0.25, alpha = 0.05 this
-    is 84/288 = 0.2917, i.e. at least 85 correct trials.
+    is 84/288 = 0.2917, i.e. at least 85 correct trials. For a subject mean over
+    repeats this threshold is conservative: averaging repeats can only shrink the
+    spread of a guessing classifier's score.
     """
     k = binom.ppf(1 - alpha, n_trials, 1.0 / n_classes)
     return float(k / n_trials)
 
 
-def permutation_pvalue(y_true, y_pred, n_perm: int = 10_000, seed: int = 0,
-                       chunk: int = 1000) -> float:
-    """Shuffle the true labels against fixed predictions; one-sided p for accuracy.
-    p = (#null >= observed + 1) / (n_perm + 1)."""
-    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred)
-    observed = np.mean(y_true == y_pred)
-    rng = np.random.default_rng(seed)
-    hits, done = 0, 0
-    while done < n_perm:
-        m = min(chunk, n_perm - done)
-        perms = rng.permuted(np.tile(y_true, (m, 1)), axis=1)
-        null = (perms == y_pred).mean(axis=1)
-        hits += int(np.sum(null >= observed - 1e-12))
-        done += m
-    return (hits + 1) / (n_perm + 1)
+def subject_chance(y_true, y_pred_repeats, n_classes: int = 4, alpha: float = 0.05,
+                   n_perm: int = 10_000, seed: int = 0, chunk: int = 500) -> dict:
+    """Chance test of one subject x model, for all three metrics.
 
+    y_true          : (n_trials,) session-2 labels, identical for every repeat
+    y_pred_repeats  : (n_repeats, n_trials) predictions; a single fold is (1, n_trials)
 
-def subject_permutation_pvalue(y_true, y_pred_repeats, n_perm: int = 10_000,
-                               seed: int = 0, chunk: int = 1000) -> float:
-    """Subject-level version: the 10 repeats predict the SAME 288 test trials, so one
-    permutation of those 288 labels is applied to every repeat and the statistic is
-    the mean accuracy over repeats. (Do not treat 10 x 288 as 2880 independent trials.)"""
+    Statistic: the metric averaged over repeats. Null: shuffle the true labels ONCE
+    per permutation and score every repeat against that same shuffle, then average.
+    Shuffling each repeat separately would average away noise that the real repeats
+    share (they predict the same trials), giving a null that is too narrow.
+    p = (#null >= observed + 1) / (n_perm + 1), one-sided.
+    """
     y_true = np.asarray(y_true)
-    P = np.asarray(y_pred_repeats)                      # (n_repeats, n_trials)
-    observed = np.mean(P == y_true[None, :])
-    labels = np.unique(np.concatenate([y_true, P.ravel()]))
-    # frac[t, c] = fraction of repeats that predicted class c on trial t
-    frac = np.stack([(P == c).mean(axis=0) for c in labels], axis=1)
-    lab_idx = np.searchsorted(labels, y_true)
+    P = np.atleast_2d(np.asarray(y_pred_repeats))
+    n_rep, n = P.shape
+    eye = np.eye(n_classes)
+    pred_1h = eye[P]                                             # (R, n, C)
+    observed = metrics_batch(np.stack([confusion(y_true, p, range(n_classes)) for p in P])).mean(axis=0)
+
     rng = np.random.default_rng(seed)
-    t = np.arange(y_true.size)
-    hits, done = 0, 0
+    null = np.empty((n_perm, len(METRICS)))
+    done = 0
     while done < n_perm:
         m = min(chunk, n_perm - done)
-        perm_idx = rng.permuted(np.tile(lab_idx, (m, 1)), axis=1)
-        null = frac[t[None, :], perm_idx].mean(axis=1)
-        hits += int(np.sum(null >= observed - 1e-12))
+        shuffled = rng.permuted(np.tile(y_true, (m, 1)), axis=1)    # (m, n): one shuffle per row
+        true_1h = eye[shuffled]                                      # (m, n, C)
+        # cm[i, r, t, c] = trials with shuffled label t that repeat r predicted as c
+        cm = np.einsum("int,rnc->irtc", true_1h, pred_1h, optimize=True)
+        null[done:done + m] = metrics_batch(cm).mean(axis=1)
         done += m
-    return (hits + 1) / (n_perm + 1)
 
-
-def chance_assessment(y_true, y_pred, n_classes=4, alpha=0.05, n_perm=10_000, seed=0) -> dict:
-    """Both chance checks for one fold. Above chance only if both pass."""
-    acc = float(np.mean(np.asarray(y_true) == np.asarray(y_pred)))
-    thr = binomial_threshold(len(y_true), n_classes, alpha)
-    p = permutation_pvalue(y_true, y_pred, n_perm, seed)
-    return {"accuracy": acc, "threshold": thr, "p_perm": p,
-            "above_chance": bool(acc > thr and p < alpha)}
+    binom_thr = binomial_threshold(n, n_classes, alpha)
+    out = {"n_repeats": n_rep, "n_trials": n}
+    for k, metric in enumerate(METRICS):
+        p = (1 + int(np.sum(null[:, k] >= observed[k] - 1e-12))) / (n_perm + 1)
+        res = {"observed": float(observed[k]), "p_perm": p,
+               "perm_threshold": float(np.quantile(null[:, k], 1 - alpha)),
+               "null_mean": float(null[:, k].mean()), "null_sd": float(null[:, k].std(ddof=1))}
+        if metric == "accuracy":
+            res["binomial_threshold"] = binom_thr
+            res["above_chance"] = bool(observed[k] > binom_thr and p < alpha)
+        else:
+            res["binomial_threshold"] = None
+            res["above_chance"] = bool(p < alpha)
+        out[metric] = res
+    return out
 
 
 # --------------------------------------------------------------------------- #
@@ -223,29 +233,48 @@ def compare_models(subject_means: dict, pairs=DEFAULT_PAIRS, n_boot=10_000, seed
 
 
 # --------------------------------------------------------------------------- #
-# Input: predictions saved by the training code
+# Input: a run folder of the team pipeline
 # --------------------------------------------------------------------------- #
-def load_predictions(folder) -> list[dict]:
-    """Read every *.npz in `folder`. One file per (model, subject, repeat) with keys:
-        model   : "ANN" | "SNN" | "RSNN"
-        subject : int 1..9 (A01..A09)
-        repeat  : int 0..9
-        seed    : int, the fold seed (the random draw of 5 train / 3 val subjects);
-                  must be the same for all three models on a given fold
-        y_true  : (288,) int labels of the target's session-2 trials, fixed order
-        y_pred  : (288,) int predicted labels, same order
-    (PROPOSED format; to be confirmed with the training pipeline.)"""
+_STEM = re.compile(r"^s(\d+)_r(\d+)$")
+
+
+def load_run(run_dir) -> list[dict]:
+    """Read every fold of a benchmark run folder (rssns_for_mi_EEG/results/benchmark/<run id>).
+
+    Layout written by benchmark.py:
+        predictions/<model>/s<S>_r<R>.npz   y_true, y_pred, scores (session-2 test trials)
+        metrics/<model>/s<S>_r<R>.json      model, subject, repeat, seed, metrics
+        folds.json                          every fold's seed and subject draw
+    Model folder names (ann, snn, rsnn) are returned upper-case. The fold seed is
+    read from the metrics file and checked against folds.json when it exists.
+    """
+    run_dir = Path(run_dir)
+    fold_seeds = {}
+    if (run_dir / "folds.json").exists():
+        for f in json.loads((run_dir / "folds.json").read_text())["folds"]:
+            fold_seeds[(f["target"], f["repeat"])] = f["seed"]
     recs = []
-    for f in sorted(Path(folder).glob("*.npz")):
-        z = np.load(f, allow_pickle=False)
-        recs.append({"model": str(z["model"]), "subject": int(z["subject"]),
-                     "repeat": int(z["repeat"]), "seed": int(z["seed"]),
-                     "y_true": z["y_true"], "y_pred": z["y_pred"]})
+    for model_dir in sorted(p for p in (run_dir / "predictions").iterdir() if p.is_dir()):
+        for f in sorted(model_dir.glob("*.npz")):
+            match = _STEM.match(f.stem)
+            if not match:
+                continue
+            subject, repeat = int(match[1]), int(match[2])
+            meta = json.loads((run_dir / "metrics" / model_dir.name / f"{f.stem}.json").read_text())
+            if (meta["subject"], meta["repeat"]) != (subject, repeat):
+                raise ValueError(f"{f}: file name and metrics file disagree on subject/repeat")
+            if fold_seeds and fold_seeds.get((subject, repeat)) != meta["seed"]:
+                raise ValueError(f"{f}: seed {meta['seed']} does not match folds.json")
+            z = np.load(f, allow_pickle=False)
+            recs.append({"model": model_dir.name.upper(), "subject": subject, "repeat": repeat,
+                         "seed": int(meta["seed"]), "y_true": z["y_true"], "y_pred": z["y_pred"]})
     return recs
 
 
 def check_folds(records) -> None:
-    """All models must cover the same (subject, repeat) folds with identical y_true."""
+    """Checks the subject-level analysis relies on:
+    * all models cover the same (subject, repeat) folds with the same fold seed;
+    * all models and all repeats of a subject share one y_true (the same session-2 trials)."""
     keys = {}
     for r in records:
         keys.setdefault(r["model"], {})[(r["subject"], r["repeat"])] = r
@@ -259,6 +288,22 @@ def check_folds(records) -> None:
                 raise ValueError(f"y_true differs between {m} and {models[0]} at {k}")
             if keys[m][k]["seed"] != ref[k]["seed"]:
                 raise ValueError(f"seed differs between {m} and {models[0]} at {k}")
+    first = {}
+    for (s, rep), r in sorted(ref.items()):
+        if s in first and not np.array_equal(r["y_true"], first[s]):
+            raise ValueError(f"subject {s}: repeat {rep} has a different y_true from repeat 0")
+        first.setdefault(s, r["y_true"])
+
+
+def test_set_report(records, labels=(0, 1, 2, 3)) -> dict:
+    """Size and class counts of each subject's test set (pipeline check: 288 trials, 72 per class)."""
+    out = {}
+    for r in records:
+        if r["subject"] not in out:
+            y = np.asarray(r["y_true"])
+            out[r["subject"]] = {"n_trials": int(y.size),
+                                 "per_class": [int(np.sum(y == c)) for c in labels]}
+    return dict(sorted(out.items()))
 
 
 # --------------------------------------------------------------------------- #
@@ -271,11 +316,11 @@ def evaluate(records, config=None) -> dict:
     pairs = [tuple(p) for p in cfg["pairs"]]
     check_folds(records)
 
-    models = sorted({r["model"] for r in records}, key=lambda m: (m not in MODELS, m))
+    models = sorted({r["model"] for r in records}, key=lambda m: (MODELS.index(m) if m in MODELS else len(MODELS), m))
     subjects = sorted({r["subject"] for r in records})
     folds, per_subject, subject_means = [], {}, {}
 
-    for m in models:
+    for mi, m in enumerate(models):
         per_subject[m] = {}
         subject_means[m] = {k: [] for k in METRICS}
         cms = []
@@ -285,39 +330,24 @@ def evaluate(records, config=None) -> dict:
             vals = {k: [] for k in METRICS}
             for r in recs:
                 fm = fold_metrics(r["y_true"], r["y_pred"], labels)
-                # seed for the permutation stream is derived from the fold, so reruns match
-                ch = chance_assessment(r["y_true"], r["y_pred"], len(labels), alpha, n_perm,
-                                       seed=seed + 1000 * s + r["repeat"])
                 folds.append({"model": m, "subject": s, "repeat": r["repeat"],
-                              "train_seed": r["seed"],
-                              **{k: fm[k] for k in METRICS},
-                              "threshold": ch["threshold"], "p_perm": ch["p_perm"],
-                              "above_chance": ch["above_chance"]})
+                              "fold_seed": r["seed"], **{k: fm[k] for k in METRICS}})
                 cms.append(row_normalize(fm["confusion"]))
                 for k in METRICS:
                     vals[k].append(fm[k])
-            y_true = recs[0]["y_true"]
-            P = np.stack([r["y_pred"] for r in recs])
-            p_subj = subject_permutation_pvalue(y_true, P, n_perm, seed=seed + 1000 * s)
-            thr = binomial_threshold(len(y_true), len(labels), alpha)
-            mean_acc = float(np.mean(vals["accuracy"]))
-            per_subject[m][s] = {
-                **{k: mean_sd(vals[k]) for k in METRICS},
-                "n_repeats": len(recs),
-                "chance_subject_level": {"accuracy": mean_acc, "threshold": thr, "p_perm": p_subj,
-                                         "above_chance": bool(mean_acc > thr and p_subj < alpha)},
-            }
+            # permutation seed derived from (seed, model, subject), so reruns match
+            chance = subject_chance(recs[0]["y_true"], np.stack([r["y_pred"] for r in recs]),
+                                    len(labels), alpha, n_perm, seed=seed + 1000 * s + 100 * mi)
+            per_subject[m][s] = {**{k: mean_sd(vals[k]) for k in METRICS},
+                                 "n_repeats": len(recs), "chance": chance}
             for k in METRICS:
                 subject_means[m][k].append(float(np.mean(vals[k])))
         per_subject[m]["confusion_row_normalized_mean"] = np.mean(cms, axis=0).tolist()
 
     across = {m: {k: mean_sd(subject_means[m][k]) for k in METRICS} for m in models}
     chance_summary = {
-        m: {"folds_above_chance": sum(f["above_chance"] for f in folds if f["model"] == m),
-            "n_folds": sum(1 for f in folds if f["model"] == m),
-            "subjects_above_chance": sum(per_subject[m][s]["chance_subject_level"]["above_chance"]
-                                         for s in subjects),
-            "n_subjects": len(subjects)}
+        m: {k: sum(per_subject[m][s]["chance"][k]["above_chance"] for s in subjects) for k in METRICS}
+        | {"n_subjects": len(subjects)}
         for m in models
     }
     comparisons = compare_models(subject_means, pairs, cfg["n_bootstrap"], seed)
@@ -326,8 +356,9 @@ def evaluate(records, config=None) -> dict:
         "config": cfg,
         "environment": {"python": platform.python_version(), "numpy": np.__version__,
                         "scipy": scipy.__version__},
-        "train_seeds": sorted({(r["subject"], r["repeat"], r["seed"]) for r in records}),
+        "fold_seeds": sorted({(r["subject"], r["repeat"], r["seed"]) for r in records}),
         "subjects": subjects,
+        "test_sets": test_set_report(records, labels),
         "folds": folds,
         "per_subject": per_subject,
         "subject_means": subject_means,
@@ -348,8 +379,8 @@ def save_results(results: dict, path) -> None:
 
 if __name__ == "__main__":
     import argparse
-    ap = argparse.ArgumentParser(description="Evaluate saved predictions.")
-    ap.add_argument("pred_dir")
+    ap = argparse.ArgumentParser(description="Evaluate a benchmark run folder.")
+    ap.add_argument("run_dir")
     ap.add_argument("--out", default="results.json")
     ap.add_argument("--config", help="JSON file overriding DEFAULT_CONFIG")
     ap.add_argument("--seed", type=int)
@@ -357,7 +388,7 @@ if __name__ == "__main__":
     cfg = json.loads(Path(a.config).read_text()) if a.config else {}
     if a.seed is not None:
         cfg["seed"] = a.seed
-    res = evaluate(load_predictions(a.pred_dir), cfg)
+    res = evaluate(load_run(a.run_dir), cfg)
     save_results(res, a.out)
     for metric, rows in res["comparisons"].items():
         for r in rows:

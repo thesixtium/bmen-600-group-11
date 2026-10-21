@@ -9,3 +9,7 @@ tutorial_1_simple_example_motor_imagery.ipynb
 /rssns_for_mi_EEG/.idea
 /rssns_for_mi_EEG/data
 /rssns_for_mi_EEG/src/__pycache__
+
+__pycache__/
+.pytest_cache/
+evaluation/outputs/synthetic_run/

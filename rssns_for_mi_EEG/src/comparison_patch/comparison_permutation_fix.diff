@@ -1,0 +1,49 @@
+--- comparison_original.py	2026-10-21 10:27:58.056896800 -0600
++++ comparison.py	2026-10-21 10:28:08.287990400 -0600
+@@ -8,8 +8,9 @@
+       - accuracy: binomial threshold from the actual number of test trials (Combrisson & Jerbi 2015) AND permutation.
+       - kappa, macro-F1: no analytic threshold exists, so the permutation test alone decides (its threshold is the
+         (1 - alpha) quantile of the permutation null).
+-    The permutation null matches the subject-level mean: in each of the 10 repeats the session-2 labels are shuffled
+-    against that repeat's predictions, the metric is computed, and the 10 values are averaged (independent shuffles).
++    The permutation null matches the subject-level mean: the session-2 labels are shuffled ONCE per permutation and
++    that same shuffle is scored against each of the 10 repeats' predictions, then the 10 values are averaged. The
++    repeats predict the same 288 trials, so shuffling each repeat separately would make the null too narrow.
+   * Differences between models: exact two-sided Wilcoxon signed-rank test on the nine subject means, Holm-corrected
+     across the three comparisons of each metric, plus the median paired difference with a bootstrap CI over subjects.
+   * Summaries: per-subject mean +/- SD across repeats, and mean +/- SD across subjects.
+@@ -61,12 +62,10 @@
+     return np.stack([acc, kappa, f1.mean(axis=-1)], axis=-1)
+ 
+ 
+-def _permuted_metrics(
+-    y_true: NDArray[np.int64], y_pred: NDArray[np.int64], n_perm: int, rng: np.random.Generator
+-) -> NDArray[np.float64]:
+-    """Metrics of n_perm label shuffles of one fold: (n_perm, 3). Predictions stay fixed, true labels are permuted."""
++def _permuted_metrics(shuffled: NDArray[np.int64], y_pred: NDArray[np.int64]) -> NDArray[np.float64]:
++    """Metrics of one fold's fixed predictions against pre-drawn label shuffles: shuffled (n_perm, n) -> (n_perm, 3)."""
++    n_perm = shuffled.shape[0]
+     pred_onehot = np.eye(N_CLASSES, dtype=np.float32)[y_pred]  # (n, C)
+-    shuffled = rng.permuted(np.tile(y_true, (n_perm, 1)), axis=1)  # (n_perm, n)
+     conf = np.empty((n_perm, N_CLASSES, N_CLASSES))
+     for t in range(N_CLASSES):
+         conf[:, t, :] = (shuffled == t).astype(np.float32) @ pred_onehot
+@@ -136,11 +135,13 @@
+     rows = []
+     for (model, subject), group in df.groupby(["model", "subject"]):
+         rng = np.random.default_rng([cfg.seed, int(subject), MODEL_ORDER.index(model)])
+-        null = np.zeros((cfg.n_permutations, len(METRIC_NAMES)))
+-        for repeat in sorted(group["repeat"]):
+-            pred = np.load(run_dir / "predictions" / model / f"s{subject}_r{repeat}.npz")
+-            null += _permuted_metrics(pred["y_true"], pred["y_pred"], cfg.n_permutations, rng)
+-        null /= len(group)  # null distribution of the subject-level mean over repeats
++        preds = [np.load(run_dir / "predictions" / model / f"s{subject}_r{repeat}.npz") for repeat in sorted(group["repeat"])]
++        y_true = preds[0]["y_true"]
++        if any(not np.array_equal(p["y_true"], y_true) for p in preds):
++            raise ValueError(f"{model} subject {subject}: the repeats do not share the same session-2 labels")
++        # ONE shuffle per permutation, shared by every repeat (they predict the same trials)
++        shuffled = rng.permuted(np.tile(y_true, (cfg.n_permutations, 1)), axis=1)  # (n_perm, n)
++        null = np.mean([_permuted_metrics(shuffled, p["y_pred"]) for p in preds], axis=0)  # null of the subject mean
+         n_test = int(group["n_test"].iloc[0])  # the repeats share the same session-2 trials
+         binomial_threshold = stats.binom.isf(cfg.alpha, n_test, 1 / N_CLASSES) / n_test
+         for k, metric in enumerate(METRIC_NAMES):
