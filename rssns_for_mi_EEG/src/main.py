@@ -8,9 +8,9 @@ from preprocess_data import preprocess_data
 
 data = download_data(redo=False)
 
-# processed = preprocess_data(data)
+processed = preprocess_data(data)
 
-# data_statistics(data, processed)
+data_statistics(data, processed)
 
 # Make and train EEGNet ANN and benchmark
 
