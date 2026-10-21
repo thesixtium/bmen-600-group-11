@@ -1,0 +1,10 @@
+model,subject,metric,mean,sd_repeats,n_repeats
+ann,1,accuracy,0.4131944444444444,,1
+ann,1,kappa,0.2175925925925925,,1
+ann,1,macro_f1,0.35515068096204,,1
+rsnn,1,accuracy,0.2152777777777778,,1
+rsnn,1,kappa,-0.0462962962962962,,1
+rsnn,1,macro_f1,0.145533965600425,,1
+snn,1,accuracy,0.2708333333333333,,1
+snn,1,kappa,0.0277777777777777,,1
+snn,1,macro_f1,0.1413562967502067,,1
