@@ -1,0 +1,68 @@
+{
+ "run_id": "20261020_143411",
+ "fold": {
+  "n_repeats": 10,
+  "n_pretrain_subjects": 5,
+  "finetune_val_fraction": 0.2,
+  "base_seed": 2026
+ },
+ "eegnet": {
+  "n_channels": 22,
+  "n_samples": 256,
+  "n_classes": 4,
+  "F1": 4,
+  "D": 2,
+  "F2": 8,
+  "kernel_length": 32,
+  "separable_kernel": 16,
+  "pool1": 4,
+  "pool2": 8,
+  "depthwise_max_norm": 1.0,
+  "dense_max_norm": 0.25,
+  "bn_eps": 0.001,
+  "bn_momentum": 0.01
+ },
+ "ann_train": {
+  "pretrain_epochs": 500,
+  "finetune_epochs": 100,
+  "pretrain_dropout": 0.25,
+  "finetune_dropout": 0.5,
+  "learning_rate": 0.001,
+  "batch_size": 16,
+  "log_every_epochs": 50
+ },
+ "snn": {
+  "n_steps": 256,
+  "threshold": 1.0,
+  "calibration_percentile": 99.9,
+  "signed_spikes": true,
+  "negative_floor": 1.0,
+  "tie_break_membrane": true
+ },
+ "rsnn": {
+  "n_hidden": null,
+  "n_steps": 256,
+  "beta": 0.9,
+  "threshold": 1.0,
+  "surrogate_slope": 25.0,
+  "recurrent_init_gain": 1.0,
+  "batch_size": 64
+ },
+ "rsnn_train": {
+  "pretrain_epochs": 500,
+  "finetune_epochs": 100,
+  "pretrain_dropout": 0.25,
+  "finetune_dropout": 0.5,
+  "learning_rate": 0.001,
+  "batch_size": 64,
+  "log_every_epochs": 50
+ },
+ "parameter_counts": {
+  "ann_params": 796,
+  "converted_snn_params": 776,
+  "rsnn_hidden": 17,
+  "rsnn_params": 752,
+  "rsnn_minus_snn_params": -24,
+  "rsnn_relative_difference": -0.030927835051546393
+ }
+}
