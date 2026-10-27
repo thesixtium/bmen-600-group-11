@@ -37,13 +37,13 @@ NOTES: dict[str, tuple[str, str]] = {
         "One column per comparison (difference = first minus second model), one row per metric. Each dot is one subject's "
         "paired difference of subject means (nine per panel). The solid line is the median, the shaded band its bootstrap "
         "95% confidence interval over subjects, and the dashed line marks zero (no difference). Titles give the "
-        "Holm-corrected p-value of the exact two-sided Wilcoxon signed-rank test (3 comparisons per metric). Rows have "
+        "Holm-corrected p-value of the exact two-sided Wilcoxon signed-rank test (5 comparisons per metric). Rows have "
         "their own y-axis.",
         "A band that excludes zero together with p(Holm) < 0.05 supports a real difference between the models. Dots mostly "
         "on one side of zero but a band touching zero mean a consistent but small or uncertain effect. With nine subjects "
         "the smallest possible exact two-sided p is 2/512 (about 0.004), and the Holm correction raises it further, so "
-        "only consistent effects can reach significance. The RSNN is not tuned for itself and differs from the SNN in more "
-        "than recurrence, so a difference cannot be attributed to recurrence alone.",
+        "only consistent effects can reach significance. RSNN vs SNN differs in more than recurrence; RNN vs RSNN isolates the spiking "
+        "neuron model (same topology and size), and RNN vs ANN isolates the recurrent architecture.",
     ),
     "chance_tests.png": (
         "One panel per metric; rows = models, columns = target subjects, cell = subject-level mean over the 10 repeats. "
@@ -118,7 +118,7 @@ def _paired_differences(diffs: pd.DataFrame, tests: pd.DataFrame, out_dir: Path)
 
 
 def _chance_tests(chance: pd.DataFrame, models: list[str], out_dir: Path) -> None:
-    fig, axes = plt.subplots(1, len(METRIC_NAMES), figsize=(5.2 * len(METRIC_NAMES), 2.6), squeeze=False)
+    fig, axes = plt.subplots(1, len(METRIC_NAMES), figsize=(5.2 * len(METRIC_NAMES), 3.0), squeeze=False)
     for ax, metric in zip(axes[0], METRIC_NAMES):
         sub = chance[chance["metric"] == metric]
         value = sub.pivot(index="model", columns="subject", values="observed").loc[models]

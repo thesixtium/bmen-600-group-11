@@ -1,4 +1,4 @@
-"""EEGNet ANN, fully recurrent LIF network (RSNN) and analytic parameter counts.
+"""EEGNet ANN, fully recurrent LIF network (RSNN), its non-spiking ELU twin (RNN) and analytic parameter counts.
 
 The converted SNN lives in ann_to_snn.py.
 """
@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 from snntorch import surrogate  # only the surrogate gradient is used; the LIF loop below is written out explicitly
 from torch import nn
 
-from benchmark_config import EEGNetConfig, RSNNConfig
+from benchmark_config import EEGNetConfig, RNNConfig, RSNNConfig
 
 
 # ---------------------------------------------------------------- EEGNet
@@ -128,6 +128,61 @@ class RecurrentLIFNet(nn.Module):
         return self.readout(self.dropout(spike_count / n_steps))
 
 
+# ---------------------------------------------------------------- Fully recurrent ELU network (non-spiking control)
+
+
+class RecurrentELUNet(nn.Module):
+    """(input standardization) -> input projection -> ONE dense all-to-all recurrent ELU layer -> linear readout.
+
+    Non-spiking control for RecurrentLIFNet: identical weights (input_proj, recurrent H x H without bias, readout),
+    identical init, identical input standardization buffers and identical time-averaged readout. Only the neuron model
+    differs: the leaky integrate-and-fire neuron (beta, threshold, reset, spikes, surrogate gradient) is replaced by the
+    ELU activation of the EEGNet ANN.
+
+    Dynamics for t = 1..T (Elman style):
+      h_t = ELU(input_proj(x_t) + recurrent(h_{t-1})),   h_0 = 0 (re-created inside every forward() call)
+      output = readout(dropout(mean_t h_t))
+    The only memory is the recurrent weights (no membrane leak). Gradients are exact BPTT (ELU is differentiable).
+    Hidden-to-hidden edges form directed cycles (diagonal self-connections included), so the layer is truly recurrent.
+    """
+
+    def __init__(self, n_inputs: int, n_hidden: int, n_classes: int, cfg: RNNConfig = RNNConfig()) -> None:
+        super().__init__()
+        self.cfg = cfg
+        self.n_hidden = n_hidden
+        self.input_proj = nn.Linear(n_inputs, n_hidden)
+        self.recurrent = nn.Linear(n_hidden, n_hidden, bias=False)
+        self.readout = nn.Linear(n_hidden, n_classes)
+        self.dropout = nn.Dropout(0.25)  # on the readout input; probability is set by the training schedule
+        self.act = nn.ELU()
+        nn.init.normal_(self.recurrent.weight, mean=0.0, std=cfg.recurrent_init_gain / math.sqrt(n_hidden))
+        self.register_buffer("ch_mean", torch.zeros(1, n_inputs, 1))
+        self.register_buffer("ch_std", torch.ones(1, n_inputs, 1))
+
+    @property
+    def recurrent_weight(self) -> torch.Tensor:
+        return self.recurrent.weight  # (H, H), trainable
+
+    @torch.no_grad()
+    def set_input_stats(self, X: NDArray) -> None:
+        """Per-channel mean/std from the PRETRAINING subjects' session-1 trials (n_trials, n_channels, n_samples)."""
+        X_t = torch.as_tensor(X, dtype=torch.float32)
+        self.ch_mean.copy_(X_t.mean(dim=(0, 2)).view(1, -1, 1))
+        self.ch_std.copy_(X_t.std(dim=(0, 2)).clamp_min(1e-6).view(1, -1, 1))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = (x - self.ch_mean) / self.ch_std  # (B, C, T) standardized per channel
+        x = x.permute(2, 0, 1)  # (T, B, C): one EEG sample (22 values) per step
+        n_steps = min(self.cfg.n_steps, x.shape[0])
+        input_current = self.input_proj(x)  # (T, B, H)
+        h = x.new_zeros(x.shape[1], self.n_hidden)
+        h_sum = x.new_zeros(x.shape[1], self.n_hidden)
+        for t in range(n_steps):
+            h = self.act(input_current[t] + self.recurrent(h))
+            h_sum = h_sum + h
+        return self.readout(self.dropout(h_sum / n_steps))
+
+
 # ---------------------------------------------------------------- Parameter counts (analytic)
 
 
@@ -166,6 +221,11 @@ def rsnn_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
     return (n_inputs * n_hidden + n_hidden) + n_hidden * n_hidden + (n_hidden * n_classes + n_classes)
 
 
+def rnn_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
+    """Same layers as the RSNN (input_proj W + b, dense H x H recurrent, readout W + b), so the same count."""
+    return rsnn_param_count(n_inputs, n_hidden, n_classes)
+
+
 def choose_hidden_size(target_params: int, n_inputs: int, n_classes: int, max_hidden: int = 2000) -> int:
     """Integer hidden size whose RSNN parameter count is closest to target_params (smaller size wins ties)."""
     return min(range(1, max_hidden + 1), key=lambda h: abs(rsnn_param_count(n_inputs, h, n_classes) - target_params))
@@ -180,6 +240,8 @@ def model_summary(eegnet_cfg: EEGNetConfig, rsnn_cfg: RSNNConfig) -> dict:
         "converted_snn_params": snn_params,
         "rsnn_hidden": hidden,
         "rsnn_params": rsnn_params,
+        "rnn_hidden": hidden,  # the RNN always uses the RSNN's hidden size
+        "rnn_params": rnn_param_count(eegnet_cfg.n_channels, hidden, eegnet_cfg.n_classes),
         "rsnn_minus_snn_params": rsnn_params - snn_params,
         "rsnn_relative_difference": (rsnn_params - snn_params) / snn_params,
     }

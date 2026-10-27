@@ -20,9 +20,9 @@ from matplotlib.figure import Figure
 
 from data_statistics import CLASSES
 
-MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn")
-MODEL_LABELS: dict[str, str] = {"ann": "EEGNet ANN", "snn": "Converted SNN", "rsnn": "RSNN"}
-MODEL_COLORS: dict[str, str] = {"ann": "tab:blue", "snn": "tab:orange", "rsnn": "tab:green"}
+MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
+MODEL_LABELS: dict[str, str] = {"ann": "EEGNet ANN", "snn": "Converted SNN", "rsnn": "RSNN", "rnn": "RNN (ELU)"}
+MODEL_COLORS: dict[str, str] = {"ann": "tab:blue", "snn": "tab:orange", "rsnn": "tab:green", "rnn": "tab:red"}
 CHANCE_ACCURACY: float = 0.25
 METRICS: tuple[tuple[str, str, tuple[float, float]], ...] = (
     ("accuracy", "Accuracy", (0.0, 1.0)),
@@ -82,7 +82,7 @@ def _accuracy_per_subject(df: pd.DataFrame, models: list[str], out_dir: Path) ->
     ax.axhline(CHANCE_ACCURACY, ls="--", c="gray", label="nominal chance (25%)")
     ax.set_xticks(range(len(subjects)), [f"S{s}" for s in subjects])
     ax.set(ylim=(0, 1), ylabel="Accuracy (session 2)", xlabel="Target subject", title="Accuracy per target subject")
-    ax.legend(ncol=4, fontsize=8)
+    ax.legend(ncol=5, fontsize=7)
     _save(fig, out_dir, "accuracy_per_subject.png")
 
 

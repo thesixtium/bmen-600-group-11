@@ -2,7 +2,7 @@
 
 Output layout (<run_dir> = results/benchmark/<run id>, run id = $BENCH_RUN_ID or a timestamp):
   config.json, folds.json            configuration, parameter counts, fold definitions and seeds
-  checkpoints/<model>/s<S>_r<R>.pt   pretrained + fine-tuned weights (ann, rsnn)
+  checkpoints/<model>/s<S>_r<R>.pt   pretrained + fine-tuned weights (ann, rsnn, rnn)
   histories/<model>/s<S>_r<R>.json   per-epoch train/validation loss
   metrics/<model>/s<S>_r<R>.json     accuracy, kappa, macro-F1, confusion matrix, config metadata (one per fold)
   predictions/<model>/s<S>_r<R>.npz  y_true, y_pred, scores (logits / output spike counts)
@@ -29,6 +29,8 @@ from benchmark_config import (
     N_CHANNELS,
     N_CLASSES,
     RESULTS_DIR,
+    RNN_CFG,
+    RNN_TRAIN,
     RSNN_TRAIN,
     EEGNetConfig,
     FoldConfig,
@@ -36,13 +38,13 @@ from benchmark_config import (
     SNNConfig,
 )
 from folds import Fold, build_fold_data, save_folds
-from models import EEGNet, RecurrentLIFNet, count_parameters, model_summary
+from models import EEGNet, RecurrentELUNet, RecurrentLIFNet, count_parameters, model_summary
 from preprocess_data import ProcessedData
 from timing import PipelineTimer
 from training import TrainingOutcome, predict_logits, pretrain_then_finetune
 
 EEGNET_CFG, SNN_CFG, RSNN_CFG, FOLD_CFG = EEGNetConfig(), SNNConfig(), RSNNConfig(), FoldConfig()
-MODELS: tuple[str, ...] = ("ann", "snn", "rsnn")
+MODELS: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
 
 
 # ---------------------------------------------------------------- setup
@@ -68,6 +70,8 @@ def prepare_run_dir(folds: list[Fold], run_id: str | None = None) -> Path:
         "snn": asdict(SNN_CFG),
         "rsnn": asdict(RSNN_CFG),
         "rsnn_train": asdict(RSNN_TRAIN),
+        "rnn": asdict(RNN_CFG),
+        "rnn_train": asdict(RNN_TRAIN),
         "parameter_counts": summary,
     }
     (run_dir / "config.json").write_text(json.dumps(config, indent=1))
@@ -227,6 +231,35 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
             logits = predict_logits(model, data.test.X, device)
             _save_result(
                 run_dir, "rsnn", fold, data.test.y, logits.argmax(1), logits,
+                {"n_params": count_parameters(model), "n_hidden": n_hidden, **_best_epochs(outcome)},
+            )
+
+
+# ---------------------------------------------------------------- Model 4: RNN (non-spiking control of the RSNN)
+
+
+def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
+    """Elman RNN with ELU, same hidden size / init / input handling / training schedule / folds as the RSNN."""
+    n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]  # identical number of recurrent nodes as the RSNN
+    tracker = timer.track("rnn", pending_folds(run_dir, "rnn", folds))
+    for fold in tracker.folds:
+        with tracker.fold(fold) as t:
+            data = build_fold_data(processed, fold)
+            torch.manual_seed(fold.seed)
+            model = RecurrentELUNet(N_CHANNELS, n_hidden, N_CLASSES, RNN_CFG)
+            if RNN_CFG.normalize_input:
+                # per-channel standardization from the PRETRAINING subjects' session 1 only (no target / test data)
+                model.set_input_stats(data.pre_train.X)
+            outcome = pretrain_then_finetune(model, data, RNN_TRAIN, fold.seed, device, tag=f"[rnn {_stem(fold)}]")
+            t["pretrain_s"], t["finetune_s"] = outcome.pretrain_seconds, outcome.finetune_seconds
+            torch.save(
+                {"pretrained": outcome.pretrained_state, "finetuned": outcome.finetuned_state},
+                run_dir / "checkpoints" / "rnn" / f"{_stem(fold)}.pt",
+            )
+            _save_history(run_dir, "rnn", fold, outcome)
+            logits = predict_logits(model, data.test.X, device)
+            _save_result(
+                run_dir, "rnn", fold, data.test.y, logits.argmax(1), logits,
                 {"n_params": count_parameters(model), "n_hidden": n_hidden, **_best_epochs(outcome)},
             )
 

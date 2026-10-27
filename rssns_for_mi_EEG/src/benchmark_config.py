@@ -88,6 +88,28 @@ class RSNNConfig:
 
 
 @dataclass(frozen=True)
+class RNNConfig:
+    """Non-spiking control for the RSNN: same topology (input projection -> ONE dense all-to-all recurrent layer ->
+    linear readout on the time-averaged hidden activity), but the LIF neurons are replaced by the ELU of the EEGNet ANN
+    (Elman style: h_t = ELU(W_in x_t + b + W_rec h_{t-1}); no leak, no threshold, no reset).
+
+    The hidden size is NOT set here: it is always the RSNN's hidden size (model_summary()["rsnn_hidden"]), so both
+    models have exactly the same number of recurrent nodes and parameters. Init, input standardization, simulation steps,
+    batch size and the pretrain/finetune schedule mirror the RSNN.
+
+    Stability note: ELU is unbounded for x > 0, so a recurrent loop over 256 steps can in principle diverge. The RSNN init
+    (recurrent std = gain / sqrt(n_hidden)) is kept on purpose. Add gradient clipping (e.g.
+    torch.nn.utils.clip_grad_norm_ in training.fit, RNN only) ONLY if training diverges (NaN / exploding loss), and then
+    document it as a deliberate deviation from the RSNN's training.
+    """
+
+    n_steps: int = N_SAMPLES  # one step per EEG sample, same as the RSNN
+    recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2), same as the RSNN
+    batch_size: int = 64  # same as the RSNN
+    normalize_input: bool = True  # same per-channel standardization (pretraining subjects only) as the RSNN
+
+
+@dataclass(frozen=True)
 class ComparisonConfig:
     """Statistics of the 'Comparative metrics' step (research plan, Section 4: 'Avoiding misleading results')."""
 
@@ -102,8 +124,10 @@ FOLD_CFG = FoldConfig()
 EEGNET_CFG = EEGNetConfig()
 SNN_CFG = SNNConfig()
 RSNN_CFG = RSNNConfig()
+RNN_CFG = RNNConfig()
 ANN_TRAIN = TrainConfig()
 RSNN_TRAIN = TrainConfig(batch_size=RSNN_CFG.batch_size)
+RNN_TRAIN = TrainConfig(batch_size=RNN_CFG.batch_size)
 COMPARISON_CFG = ComparisonConfig()
 
 # Bug-testing mode: BENCH_QUICK=1 shrinks epochs and simulation steps. Results are NOT comparable to the real
@@ -113,6 +137,8 @@ QUICK: bool = QUICK_MODE or os.environ.get("BENCH_QUICK") == "1"  # the environm
 if QUICK:
     ANN_TRAIN = replace(ANN_TRAIN, pretrain_epochs=2, finetune_epochs=2)
     RSNN_TRAIN = replace(RSNN_TRAIN, pretrain_epochs=2, finetune_epochs=2)
+    RNN_TRAIN = replace(RNN_TRAIN, pretrain_epochs=2, finetune_epochs=2)
     SNN_CFG = replace(SNN_CFG, n_steps=32)
     COMPARISON_CFG = replace(COMPARISON_CFG, n_permutations=200, n_bootstrap=200)
     RSNN_CFG = replace(RSNN_CFG, n_steps=64)  # uses only the first 64 of 256 samples
+    RNN_CFG = replace(RNN_CFG, n_steps=64)

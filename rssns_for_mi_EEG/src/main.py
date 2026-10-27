@@ -9,6 +9,7 @@ from benchmark import (
     pending_folds,
     prepare_run_dir,
     run_ann_benchmark,
+    run_rnn_benchmark,
     run_rsnn_benchmark,
     run_snn_benchmark,
     select_device,
@@ -60,6 +61,10 @@ try:
     # Make and train RSNN model and benchmark
     with timer.stage("benchmark: rsnn"):
         run_rsnn_benchmark(processed, folds, run_dir, device, timer)
+
+    # Make and train the non-spiking RNN control (same topology and size as the RSNN, ELU instead of LIF)
+    with timer.stage("benchmark: rnn"):
+        run_rnn_benchmark(processed, folds, run_dir, device, timer)
 
     with timer.stage("collect_results"):
         collect_results(run_dir)

@@ -11,7 +11,7 @@ Implements 'Outcome and comparisons' and 'Avoiding misleading results and showin
     The permutation null matches the subject-level mean: in each of the 10 repeats the session-2 labels are shuffled
     against that repeat's predictions, the metric is computed, and the 10 values are averaged (independent shuffles).
   * Differences between models: exact two-sided Wilcoxon signed-rank test on the nine subject means, Holm-corrected
-    across the three comparisons of each metric, plus the median paired difference with a bootstrap CI over subjects.
+    across the five comparisons of each metric, plus the median paired difference with a bootstrap CI over subjects.
   * Summaries: per-subject mean +/- SD across repeats, and mean +/- SD across subjects.
 All three metrics are tested; accuracy is the primary one.
 
@@ -31,7 +31,7 @@ from scipy import stats
 
 from benchmark_config import COMPARISON_CFG, N_CLASSES, ComparisonConfig
 
-MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn")
+MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")  # new models are appended: keeps existing RNG seeds
 METRIC_NAMES: tuple[str, ...] = ("accuracy", "kappa", "macro_f1")
 PRIMARY_METRIC: str = "accuracy"
 # (model a, model b, label): the paired difference is always a - b
@@ -39,6 +39,9 @@ COMPARISONS: tuple[tuple[str, str, str], ...] = (
     ("rsnn", "snn", "RSNN - SNN (research question)"),
     ("rsnn", "ann", "RSNN - ANN (vs baseline)"),
     ("ann", "snn", "ANN - SNN (lost in conversion)"),
+    # RNN control (appended so the seeds of the original three comparisons are unchanged)
+    ("rnn", "rsnn", "RNN - RSNN (effect of spiking)"),
+    ("rnn", "ann", "RNN - ANN (vs baseline)"),
 )
 
 
@@ -190,7 +193,7 @@ def paired_tests(df: pd.DataFrame, cfg: ComparisonConfig) -> tuple[pd.DataFrame,
                 diff_rows.append(
                     {"metric": metric, "comparison": f"{a}-{b}", "subject": subject, "a": va, "b": vb, "diff": va - vb}
                 )
-        p_holm = holm_correction(np.array([r["p_raw"] for r in family], dtype=float))  # family = 3 comparisons per metric
+        p_holm = holm_correction(np.array([r["p_raw"] for r in family], dtype=float))  # family = 5 comparisons per metric
         for r, ph in zip(family, p_holm):
             r["p_holm"] = float(ph)
             r["significant"] = bool(ph < cfg.alpha)
@@ -229,7 +232,7 @@ def compare_models(run_dir: Path, cfg: ComparisonConfig = COMPARISON_CFG) -> Non
     pd.set_option("display.width", 200)
     print("\nMean +/- SD across subjects:")
     print(summary[["model", "metric", "mean_across_subjects", "sd_across_subjects", "n_subjects"]].round(3).to_string(index=False))
-    print("\nPaired comparisons (difference = first - second, Holm across the 3 comparisons of each metric):")
+    print("\nPaired comparisons (difference = first - second, Holm across the 5 comparisons of each metric):")
     cols = ["metric", "comparison", "n_subjects", "median_diff", "ci_low", "ci_high", "p_raw", "p_holm", "significant"]
     print(tests[cols].round(4).to_string(index=False))
     share = chance.groupby(["model", "metric"])["above_chance"].sum().unstack()
