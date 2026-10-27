@@ -25,7 +25,19 @@ HOW TO RUN THE BENCHMARK ON ARC
    BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0 sbatch run_benchmark.slurm
 
 6. FULL RUN (always submit from rssns_for_mi_EEG/)
-   sbatch run_benchmark.slurm
+   ONE COMMAND, ANY NUMBER OF DAYS (recommended):
+       chmod +x submit_chain.sh        (first time only; also: sed -i 's/\r$//' submit_chain.sh if edited on Windows)
+       ./submit_chain.sh 6
+   This queues 6 jobs that share ONE run id; each starts after the previous one ends. Every job stops starting new
+   folds ~30 min before its 24 h limit, so nothing is lost mid-fold, and the next job resumes where it stopped.
+   When all folds of all 4 models are done, the job writes the analysis + a COMPLETE file in the run folder. Any job
+   that starts after that sees COMPLETE and exits in seconds, so it can NEVER retrain anything: queue more jobs than
+   you think you need. Leftover queued jobs can be removed with: scancel -u $USER --name=rsnn_benchmark
+   The analysis (results.csv, figures, comparison/) is only produced once everything is finished; before that the
+   log ends with "[chain] INCOMPLETE: folds still pending ...".
+
+   Single job instead (old behaviour, resume by hand as in step 8):
+       sbatch run_benchmark.slurm
 
 7. WATCH IT
    squeue -u $USER                                  job state
@@ -54,7 +66,7 @@ HOW TO RUN THE BENCHMARK ON ARC
 
    b) Check how far it got (folds finished out of 90 per model):
 
-        for m in ann snn rsnn; do echo $m $(ls results/benchmark/$RUN_ID/metrics/$m | wc -l); done
+        for m in ann snn rsnn rnn; do echo $m $(ls results/benchmark/$RUN_ID/metrics/$m | wc -l); done
 
    c) Resume with that id:
 
@@ -62,7 +74,7 @@ HOW TO RUN THE BENCHMARK ON ARC
 
    d) Confirm it is continuing, not starting over: the new slurm output
       should show "pending folds per model" with the remaining counts
-      (e.g. {'ann': 0, 'snn': 0, 'rsnn': 39}), not 90s. If it shows 90s,
+      (e.g. {'ann': 0, 'snn': 0, 'rsnn': 39, 'rnn': 90}), not 90s. If it shows 90s,
       the id was wrong: scancel the job and recheck step (a).
 RESULTS: results/benchmark/<run id>/
    results.csv, comparison/ (tables + figures), figures/, run_log.txt

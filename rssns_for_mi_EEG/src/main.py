@@ -1,5 +1,6 @@
 import os
 import warnings
+from datetime import datetime
 
 warnings.filterwarnings("ignore", message="Montage name 'standard_1005'")
 
@@ -66,15 +67,25 @@ try:
     with timer.stage("benchmark: rnn"):
         run_rnn_benchmark(processed, folds, run_dir, device, timer)
 
-    with timer.stage("collect_results"):
-        collect_results(run_dir)
-    with timer.stage("plot_benchmarks"):
-        plot_benchmarks(run_dir)
+    # Chained jobs: a job that ran out of time ends cleanly with folds still pending. The analysis only makes sense on
+    # the finished set, so it is skipped until every selected fold of every model has metrics; the final job runs it
+    # and writes the COMPLETE marker, which makes any further queued job with the same BENCH_RUN_ID exit immediately.
+    remaining = {m: len(pending_folds(run_dir, m, folds)) for m in MODELS}
+    if any(remaining.values()):
+        print(f"[chain] INCOMPLETE: folds still pending per model: {remaining}. Analysis skipped; "
+              f"rerun/resubmit with BENCH_RUN_ID={run_dir.name} to continue.")
+    else:
+        with timer.stage("collect_results"):
+            collect_results(run_dir)
+        with timer.stage("plot_benchmarks"):
+            plot_benchmarks(run_dir)
 
-    # Comparative metrics between models (chance tests, paired Wilcoxon + Holm, bootstrap CIs, figures)
-    with timer.stage("compare_models"):
-        compare_models(run_dir)
-    with timer.stage("plot_comparison"):
-        plot_comparison(run_dir)
+        # Comparative metrics between models (chance tests, paired Wilcoxon + Holm, bootstrap CIs, figures)
+        with timer.stage("compare_models"):
+            compare_models(run_dir)
+        with timer.stage("plot_comparison"):
+            plot_comparison(run_dir)
+        (run_dir / "COMPLETE").write_text(datetime.now().isoformat() + "\n")
+        print(f"[chain] COMPLETE: all folds done and analysis written to {run_dir}")
 finally:
     timer.finish()  # also runs after a crash / Ctrl-C, so partial timings are still saved

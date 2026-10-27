@@ -27,11 +27,16 @@
 # Optional overrides (sbatch passes your shell environment through):
 #   BENCH_RUN_ID=20261020_120000 sbatch run_benchmark.slurm   resume a run (finished folds are skipped)
 #   BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0 sbatch run_benchmark.slurm   fast smoke test
+#   ./submit_chain.sh 6                                       RECOMMENDED for the full run: queues 6 chained jobs
+#                                                             sharing ONE run id (see how_to_run.txt)
 #   PY_MODULE=python/3.11.x sbatch run_benchmark.slurm        force a python module (see `module avail python`)
 #                                                             if unset, a 3.10-3.12 module is auto-detected
 # -----------------------------------------------------------------------------
 
 # ----------------------------- settings --------------------------------------
+JOB_START=$(date +%s)
+TIME_LIMIT_S=86400                       # keep in sync with --time=24:00:00 above
+DEADLINE_MARGIN_MIN="${DEADLINE_MARGIN_MIN:-30}"   # stop starting new folds this long before the limit
 PROJECT_DIR="${PROJECT_DIR:-/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG}"
 PY_MODULE="${PY_MODULE:-}"      # empty = use python3 if it is 3.10-3.12, else auto-detect a module
 
@@ -62,6 +67,18 @@ echo "Log file  : $LOG"
 echo "Git commit: $(git -C "$PROJECT_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 echo "BENCH_QUICK=${BENCH_QUICK:-0} BENCH_TARGETS=${BENCH_TARGETS:-all} BENCH_REPEATS=${BENCH_REPEATS:-all}"
 echo "-----------------------------------------------------------------------"
+
+# ----------------------------- already finished? -----------------------------
+# Chained jobs share one run id. If an earlier job finished everything (main.py writes COMPLETE after the analysis),
+# stop now, before any pip install, so surplus queued jobs cost seconds and never retrain anything.
+if [ -f "$RUN_DIR/COMPLETE" ]; then
+    echo "Run $BENCH_RUN_ID is already COMPLETE ($(cat "$RUN_DIR/COMPLETE")). Nothing to do."
+    exit 0
+fi
+# main.py stops starting new folds once the next one would not finish before this deadline, so the job ends cleanly
+# (no fold is lost to the hard time limit) and the next chained job resumes.
+export BENCH_DEADLINE_EPOCH=$(( JOB_START + TIME_LIMIT_S - DEADLINE_MARGIN_MIN * 60 ))
+echo "Deadline  : $(date -d @"$BENCH_DEADLINE_EPOCH") (no new folds after this; margin ${DEADLINE_MARGIN_MIN} min)"
 
 # ----------------------------- python selection ------------------------------
 # Make sure the `module` command exists inside the batch shell.

@@ -22,6 +22,7 @@ Notes
 """
 
 import json
+import os
 import time
 from collections import Counter, defaultdict
 from contextlib import contextmanager
@@ -64,6 +65,11 @@ class PipelineTimer:
         self.records: list[dict] = []  # one per finished fold of this process
         self.history_key = f"{'quick' if QUICK else 'full'}|unknown"
         self.history: dict[str, dict[str, float]] = self._load_history()
+        # Optional wall-clock deadline (unix seconds), set by run_benchmark.slurm a safety margin before the job's time
+        # limit. Once a model's next fold would not finish before it, no new folds are started (see out_of_time()).
+        deadline = os.environ.get("BENCH_DEADLINE_EPOCH")
+        self.deadline: float | None = float(deadline) if deadline else None
+        self.stopped_for_time = False
 
     # ------------------------------------------------------------ setup / helpers
     @staticmethod
@@ -98,6 +104,26 @@ class PipelineTimer:
         if done:
             return sum(done) / len(done)
         return self.history.get(self.history_key, {}).get(model)
+
+    def out_of_time(self, model: str) -> bool:
+        """True if no further fold of `model` should be started in this process (deadline too close). Sticky: once True,
+        it stays True for every later model, which matters because the SNN needs the ANN checkpoints of its folds.
+        Always False when BENCH_DEADLINE_EPOCH is not set (e.g. local runs)."""
+        if self.deadline is None:
+            return False
+        if self.stopped_for_time:
+            return True
+        done = [r["seconds"] for r in self.records if r["model"] == model]
+        if done:
+            expected = 1.25 * max(done)  # slowest fold seen in this process, plus headroom
+        else:
+            prior = self.history.get(self.history_key, {}).get(model)
+            expected = 1.5 * prior if prior else 0.0
+        if time.time() + expected > self.deadline:
+            self.stopped_for_time = True
+            print(f"[time] deadline close (next {model} fold needs ~{format_duration(expected)}, "
+                  f"{format_duration(self.deadline - time.time())} left): starting no more folds in this job.")
+        return self.stopped_for_time
 
     def eta_pipeline(self, current: str, current_remaining: float) -> tuple[float, list[str]]:
         """Remaining benchmark time = rest of the current model + estimated later models. Returns (seconds, unknown models)."""

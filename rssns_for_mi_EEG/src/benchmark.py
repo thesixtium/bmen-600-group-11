@@ -151,6 +151,8 @@ def _best_epochs(outcome: TrainingOutcome) -> dict:
 def run_ann_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
     tracker = timer.track("ann", pending_folds(run_dir, "ann", folds))
     for fold in tracker.folds:
+        if timer.out_of_time("ann"):
+            break
         with tracker.fold(fold) as t:
             data = build_fold_data(processed, fold)
             torch.manual_seed(fold.seed)
@@ -178,6 +180,8 @@ def run_snn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path
     """Converts each fold's fine-tuned ANN checkpoint (run_ann_benchmark must have produced it). No training."""
     tracker = timer.track("snn", pending_folds(run_dir, "snn", folds))
     for fold in tracker.folds:
+        if timer.out_of_time("snn"):
+            break
         with tracker.fold(fold) as t:
             ckpt_path = run_dir / "checkpoints" / "ann" / f"{_stem(fold)}.pt"
             if not ckpt_path.exists():
@@ -214,6 +218,8 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
     n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]
     tracker = timer.track("rsnn", pending_folds(run_dir, "rsnn", folds))
     for fold in tracker.folds:
+        if timer.out_of_time("rsnn"):
+            break
         with tracker.fold(fold) as t:
             data = build_fold_data(processed, fold)
             torch.manual_seed(fold.seed)
@@ -243,6 +249,8 @@ def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path
     n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]  # identical number of recurrent nodes as the RSNN
     tracker = timer.track("rnn", pending_folds(run_dir, "rnn", folds))
     for fold in tracker.folds:
+        if timer.out_of_time("rnn"):
+            break
         with tracker.fold(fold) as t:
             data = build_fold_data(processed, fold)
             torch.manual_seed(fold.seed)
