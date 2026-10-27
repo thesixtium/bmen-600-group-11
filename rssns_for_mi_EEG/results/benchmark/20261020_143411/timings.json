@@ -1,0 +1,29 @@
+{
+ "total_s": 12626.290042838082,
+ "stages_s": {
+  "download_data": 24.02091896533966,
+  "preprocess_data": 33.598121675662696,
+  "data_statistics": 29.78245858568698,
+  "benchmark: ann": 0.0035105273127555847,
+  "benchmark: snn": 0.0032864436507225037,
+  "benchmark: rsnn": 12489.683606307022,
+  "collect_results": 2.4321862123906612,
+  "plot_benchmarks": 2.2513089245185256,
+  "compare_models": 40.537140735425055,
+  "plot_comparison": 3.488352032378316
+ },
+ "per_model": {
+  "rsnn": {
+   "n_folds": 5,
+   "total_s": 12489.661521364003,
+   "mean_s": 2497.9323042728006,
+   "min_s": 2487.097777761519,
+   "max_s": 2531.7421613261104
+  }
+ },
+ "per_model_subject_s": {
+  "rsnn": {
+   "9": 12489.661521364003
+  }
+ }
+}
