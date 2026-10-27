@@ -35,8 +35,35 @@ HOW TO RUN THE BENCHMARK ON ARC
    scancel <jobid>                                  cancel the job
 
 8. IF IT HITS THE 24 H LIMIT, RESUME (finished folds are skipped)
-   BENCH_RUN_ID=<same run id> sbatch run_benchmark.slurm
 
+   a) Find the run id. It is the folder name under results/benchmark/
+      (quick_* folders are smoke tests, ignore them):
+
+        ls -d results/benchmark/*/ | grep -v quick_
+
+      Run ids are timestamps (YYYYMMDD_HHMMSS), so the newest full run is
+      the last one listed. To pick it automatically:
+
+        RUN_ID=$(basename $(ls -d results/benchmark/*/ | grep -v quick_ | sort | tail -1))
+        echo $RUN_ID
+
+      If you can't tell which folder it is, the id is also printed in the
+      "Run ID :" line at the top of the job's slurm output file:
+
+        grep -h "Run ID" slurm_rsnn_benchmark_*.out
+
+   b) Check how far it got (folds finished out of 90 per model):
+
+        for m in ann snn rsnn; do echo $m $(ls results/benchmark/$RUN_ID/metrics/$m | wc -l); done
+
+   c) Resume with that id:
+
+        BENCH_RUN_ID=$RUN_ID sbatch run_benchmark.slurm
+
+   d) Confirm it is continuing, not starting over: the new slurm output
+      should show "pending folds per model" with the remaining counts
+      (e.g. {'ann': 0, 'snn': 0, 'rsnn': 39}), not 90s. If it shows 90s,
+      the id was wrong: scancel the job and recheck step (a).
 RESULTS: results/benchmark/<run id>/
    results.csv, comparison/ (tables + figures), figures/, run_log.txt
    Download to your PC, e.g. from PowerShell:

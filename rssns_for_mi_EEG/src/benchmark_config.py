@@ -81,6 +81,10 @@ class RSNNConfig:
     surrogate_slope: float = 25.0  # snntorch.surrogate.fast_sigmoid default
     recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2)
     batch_size: int = 64  # larger than the ANN's to keep BPTT over 256 steps tractable
+    # Per-channel standardization of the input (mean/std over trials and time of the PRETRAINING subjects' session 1
+    # only; fixed afterwards, so no target or test information is used). The ANN has BatchNorm and the converted SNN
+    # divides by lambda_0; this gives the RSNN the equivalent scale handling. False = previous behaviour (raw uV).
+    normalize_input: bool = True
 
 
 @dataclass(frozen=True)

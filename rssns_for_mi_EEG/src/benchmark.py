@@ -214,6 +214,9 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
             data = build_fold_data(processed, fold)
             torch.manual_seed(fold.seed)
             model = RecurrentLIFNet(N_CHANNELS, n_hidden, N_CLASSES, RSNN_CFG)
+            if RSNN_CFG.normalize_input:
+                # per-channel standardization from the PRETRAINING subjects' session 1 only (no target / test data)
+                model.set_input_stats(data.pre_train.X)
             outcome = pretrain_then_finetune(model, data, RSNN_TRAIN, fold.seed, device, tag=f"[rsnn {_stem(fold)}]")
             t["pretrain_s"], t["finetune_s"] = outcome.pretrain_seconds, outcome.finetune_seconds
             torch.save(

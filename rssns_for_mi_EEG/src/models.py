@@ -6,6 +6,7 @@ The converted SNN lives in ann_to_snn.py.
 import math
 
 import torch
+from numpy.typing import NDArray
 from snntorch import surrogate  # only the surrogate gradient is used; the LIF loop below is written out explicitly
 from torch import nn
 
@@ -61,13 +62,18 @@ class EEGNet(nn.Module):
 
 
 class RecurrentLIFNet(nn.Module):
-    """input projection -> ONE dense all-to-all recurrent LIF layer -> linear readout.
+    """(input standardization) -> input projection -> ONE dense all-to-all recurrent LIF layer -> linear readout.
 
     Weights (all trained by surrogate-gradient BPTT):
       input_proj : Linear(n_inputs -> n_hidden), applied to the 22 channel values of one EEG sample per step
       recurrent  : Linear(n_hidden -> n_hidden, no bias), dense H x H; entry [i, j] is the trainable weight of the
                    directed connection from hidden neuron j to hidden neuron i (diagonal = self-connections included)
       readout    : Linear(n_hidden -> n_classes) on the time-averaged hidden spike rate
+
+    Input standardization: per-channel (x - ch_mean) / ch_std with FIXED buffers (not trained, not part of the
+    parameter count). They are set once by set_input_stats() from the pretraining subjects' session 1 and stay fixed
+    through fine-tuning and testing, so no target-subject or test information enters them. Until set_input_stats() is
+    called they are the identity (mean 0, std 1), i.e. the model sees the raw input.
 
     Dynamics for t = 1..T (reset by subtraction, previous spike used for both feedback and reset):
       I_t   = input_proj(x_t) + recurrent(s_{t-1})
@@ -87,12 +93,26 @@ class RecurrentLIFNet(nn.Module):
         self.dropout = nn.Dropout(0.25)  # on the readout input; probability is set by the training schedule
         self.spike_fn = surrogate.fast_sigmoid(slope=cfg.surrogate_slope)
         nn.init.normal_(self.recurrent.weight, mean=0.0, std=cfg.recurrent_init_gain / math.sqrt(n_hidden))
+        # fixed (non-trainable) input standardization, saved in the state_dict with the weights
+        self.register_buffer("ch_mean", torch.zeros(1, n_inputs, 1))
+        self.register_buffer("ch_std", torch.ones(1, n_inputs, 1))
 
     @property
     def recurrent_weight(self) -> torch.Tensor:
         return self.recurrent.weight  # (H, H), trainable
 
+    @torch.no_grad()
+    def set_input_stats(self, X: NDArray) -> None:
+        """Set the per-channel mean/std from X of shape (n_trials, n_channels, n_samples).
+
+        Call with the PRETRAINING subjects' session-1 trials only. Statistics are taken over trials and time.
+        """
+        X_t = torch.as_tensor(X, dtype=torch.float32)
+        self.ch_mean.copy_(X_t.mean(dim=(0, 2)).view(1, -1, 1))
+        self.ch_std.copy_(X_t.std(dim=(0, 2)).clamp_min(1e-6).view(1, -1, 1))
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = (x - self.ch_mean) / self.ch_std  # (B, C, T) standardized per channel
         x = x.permute(2, 0, 1)  # (T, B, C): one EEG sample (22 values) per simulation step
         n_steps = min(self.cfg.n_steps, x.shape[0])
         batch = x.shape[1]
@@ -141,7 +161,8 @@ def converted_snn_param_count(c: EEGNetConfig = EEGNetConfig()) -> int:
 
 
 def rsnn_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
-    """input_proj (W + b) + dense recurrent H x H (no bias) + readout (W + b)."""
+    """input_proj (W + b) + dense recurrent H x H (no bias) + readout (W + b). The fixed input standardization
+    buffers are not trainable and not counted."""
     return (n_inputs * n_hidden + n_hidden) + n_hidden * n_hidden + (n_hidden * n_classes + n_classes)
 
 
