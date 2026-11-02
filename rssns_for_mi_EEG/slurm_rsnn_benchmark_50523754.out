@@ -1,0 +1,899 @@
+Job ID    : 50523754
+Node      : fg2
+Started   : Thu Oct 29 14:25:35 MDT 2026
+Project   : /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG
+Run ID    : 20261027_153619
+Log file  : /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261027_153619/run_log.txt
+Git commit: 06a1c80
+BENCH_QUICK=0 BENCH_TARGETS=all BENCH_REPEATS=all
+-----------------------------------------------------------------------
+Deadline  : Fri Oct 30 13:55:35 MDT 2026 (no new folds after this; margin 30 min)
+python3 is Python 3.6.8, not 3.10-3.12: searching for a module...
+Auto-detected module: python/3.12.5
+System python: 3.12.5
+Requirement already satisfied: pip in /tmp/venv_50523754/lib/python3.12/site-packages (24.2)
+Collecting pip
+  Using cached pip-26.2.2-py3-none-any.whl.metadata (4.6 kB)
+Collecting wheel
+  Using cached wheel-0.48.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting setuptools==69.5.1
+  Using cached setuptools-69.5.1-py3-none-any.whl.metadata (6.2 kB)
+Collecting packaging>=24.0 (from wheel)
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Using cached setuptools-69.5.1-py3-none-any.whl (894 kB)
+Using cached pip-26.2.2-py3-none-any.whl (1.8 MB)
+Using cached wheel-0.48.0-py3-none-any.whl (33 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Installing collected packages: setuptools, pip, packaging, wheel
+  Attempting uninstall: pip
+    Found existing installation: pip 24.2
+    Uninstalling pip-24.2:
+      Successfully uninstalled pip-24.2
+Successfully installed packaging-26.3 pip-26.2.2 setuptools-69.5.1 wheel-0.48.0
+Collecting torch==2.4.0
+  Using cached torch-2.4.0-cp312-cp312-manylinux1_x86_64.whl.metadata (26 kB)
+Collecting filelock (from torch==2.4.0)
+  Using cached filelock-4.2.4-py3-none-any.whl.metadata (2.0 kB)
+Collecting typing-extensions>=4.8.0 (from torch==2.4.0)
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting sympy (from torch==2.4.0)
+  Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting networkx (from torch==2.4.0)
+  Using cached networkx-3.7-py3-none-any.whl.metadata (6.7 kB)
+Collecting jinja2 (from torch==2.4.0)
+  Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting fsspec (from torch==2.4.0)
+  Using cached fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+Requirement already satisfied: setuptools in /tmp/venv_50523754/lib/python3.12/site-packages (from torch==2.4.0) (69.5.1)
+Collecting nvidia-cuda-nvrtc-cu12==12.1.105 (from torch==2.4.0)
+  Using cached nvidia_cuda_nvrtc_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cuda-runtime-cu12==12.1.105 (from torch==2.4.0)
+  Using cached nvidia_cuda_runtime_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cuda-cupti-cu12==12.1.105 (from torch==2.4.0)
+  Using cached nvidia_cuda_cupti_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-cudnn-cu12==9.1.0.70 (from torch==2.4.0)
+  Using cached nvidia_cudnn_cu12-9.1.0.70-py3-none-manylinux2014_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-cublas-cu12==12.1.3.1 (from torch==2.4.0)
+  Using cached nvidia_cublas_cu12-12.1.3.1-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cufft-cu12==11.0.2.54 (from torch==2.4.0)
+  Using cached nvidia_cufft_cu12-11.0.2.54-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-curand-cu12==10.3.2.106 (from torch==2.4.0)
+  Using cached nvidia_curand_cu12-10.3.2.106-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
+Collecting nvidia-cusolver-cu12==11.4.5.107 (from torch==2.4.0)
+  Using cached nvidia_cusolver_cu12-11.4.5.107-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-cusparse-cu12==12.1.0.106 (from torch==2.4.0)
+  Using cached nvidia_cusparse_cu12-12.1.0.106-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
+Collecting nvidia-nccl-cu12==2.20.5 (from torch==2.4.0)
+  Using cached nvidia_nccl_cu12-2.20.5-py3-none-manylinux2014_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-nvtx-cu12==12.1.105 (from torch==2.4.0)
+  Using cached nvidia_nvtx_cu12-12.1.105-py3-none-manylinux1_x86_64.whl.metadata (1.7 kB)
+Collecting triton==3.0.0 (from torch==2.4.0)
+  Using cached triton-3.0.0-1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.3 kB)
+Collecting nvidia-nvjitlink-cu12 (from nvidia-cusolver-cu12==11.4.5.107->torch==2.4.0)
+  Using cached nvidia_nvjitlink_cu12-12.9.86-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->torch==2.4.0)
+  Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy->torch==2.4.0)
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Using cached torch-2.4.0-cp312-cp312-manylinux1_x86_64.whl (797.2 MB)
+Using cached nvidia_cublas_cu12-12.1.3.1-py3-none-manylinux1_x86_64.whl (410.6 MB)
+Using cached nvidia_cuda_cupti_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (14.1 MB)
+Using cached nvidia_cuda_nvrtc_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (23.7 MB)
+Using cached nvidia_cuda_runtime_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (823 kB)
+Using cached nvidia_cudnn_cu12-9.1.0.70-py3-none-manylinux2014_x86_64.whl (664.8 MB)
+Using cached nvidia_cufft_cu12-11.0.2.54-py3-none-manylinux1_x86_64.whl (121.6 MB)
+Using cached nvidia_curand_cu12-10.3.2.106-py3-none-manylinux1_x86_64.whl (56.5 MB)
+Using cached nvidia_cusolver_cu12-11.4.5.107-py3-none-manylinux1_x86_64.whl (124.2 MB)
+Using cached nvidia_cusparse_cu12-12.1.0.106-py3-none-manylinux1_x86_64.whl (196.0 MB)
+Using cached nvidia_nccl_cu12-2.20.5-py3-none-manylinux2014_x86_64.whl (176.2 MB)
+Using cached nvidia_nvtx_cu12-12.1.105-py3-none-manylinux1_x86_64.whl (99 kB)
+Using cached triton-3.0.0-1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (209.5 MB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached filelock-4.2.4-py3-none-any.whl (162 kB)
+Using cached fsspec-2026.9.0-py3-none-any.whl (221 kB)
+Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Using cached networkx-3.7-py3-none-any.whl (2.1 MB)
+Using cached nvidia_nvjitlink_cu12-12.9.86-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (39.7 MB)
+Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+Installing collected packages: mpmath, typing-extensions, sympy, nvidia-nvtx-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufft-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, networkx, MarkupSafe, fsspec, filelock, triton, nvidia-cusparse-cu12, nvidia-cudnn-cu12, jinja2, nvidia-cusolver-cu12, torch
+
+Successfully installed MarkupSafe-3.0.4 filelock-4.2.4 fsspec-2026.9.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.7 nvidia-cublas-cu12-12.1.3.1 nvidia-cuda-cupti-cu12-12.1.105 nvidia-cuda-nvrtc-cu12-12.1.105 nvidia-cuda-runtime-cu12-12.1.105 nvidia-cudnn-cu12-9.1.0.70 nvidia-cufft-cu12-11.0.2.54 nvidia-curand-cu12-10.3.2.106 nvidia-cusolver-cu12-11.4.5.107 nvidia-cusparse-cu12-12.1.0.106 nvidia-nccl-cu12-2.20.5 nvidia-nvjitlink-cu12-12.9.86 nvidia-nvtx-cu12-12.1.105 sympy-1.14.0 torch-2.4.0 triton-3.0.0 typing-extensions-4.16.0
+Collecting snntorch
+  Using cached snntorch-1.0.0-py2.py3-none-any.whl.metadata (15 kB)
+Collecting moabb
+  Using cached moabb-1.7.2-py3-none-any.whl.metadata (15 kB)
+Collecting mne
+  Using cached mne-1.13.2-py3-none-any.whl.metadata (17 kB)
+Collecting numpy
+  Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting scipy
+  Using cached scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting pandas
+  Using cached pandas-3.1.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (18 kB)
+Collecting scikit-learn
+  Using cached scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 kB)
+Collecting matplotlib
+  Using cached matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+Collecting h5py>=3.10.0 (from moabb)
+  Using cached h5py-3.16.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (3.0 kB)
+Collecting pymatreader>=1.2.2 (from moabb)
+  Using cached pymatreader-1.3.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting seaborn>=0.12.1 (from moabb)
+  Using cached seaborn-0.13.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting pyriemann>=0.12 (from moabb)
+  Using cached pyriemann-0.12-py2.py3-none-any.whl.metadata (10.0 kB)
+Collecting PyYAML>=6.0 (from moabb)
+  Using cached pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting nemar-py>=0.2.1 (from moabb)
+  Using cached nemar_py-0.3.3-py3-none-any.whl.metadata (8.4 kB)
+Collecting pooch>=1.6.0 (from moabb)
+  Using cached pooch-1.9.0-py3-none-any.whl.metadata (10 kB)
+Collecting requests>=2.28.1 (from moabb)
+  Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting remotezip>=0.12.3 (from moabb)
+  Using cached remotezip-0.12.6-py3-none-any.whl.metadata (7.3 kB)
+Collecting urllib3>=1.26.15 (from moabb)
+  Using cached urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting tqdm>=4.64.1 (from moabb)
+  Using cached tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+Collecting coverage>=7.0.1 (from moabb)
+  Using cached coverage-7.17.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (8.1 kB)
+Collecting memory-profiler>=0.61.0 (from moabb)
+  Using cached memory_profiler-0.61.0-py3-none-any.whl.metadata (20 kB)
+Collecting edflib-python>=1.0.6 (from moabb)
+  Using cached EDFlib_Python-1.0.8-py3-none-any.whl.metadata (1.3 kB)
+Collecting edfio>=0.4.2 (from moabb)
+  Using cached edfio-0.4.18-py3-none-any.whl.metadata (4.0 kB)
+Requirement already satisfied: filelock>=3.18.0 in /tmp/venv_50523754/lib/python3.12/site-packages (from moabb) (4.2.4)
+Collecting mne-bids>=0.19 (from moabb)
+  Using cached mne_bids-0.20.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting pybv>=0.7.3 (from moabb)
+  Using cached pybv-0.8.1-py3-none-any.whl.metadata (14 kB)
+Collecting pycountry>=24.6.1 (from moabb)
+  Using cached pycountry-26.2.16-py3-none-any.whl.metadata (12 kB)
+Collecting docstring-inheritance>=2.0.0 (from moabb)
+  Using cached docstring_inheritance-3.0.0-py3-none-any.whl.metadata (10 kB)
+Collecting decorator>=5.1 (from mne)
+  Using cached decorator-5.3.1-py3-none-any.whl.metadata (3.9 kB)
+Requirement already satisfied: jinja2>=3.1 in /tmp/venv_50523754/lib/python3.12/site-packages (from mne) (3.1.6)
+Collecting lazy-loader>=0.3 (from mne)
+  Using cached lazy_loader-0.6-py3-none-any.whl.metadata (6.0 kB)
+Requirement already satisfied: packaging in /tmp/venv_50523754/lib/python3.12/site-packages (from mne) (26.3)
+Collecting python-dateutil>=2.9.0 (from pandas)
+  Using cached python_dateutil-3.0.0-py2.py3-none-any.whl.metadata (8.2 kB)
+Collecting joblib>=1.4.0 (from scikit-learn)
+  Using cached joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting narwhals>=2.0.1 (from scikit-learn)
+  Using cached narwhals-2.28.0-py3-none-any.whl.metadata (15 kB)
+Collecting threadpoolctl>=3.5.0 (from scikit-learn)
+  Using cached threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+Collecting contourpy>=1.0.1 (from matplotlib)
+  Using cached contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib)
+  Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib)
+  Using cached fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib)
+  Using cached kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting pillow>=9 (from matplotlib)
+  Using cached pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib)
+  Using cached pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Requirement already satisfied: typing-extensions<5,>=4 in /tmp/venv_50523754/lib/python3.12/site-packages (from docstring-inheritance>=2.0.0->moabb) (4.16.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /tmp/venv_50523754/lib/python3.12/site-packages (from jinja2>=3.1->mne) (3.0.4)
+Collecting cloudpickle>=3.0 (from joblib>=1.4.0->scikit-learn)
+  Using cached cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting psutil (from memory-profiler>=0.61.0->moabb)
+  Using cached psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+Collecting httpx>=0.25 (from nemar-py>=0.2.1->moabb)
+  Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting pydantic>=2 (from nemar-py>=0.2.1->moabb)
+  Downloading pydantic-2.14.2-py3-none-any.whl.metadata (137 kB)
+Collecting typer>=0.12 (from nemar-py>=0.2.1->moabb)
+  Using cached typer-0.27.3-py3-none-any.whl.metadata (16 kB)
+Collecting wcmatch>=10.1 (from nemar-py>=0.2.1->moabb)
+  Using cached wcmatch-11.2-py3-none-any.whl.metadata (6.0 kB)
+Collecting boto3>=1.34 (from nemar-py>=0.2.1->moabb)
+  Downloading boto3-1.43.122-py3-none-any.whl.metadata (6.6 kB)
+Collecting botocore<1.44.0,>=1.43.122 (from boto3>=1.34->nemar-py>=0.2.1->moabb)
+  Downloading botocore-1.43.122-py3-none-any.whl.metadata (5.6 kB)
+Collecting jmespath<2.0.0,>=0.7.1 (from boto3>=1.34->nemar-py>=0.2.1->moabb)
+  Using cached jmespath-1.1.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting s3transfer<0.20.0,>=0.19.0 (from boto3>=1.34->nemar-py>=0.2.1->moabb)
+  Using cached s3transfer-0.19.3-py3-none-any.whl.metadata (1.7 kB)
+Collecting python-dateutil>=2.9.0 (from pandas)
+  Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting six>=1.5 (from python-dateutil>=2.9.0->pandas)
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting anyio (from httpx>=0.25->nemar-py>=0.2.1->moabb)
+  Using cached anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting certifi (from httpx>=0.25->nemar-py>=0.2.1->moabb)
+  Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx>=0.25->nemar-py>=0.2.1->moabb)
+  Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx>=0.25->nemar-py>=0.2.1->moabb)
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.25->nemar-py>=0.2.1->moabb)
+  Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting platformdirs>=2.5.0 (from pooch>=1.6.0->moabb)
+  Using cached platformdirs-4.14.0-py3-none-any.whl.metadata (5.4 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2->nemar-py>=0.2.1->moabb)
+  Using cached annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.2 (from pydantic>=2->nemar-py>=0.2.1->moabb)
+  Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
+Collecting typing-inspection>=0.4.4 (from pydantic>=2->nemar-py>=0.2.1->moabb)
+  Using cached typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting xmltodict>0.13 (from pymatreader>=1.2.2->moabb)
+  Using cached xmltodict-1.0.4-py3-none-any.whl.metadata (14 kB)
+Collecting array-api-compat>=1.11 (from pyriemann>=0.12->moabb)
+  Using cached array_api_compat-1.16.0-py3-none-any.whl.metadata (1.4 kB)
+Collecting array-api-extra>=0.6 (from pyriemann>=0.12->moabb)
+  Using cached array_api_extra-0.11.5-py3-none-any.whl.metadata (24 kB)
+Collecting charset_normalizer<4,>=2 (from requests>=2.28.1->moabb)
+  Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+Collecting shellingham>=1.3.0 (from typer>=0.12->nemar-py>=0.2.1->moabb)
+  Using cached shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting rich>=13.8.0 (from typer>=0.12->nemar-py>=0.2.1->moabb)
+  Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting annotated-doc>=0.0.2 (from typer>=0.12->nemar-py>=0.2.1->moabb)
+  Using cached annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.8.0->typer>=0.12->nemar-py>=0.2.1->moabb)
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.8.0->typer>=0.12->nemar-py>=0.2.1->moabb)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.8.0->typer>=0.12->nemar-py>=0.2.1->moabb)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting bracex>=3.2 (from wcmatch>=10.1->nemar-py>=0.2.1->moabb)
+  Using cached bracex-3.2-py3-none-any.whl.metadata (3.3 kB)
+Using cached snntorch-1.0.0-py2.py3-none-any.whl (133 kB)
+Using cached moabb-1.7.2-py3-none-any.whl (980 kB)
+Using cached mne-1.13.2-py3-none-any.whl (7.7 MB)
+Using cached numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+Using cached scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+Using cached pandas-3.1.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.0 MB)
+Using cached scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.2 MB)
+Using cached matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+Using cached contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (383 kB)
+Using cached coverage-7.17.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (261 kB)
+Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Using cached decorator-5.3.1-py3-none-any.whl (10 kB)
+Using cached docstring_inheritance-3.0.0-py3-none-any.whl (26 kB)
+Using cached edfio-0.4.18-py3-none-any.whl (31 kB)
+Using cached EDFlib_Python-1.0.8-py3-none-any.whl (26 kB)
+Using cached fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+Using cached h5py-3.16.0-cp312-cp312-manylinux_2_28_x86_64.whl (5.4 MB)
+Using cached joblib-1.6.0-py3-none-any.whl (306 kB)
+Using cached cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Using cached kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+Using cached lazy_loader-0.6-py3-none-any.whl (8.8 kB)
+Using cached memory_profiler-0.61.0-py3-none-any.whl (31 kB)
+Using cached mne_bids-0.20.0-py3-none-any.whl (202 kB)
+Using cached narwhals-2.28.0-py3-none-any.whl (490 kB)
+Using cached nemar_py-0.3.3-py3-none-any.whl (74 kB)
+Downloading boto3-1.43.122-py3-none-any.whl (140 kB)
+Downloading botocore-1.43.122-py3-none-any.whl (16.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.2/16.2 MB 21.1 MB/s  0:00:00
+Using cached jmespath-1.1.0-py3-none-any.whl (20 kB)
+Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Using cached s3transfer-0.19.3-py3-none-any.whl (90 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+Using cached pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+Using cached pooch-1.9.0-py3-none-any.whl (67 kB)
+Using cached platformdirs-4.14.0-py3-none-any.whl (35 kB)
+Using cached pybv-0.8.1-py3-none-any.whl (16 kB)
+Using cached pycountry-26.2.16-py3-none-any.whl (8.0 MB)
+Downloading pydantic-2.14.2-py3-none-any.whl (490 kB)
+Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 13.4 MB/s  0:00:00
+Using cached annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Using cached pymatreader-1.3.2-py3-none-any.whl (10 kB)
+Using cached pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Using cached pyriemann-0.12-py2.py3-none-any.whl (153 kB)
+Using cached array_api_compat-1.16.0-py3-none-any.whl (81 kB)
+Using cached array_api_extra-0.11.5-py3-none-any.whl (120 kB)
+Using cached pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+Using cached remotezip-0.12.6-py3-none-any.whl (8.6 kB)
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Using cached seaborn-0.13.2-py3-none-any.whl (294 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Using cached threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+Using cached tqdm-4.70.1-py3-none-any.whl (80 kB)
+Using cached typer-0.27.3-py3-none-any.whl (123 kB)
+Using cached annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Using cached shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Using cached typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Using cached wcmatch-11.2-py3-none-any.whl (44 kB)
+Using cached bracex-3.2-py3-none-any.whl (12 kB)
+Using cached xmltodict-1.0.4-py3-none-any.whl (13 kB)
+Using cached anyio-4.15.1-py3-none-any.whl (132 kB)
+Using cached psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+Installing collected packages: xmltodict, urllib3, typing-inspection, tqdm, threadpoolctl, snntorch, six, shellingham, PyYAML, pyparsing, pygments, pydantic-core, pycountry, psutil, platformdirs, pillow, numpy, narwhals, mdurl, lazy-loader, kiwisolver, jmespath, idna, h11, fonttools, docstring-inheritance, decorator, cycler, coverage, cloudpickle, charset_normalizer, certifi, bracex, array-api-compat, annotated-types, annotated-doc, wcmatch, scipy, requests, python-dateutil, pydantic, pybv, memory-profiler, markdown-it-py, joblib, httpcore, h5py, edflib-python, edfio, contourpy, array-api-extra, anyio, scikit-learn, rich, remotezip, pymatreader, pooch, pandas, matplotlib, httpx, botocore, typer, seaborn, s3transfer, pyriemann, mne, mne-bids, boto3, nemar-py, moabb
+
+Successfully installed PyYAML-6.0.3 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 array-api-compat-1.16.0 array-api-extra-0.11.5 boto3-1.43.122 botocore-1.43.122 bracex-3.2 certifi-2026.10.23 charset_normalizer-3.5.2 cloudpickle-3.1.2 contourpy-1.4.0 coverage-7.17.0 cycler-0.12.1 decorator-5.3.1 docstring-inheritance-3.0.0 edfio-0.4.18 edflib-python-1.0.8 fonttools-4.68.0 h11-0.16.0 h5py-3.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.20 jmespath-1.1.0 joblib-1.6.0 kiwisolver-1.5.1 lazy-loader-0.6 markdown-it-py-4.2.0 matplotlib-3.11.2 mdurl-0.1.2 memory-profiler-0.61.0 mne-1.13.2 mne-bids-0.20.0 moabb-1.7.2 narwhals-2.28.0 nemar-py-0.3.3 numpy-2.5.4 pandas-3.1.0 pillow-13.0.0 platformdirs-4.14.0 pooch-1.9.0 psutil-7.2.2 pybv-0.8.1 pycountry-26.2.16 pydantic-2.14.2 pydantic-core-2.50.2 pygments-2.21.0 pymatreader-1.3.2 pyparsing-3.3.3 pyriemann-0.12 python-dateutil-2.9.0.post0 remotezip-0.12.6 requests-2.34.2 rich-15.0.0 s3transfer-0.19.3 scikit-learn-1.9.1 scipy-1.18.1 seaborn-0.13.2 shellingham-1.5.4 six-1.17.0 snntorch-1.0.0 threadpoolctl-3.7.0 tqdm-4.70.1 typer-0.27.3 typing-inspection-0.4.4 urllib3-2.8.0 wcmatch-11.2 xmltodict-1.0.4
+-----------------------------------------------------------------------
+Thu Oct 29 14:27:58 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 560.35.03              Driver Version: 560.35.03      CUDA Version: 12.6     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-PCIE-16GB           On  |   00000000:3B:00.0 Off |                    0 |
+| N/A   22C    P0             25W /  250W |       1MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch 2.4.0+cu121 | CUDA available: True
+GPU: Tesla V100-PCIE-16GB
+-----------------------------------------------------------------------
+[time] >>> download_data
+[time] <<< download_data: 26s (pipeline elapsed 26s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 34s (pipeline elapsed 1m00s)
+[time] >>> data_statistics
+PSD change after preprocessing (channel mean, dB):
+    2 Hz:  -28.6 dB
+    4 Hz:   -0.9 dB
+   10 Hz:   -0.8 dB
+   20 Hz:   -0.4 dB
+   40 Hz:   -0.3 dB
+   45 Hz:   -6.0 dB
+   50 Hz:  -50.7 dB
+   55 Hz:  -72.1 dB
+   60 Hz:  -60.8 dB
+Saved graphs to /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/data_statistics
+[time] <<< data_statistics: 30s (pipeline elapsed 1m31s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261027_153619
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393}
+[time] pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 29, 'rnn': 90} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 41m18s, ann 2m37s, snn 0.9s
+[time] initial benchmark estimate: 19h57m46s (+ unknown: rnn)
+[time] >>> benchmark: ann
+[time] [ann] nothing to run (all folds already done)
+[time] <<< benchmark: ann: 0.0s (pipeline elapsed 1m31s)
+[time] >>> benchmark: snn
+[time] [snn] nothing to run (all folds already done)
+[time] <<< benchmark: snn: 0.0s (pipeline elapsed 1m31s)
+[time] >>> benchmark: rsnn
+[time] [rsnn] 29 folds to run over 3 subject(s); prior estimate 19h57m46s (41m18s/fold)
+[time] [rsnn] fold 1/29 start (subject 7, repeat 1)
+[time]     [rsnn s7_r1] pretrain epoch 50/500 | val_loss 1.3945 | elapsed 4m07s, phase ETA 37m02s
+[time]     [rsnn s7_r1] pretrain epoch 100/500 | val_loss 1.4062 | elapsed 8m12s, phase ETA 32m47s
+[time]     [rsnn s7_r1] pretrain epoch 150/500 | val_loss 1.4264 | elapsed 12m14s, phase ETA 28m34s
+[time]     [rsnn s7_r1] pretrain epoch 200/500 | val_loss 1.4207 | elapsed 16m18s, phase ETA 24m27s
+[time]     [rsnn s7_r1] pretrain epoch 250/500 | val_loss 1.4291 | elapsed 20m21s, phase ETA 20m21s
+[time]     [rsnn s7_r1] pretrain epoch 300/500 | val_loss 1.4492 | elapsed 24m23s, phase ETA 16m16s
+[time]     [rsnn s7_r1] pretrain epoch 350/500 | val_loss 1.4630 | elapsed 28m27s, phase ETA 12m11s
+[time]     [rsnn s7_r1] pretrain epoch 400/500 | val_loss 1.4459 | elapsed 32m29s, phase ETA 8m07s
+[time]     [rsnn s7_r1] pretrain epoch 450/500 | val_loss 1.4927 | elapsed 36m32s, phase ETA 4m04s
+[time]     [rsnn s7_r1] finetune epoch 50/100 | val_loss 1.3789 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 1: acc=0.285 kappa=0.046
+[time] [rsnn] fold 1/29 done in 41m51s (pretrain 40m35s, finetune 1m15s) | avg 41m51s | rsnn elapsed 41m51s, ETA 19h31m36s | benchmark ETA 19h31m36s (excl. unknown: rnn)
+[time] [rsnn] fold 2/29 start (subject 7, repeat 2)
+[time]     [rsnn s7_r2] pretrain epoch 50/500 | val_loss 1.4163 | elapsed 4m01s, phase ETA 36m06s
+[time]     [rsnn s7_r2] pretrain epoch 100/500 | val_loss 1.4241 | elapsed 8m03s, phase ETA 32m12s
+[time]     [rsnn s7_r2] pretrain epoch 150/500 | val_loss 1.4732 | elapsed 12m05s, phase ETA 28m12s
+[time]     [rsnn s7_r2] pretrain epoch 200/500 | val_loss 1.4590 | elapsed 16m07s, phase ETA 24m11s
+[time]     [rsnn s7_r2] pretrain epoch 250/500 | val_loss 1.4377 | elapsed 20m09s, phase ETA 20m09s
+[time]     [rsnn s7_r2] pretrain epoch 300/500 | val_loss 1.4647 | elapsed 24m11s, phase ETA 16m07s
+[time]     [rsnn s7_r2] pretrain epoch 350/500 | val_loss 1.4514 | elapsed 28m13s, phase ETA 12m05s
+[time]     [rsnn s7_r2] pretrain epoch 400/500 | val_loss 1.4629 | elapsed 32m15s, phase ETA 8m04s
+[time]     [rsnn s7_r2] pretrain epoch 450/500 | val_loss 1.5049 | elapsed 36m18s, phase ETA 4m02s
+[time]     [rsnn s7_r2] finetune epoch 50/100 | val_loss 1.3840 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 2: acc=0.351 kappa=0.134
+[time] [rsnn] fold 2/29 done in 41m36s (pretrain 40m20s, finetune 1m16s) | avg 41m43s | rsnn elapsed 1h23m26s, ETA 18h46m28s | benchmark ETA 18h46m28s (excl. unknown: rnn)
+[time] [rsnn] fold 3/29 start (subject 7, repeat 3)
+[time]     [rsnn s7_r3] pretrain epoch 50/500 | val_loss 1.3687 | elapsed 4m03s, phase ETA 36m25s
+[time]     [rsnn s7_r3] pretrain epoch 100/500 | val_loss 1.3994 | elapsed 8m05s, phase ETA 32m21s
+[time]     [rsnn s7_r3] pretrain epoch 150/500 | val_loss 1.4144 | elapsed 12m08s, phase ETA 28m18s
+[time]     [rsnn s7_r3] pretrain epoch 200/500 | val_loss 1.4117 | elapsed 16m11s, phase ETA 24m16s
+[time]     [rsnn s7_r3] pretrain epoch 250/500 | val_loss 1.4239 | elapsed 20m17s, phase ETA 20m17s
+[time]     [rsnn s7_r3] pretrain epoch 300/500 | val_loss 1.4070 | elapsed 24m22s, phase ETA 16m15s
+[time]     [rsnn s7_r3] pretrain epoch 350/500 | val_loss 1.4000 | elapsed 28m26s, phase ETA 12m11s
+[time]     [rsnn s7_r3] pretrain epoch 400/500 | val_loss 1.3801 | elapsed 32m30s, phase ETA 8m08s
+[time]     [rsnn s7_r3] pretrain epoch 450/500 | val_loss 1.3737 | elapsed 36m35s, phase ETA 4m04s
+[time]     [rsnn s7_r3] finetune epoch 50/100 | val_loss 1.3800 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 3: acc=0.326 kappa=0.102
+[time] [rsnn] fold 3/29 done in 41m56s (pretrain 40m40s, finetune 1m16s) | avg 41m48s | rsnn elapsed 2h05m23s, ETA 18h06m38s | benchmark ETA 18h06m38s (excl. unknown: rnn)
+[time] [rsnn] fold 4/29 start (subject 7, repeat 4)
+[time]     [rsnn s7_r4] pretrain epoch 50/500 | val_loss 1.3839 | elapsed 4m03s, phase ETA 36m25s
+[time]     [rsnn s7_r4] pretrain epoch 100/500 | val_loss 1.3678 | elapsed 8m05s, phase ETA 32m20s
+[time]     [rsnn s7_r4] pretrain epoch 150/500 | val_loss 1.3752 | elapsed 12m06s, phase ETA 28m14s
+[time]     [rsnn s7_r4] pretrain epoch 200/500 | val_loss 1.3967 | elapsed 16m07s, phase ETA 24m10s
+[time]     [rsnn s7_r4] pretrain epoch 250/500 | val_loss 1.4021 | elapsed 20m08s, phase ETA 20m08s
+[time]     [rsnn s7_r4] pretrain epoch 300/500 | val_loss 1.4371 | elapsed 24m09s, phase ETA 16m06s
+[time]     [rsnn s7_r4] pretrain epoch 350/500 | val_loss 1.4040 | elapsed 28m10s, phase ETA 12m04s
+[time]     [rsnn s7_r4] pretrain epoch 400/500 | val_loss 1.4280 | elapsed 32m11s, phase ETA 8m03s
+[time]     [rsnn s7_r4] pretrain epoch 450/500 | val_loss 1.4269 | elapsed 36m12s, phase ETA 4m01s
+[time]     [rsnn s7_r4] finetune epoch 50/100 | val_loss 1.3772 | elapsed 37s, phase ETA 37s
+[rsnn] subject 7 repeat 4: acc=0.278 kappa=0.037
+[time] [rsnn] fold 4/29 done in 41m30s (pretrain 40m14s, finetune 1m15s) | avg 41m43s | rsnn elapsed 2h46m53s, ETA 17h23m00s | benchmark ETA 17h23m00s (excl. unknown: rnn)
+[time] [rsnn] fold 5/29 start (subject 7, repeat 5)
+[time]     [rsnn s7_r5] pretrain epoch 50/500 | val_loss 1.3924 | elapsed 4m02s, phase ETA 36m17s
+[time]     [rsnn s7_r5] pretrain epoch 100/500 | val_loss 1.3772 | elapsed 8m02s, phase ETA 32m09s
+[time]     [rsnn s7_r5] pretrain epoch 150/500 | val_loss 1.3441 | elapsed 12m04s, phase ETA 28m10s
+[time]     [rsnn s7_r5] pretrain epoch 200/500 | val_loss 1.3193 | elapsed 16m06s, phase ETA 24m09s
+[time]     [rsnn s7_r5] pretrain epoch 250/500 | val_loss 1.3308 | elapsed 20m06s, phase ETA 20m06s
+[time]     [rsnn s7_r5] pretrain epoch 300/500 | val_loss 1.3093 | elapsed 24m07s, phase ETA 16m05s
+[time]     [rsnn s7_r5] pretrain epoch 350/500 | val_loss 1.3169 | elapsed 28m09s, phase ETA 12m04s
+[time]     [rsnn s7_r5] pretrain epoch 400/500 | val_loss 1.3158 | elapsed 32m11s, phase ETA 8m03s
+[time]     [rsnn s7_r5] pretrain epoch 450/500 | val_loss 1.3289 | elapsed 36m12s, phase ETA 4m01s
+[time]     [rsnn s7_r5] finetune epoch 50/100 | val_loss 1.3615 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 5: acc=0.306 kappa=0.074
+[time] [rsnn] fold 5/29 done in 41m29s (pretrain 40m14s, finetune 1m15s) | avg 41m40s | rsnn elapsed 3h28m22s, ETA 16h40m09s | benchmark ETA 16h40m09s (excl. unknown: rnn)
+[time] [rsnn] fold 6/29 start (subject 7, repeat 6)
+[time]     [rsnn s7_r6] pretrain epoch 50/500 | val_loss 1.4555 | elapsed 4m02s, phase ETA 36m14s
+[time]     [rsnn s7_r6] pretrain epoch 100/500 | val_loss 1.4358 | elapsed 8m04s, phase ETA 32m17s
+[time]     [rsnn s7_r6] pretrain epoch 150/500 | val_loss 1.4851 | elapsed 12m06s, phase ETA 28m14s
+[time]     [rsnn s7_r6] pretrain epoch 200/500 | val_loss 1.4932 | elapsed 16m08s, phase ETA 24m12s
+[time]     [rsnn s7_r6] pretrain epoch 250/500 | val_loss 1.5245 | elapsed 20m11s, phase ETA 20m11s
+[time]     [rsnn s7_r6] pretrain epoch 300/500 | val_loss 1.5861 | elapsed 24m13s, phase ETA 16m09s
+[time]     [rsnn s7_r6] pretrain epoch 350/500 | val_loss 1.5634 | elapsed 28m16s, phase ETA 12m07s
+[time]     [rsnn s7_r6] pretrain epoch 400/500 | val_loss 1.5611 | elapsed 32m19s, phase ETA 8m05s
+[time]     [rsnn s7_r6] pretrain epoch 450/500 | val_loss 1.7047 | elapsed 36m21s, phase ETA 4m02s
+[time]     [rsnn s7_r6] finetune epoch 50/100 | val_loss 1.3834 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 6: acc=0.285 kappa=0.046
+[time] [rsnn] fold 6/29 done in 41m42s (pretrain 40m25s, finetune 1m16s) | avg 41m41s | rsnn elapsed 4h10m04s, ETA 15h58m34s | benchmark ETA 15h58m34s (excl. unknown: rnn)
+[time] [rsnn] fold 7/29 start (subject 7, repeat 7)
+[time]     [rsnn s7_r7] pretrain epoch 50/500 | val_loss 1.3619 | elapsed 4m06s, phase ETA 36m52s
+[time]     [rsnn s7_r7] pretrain epoch 100/500 | val_loss 1.3472 | elapsed 8m10s, phase ETA 32m40s
+[time]     [rsnn s7_r7] pretrain epoch 150/500 | val_loss 1.3458 | elapsed 12m11s, phase ETA 28m27s
+[time]     [rsnn s7_r7] pretrain epoch 200/500 | val_loss 1.3137 | elapsed 16m13s, phase ETA 24m20s
+[time]     [rsnn s7_r7] pretrain epoch 250/500 | val_loss 1.2877 | elapsed 20m15s, phase ETA 20m15s
+[time]     [rsnn s7_r7] pretrain epoch 300/500 | val_loss 1.2883 | elapsed 24m18s, phase ETA 16m12s
+[time]     [rsnn s7_r7] pretrain epoch 350/500 | val_loss 1.2945 | elapsed 28m18s, phase ETA 12m08s
+[time]     [rsnn s7_r7] pretrain epoch 400/500 | val_loss 1.2898 | elapsed 32m20s, phase ETA 8m05s
+[time]     [rsnn s7_r7] pretrain epoch 450/500 | val_loss 1.3245 | elapsed 36m23s, phase ETA 4m03s
+[time]     [rsnn s7_r7] finetune epoch 50/100 | val_loss 1.4247 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 7: acc=0.365 kappa=0.153
+[time] [rsnn] fold 7/29 done in 41m39s (pretrain 40m23s, finetune 1m15s) | avg 41m40s | rsnn elapsed 4h51m43s, ETA 15h16m49s | benchmark ETA 15h16m49s (excl. unknown: rnn)
+[time] [rsnn] fold 8/29 start (subject 7, repeat 8)
+[time]     [rsnn s7_r8] pretrain epoch 50/500 | val_loss 1.3925 | elapsed 4m02s, phase ETA 36m15s
+[time]     [rsnn s7_r8] pretrain epoch 100/500 | val_loss 1.3892 | elapsed 8m04s, phase ETA 32m16s
+[time]     [rsnn s7_r8] pretrain epoch 150/500 | val_loss 1.3874 | elapsed 12m06s, phase ETA 28m13s
+[time]     [rsnn s7_r8] pretrain epoch 200/500 | val_loss 1.3898 | elapsed 16m08s, phase ETA 24m12s
+[time]     [rsnn s7_r8] pretrain epoch 250/500 | val_loss 1.3904 | elapsed 20m10s, phase ETA 20m10s
+[time]     [rsnn s7_r8] pretrain epoch 300/500 | val_loss 1.3772 | elapsed 24m11s, phase ETA 16m07s
+[time]     [rsnn s7_r8] pretrain epoch 350/500 | val_loss 1.3949 | elapsed 28m12s, phase ETA 12m05s
+[time]     [rsnn s7_r8] pretrain epoch 400/500 | val_loss 1.4332 | elapsed 32m15s, phase ETA 8m04s
+[time]     [rsnn s7_r8] pretrain epoch 450/500 | val_loss 1.4783 | elapsed 36m17s, phase ETA 4m02s
+[time]     [rsnn s7_r8] finetune epoch 50/100 | val_loss 1.3684 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 8: acc=0.306 kappa=0.074
+[time] [rsnn] fold 8/29 done in 41m34s (pretrain 40m18s, finetune 1m15s) | avg 41m40s | rsnn elapsed 5h33m16s, ETA 14h34m50s | benchmark ETA 14h34m50s (excl. unknown: rnn)
+[time] [rsnn] fold 9/29 start (subject 7, repeat 9)
+[time]     [rsnn s7_r9] pretrain epoch 50/500 | val_loss 1.3987 | elapsed 4m01s, phase ETA 36m10s
+[time]     [rsnn s7_r9] pretrain epoch 100/500 | val_loss 1.4162 | elapsed 8m03s, phase ETA 32m12s
+[time]     [rsnn s7_r9] pretrain epoch 150/500 | val_loss 1.4000 | elapsed 12m04s, phase ETA 28m09s
+[time]     [rsnn s7_r9] pretrain epoch 200/500 | val_loss 1.4024 | elapsed 16m05s, phase ETA 24m07s
+[time]     [rsnn s7_r9] pretrain epoch 250/500 | val_loss 1.3971 | elapsed 20m06s, phase ETA 20m06s
+[time]     [rsnn s7_r9] pretrain epoch 300/500 | val_loss 1.4516 | elapsed 24m07s, phase ETA 16m05s
+[time]     [rsnn s7_r9] pretrain epoch 350/500 | val_loss 1.4122 | elapsed 28m08s, phase ETA 12m03s
+[time]     [rsnn s7_r9] pretrain epoch 400/500 | val_loss 1.4020 | elapsed 32m09s, phase ETA 8m02s
+[time]     [rsnn s7_r9] pretrain epoch 450/500 | val_loss 1.4555 | elapsed 36m13s, phase ETA 4m01s
+[time]     [rsnn s7_r9] finetune epoch 50/100 | val_loss 1.3684 | elapsed 38s, phase ETA 38s
+[rsnn] subject 7 repeat 9: acc=0.323 kappa=0.097
+[time] [rsnn] fold 9/29 done in 41m32s (pretrain 40m16s, finetune 1m16s) | avg 41m39s | rsnn elapsed 6h14m48s, ETA 13h52m53s | benchmark ETA 13h52m53s (excl. unknown: rnn)
+[time] [rsnn] SUBJECT 7 finished: 9 folds in 6h14m48s (41m39s/fold) | subjects done 1/3
+[time] [rsnn] fold 10/29 start (subject 8, repeat 0)
+[time]     [rsnn s8_r0] pretrain epoch 50/500 | val_loss 1.4001 | elapsed 4m02s, phase ETA 36m20s
+[time]     [rsnn s8_r0] pretrain epoch 100/500 | val_loss 1.4304 | elapsed 8m06s, phase ETA 32m25s
+[time]     [rsnn s8_r0] pretrain epoch 150/500 | val_loss 1.4269 | elapsed 12m11s, phase ETA 28m27s
+[time]     [rsnn s8_r0] pretrain epoch 200/500 | val_loss 1.4297 | elapsed 16m16s, phase ETA 24m25s
+[time]     [rsnn s8_r0] pretrain epoch 250/500 | val_loss 1.4642 | elapsed 20m21s, phase ETA 20m21s
+[time]     [rsnn s8_r0] pretrain epoch 300/500 | val_loss 1.4799 | elapsed 24m24s, phase ETA 16m16s
+[time]     [rsnn s8_r0] pretrain epoch 350/500 | val_loss 1.5323 | elapsed 28m27s, phase ETA 12m11s
+[time]     [rsnn s8_r0] pretrain epoch 400/500 | val_loss 1.5054 | elapsed 32m29s, phase ETA 8m07s
+[time]     [rsnn s8_r0] pretrain epoch 450/500 | val_loss 1.5299 | elapsed 36m32s, phase ETA 4m04s
+[time]     [rsnn s8_r0] finetune epoch 50/100 | val_loss 1.2782 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 0: acc=0.406 kappa=0.208
+[time] [rsnn] fold 10/29 done in 41m50s (pretrain 40m34s, finetune 1m15s) | avg 41m40s | rsnn elapsed 6h56m38s, ETA 13h11m36s | benchmark ETA 13h11m36s (excl. unknown: rnn)
+[time] [rsnn] fold 11/29 start (subject 8, repeat 1)
+[time]     [rsnn s8_r1] pretrain epoch 50/500 | val_loss 1.4884 | elapsed 4m03s, phase ETA 36m26s
+[time]     [rsnn s8_r1] pretrain epoch 100/500 | val_loss 1.6874 | elapsed 8m05s, phase ETA 32m20s
+[time]     [rsnn s8_r1] pretrain epoch 150/500 | val_loss 1.9335 | elapsed 12m08s, phase ETA 28m18s
+[time]     [rsnn s8_r1] pretrain epoch 200/500 | val_loss 2.0896 | elapsed 16m11s, phase ETA 24m16s
+[time]     [rsnn s8_r1] pretrain epoch 250/500 | val_loss 1.9232 | elapsed 20m13s, phase ETA 20m13s
+[time]     [rsnn s8_r1] pretrain epoch 300/500 | val_loss 2.0876 | elapsed 24m16s, phase ETA 16m11s
+[time]     [rsnn s8_r1] pretrain epoch 350/500 | val_loss 2.2194 | elapsed 28m19s, phase ETA 12m08s
+[time]     [rsnn s8_r1] pretrain epoch 400/500 | val_loss 2.3111 | elapsed 32m20s, phase ETA 8m05s
+[time]     [rsnn s8_r1] pretrain epoch 450/500 | val_loss 2.4053 | elapsed 36m22s, phase ETA 4m02s
+[time]     [rsnn s8_r1] finetune epoch 50/100 | val_loss 1.3441 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 1: acc=0.417 kappa=0.222
+[time] [rsnn] fold 11/29 done in 41m39s (pretrain 40m24s, finetune 1m15s) | avg 41m40s | rsnn elapsed 7h38m17s, ETA 12h29m56s | benchmark ETA 12h29m56s (excl. unknown: rnn)
+[time] [rsnn] fold 12/29 start (subject 8, repeat 2)
+[time]     [rsnn s8_r2] pretrain epoch 50/500 | val_loss 1.3809 | elapsed 4m03s, phase ETA 36m23s
+[time]     [rsnn s8_r2] pretrain epoch 100/500 | val_loss 1.3891 | elapsed 8m06s, phase ETA 32m24s
+[time]     [rsnn s8_r2] pretrain epoch 150/500 | val_loss 1.4104 | elapsed 12m08s, phase ETA 28m19s
+[time]     [rsnn s8_r2] pretrain epoch 200/500 | val_loss 1.4136 | elapsed 16m10s, phase ETA 24m15s
+[time]     [rsnn s8_r2] pretrain epoch 250/500 | val_loss 1.4432 | elapsed 20m13s, phase ETA 20m13s
+[time]     [rsnn s8_r2] pretrain epoch 300/500 | val_loss 1.4542 | elapsed 24m15s, phase ETA 16m10s
+[time]     [rsnn s8_r2] pretrain epoch 350/500 | val_loss 1.4621 | elapsed 28m16s, phase ETA 12m07s
+[time]     [rsnn s8_r2] pretrain epoch 400/500 | val_loss 1.4337 | elapsed 32m17s, phase ETA 8m04s
+[time]     [rsnn s8_r2] pretrain epoch 450/500 | val_loss 1.4698 | elapsed 36m18s, phase ETA 4m02s
+[time]     [rsnn s8_r2] finetune epoch 50/100 | val_loss 1.1886 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 2: acc=0.528 kappa=0.370
+[time] [rsnn] fold 12/29 done in 41m36s (pretrain 40m20s, finetune 1m15s) | avg 41m39s | rsnn elapsed 8h19m53s, ETA 11h48m10s | benchmark ETA 11h48m10s (excl. unknown: rnn)
+[time] [rsnn] fold 13/29 start (subject 8, repeat 3)
+[time]     [rsnn s8_r3] pretrain epoch 50/500 | val_loss 1.3855 | elapsed 4m02s, phase ETA 36m14s
+[time]     [rsnn s8_r3] pretrain epoch 100/500 | val_loss 1.4074 | elapsed 8m03s, phase ETA 32m13s
+[time]     [rsnn s8_r3] pretrain epoch 150/500 | val_loss 1.3919 | elapsed 12m06s, phase ETA 28m13s
+[time]     [rsnn s8_r3] pretrain epoch 200/500 | val_loss 1.4209 | elapsed 16m07s, phase ETA 24m11s
+[time]     [rsnn s8_r3] pretrain epoch 250/500 | val_loss 1.4384 | elapsed 20m09s, phase ETA 20m09s
+[time]     [rsnn s8_r3] pretrain epoch 300/500 | val_loss 1.4186 | elapsed 24m12s, phase ETA 16m08s
+[time]     [rsnn s8_r3] pretrain epoch 350/500 | val_loss 1.4105 | elapsed 28m15s, phase ETA 12m06s
+[time]     [rsnn s8_r3] pretrain epoch 400/500 | val_loss 1.3918 | elapsed 32m18s, phase ETA 8m04s
+[time]     [rsnn s8_r3] pretrain epoch 450/500 | val_loss 1.4223 | elapsed 36m19s, phase ETA 4m02s
+[time]     [rsnn s8_r3] finetune epoch 50/100 | val_loss 0.9827 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 3: acc=0.601 kappa=0.468
+[time] [rsnn] fold 13/29 done in 41m39s (pretrain 40m23s, finetune 1m16s) | avg 41m39s | rsnn elapsed 9h01m33s, ETA 11h06m31s | benchmark ETA 11h06m31s (excl. unknown: rnn)
+[time] [rsnn] fold 14/29 start (subject 8, repeat 4)
+[time]     [rsnn s8_r4] pretrain epoch 50/500 | val_loss 1.3810 | elapsed 4m02s, phase ETA 36m21s
+[time]     [rsnn s8_r4] pretrain epoch 100/500 | val_loss 1.3765 | elapsed 8m05s, phase ETA 32m18s
+[time]     [rsnn s8_r4] pretrain epoch 150/500 | val_loss 1.3871 | elapsed 12m08s, phase ETA 28m20s
+[time]     [rsnn s8_r4] pretrain epoch 200/500 | val_loss 1.3662 | elapsed 16m11s, phase ETA 24m17s
+[time]     [rsnn s8_r4] pretrain epoch 250/500 | val_loss 1.3858 | elapsed 20m13s, phase ETA 20m13s
+[time]     [rsnn s8_r4] pretrain epoch 300/500 | val_loss 1.3717 | elapsed 24m15s, phase ETA 16m10s
+[time]     [rsnn s8_r4] pretrain epoch 350/500 | val_loss 1.3670 | elapsed 28m18s, phase ETA 12m08s
+[time]     [rsnn s8_r4] pretrain epoch 400/500 | val_loss 1.3725 | elapsed 32m19s, phase ETA 8m05s
+[time]     [rsnn s8_r4] pretrain epoch 450/500 | val_loss 1.3705 | elapsed 36m21s, phase ETA 4m02s
+[time]     [rsnn s8_r4] finetune epoch 50/100 | val_loss 1.2253 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 4: acc=0.389 kappa=0.185
+[time] [rsnn] fold 14/29 done in 41m38s (pretrain 40m22s, finetune 1m15s) | avg 41m39s | rsnn elapsed 9h43m11s, ETA 10h24m50s | benchmark ETA 10h24m50s (excl. unknown: rnn)
+[time] [rsnn] fold 15/29 start (subject 8, repeat 5)
+[time]     [rsnn s8_r5] pretrain epoch 50/500 | val_loss 1.3869 | elapsed 4m01s, phase ETA 36m09s
+[time]     [rsnn s8_r5] pretrain epoch 100/500 | val_loss 1.3887 | elapsed 8m02s, phase ETA 32m10s
+[time]     [rsnn s8_r5] pretrain epoch 150/500 | val_loss 1.4007 | elapsed 12m04s, phase ETA 28m10s
+[time]     [rsnn s8_r5] pretrain epoch 200/500 | val_loss 1.4136 | elapsed 16m05s, phase ETA 24m07s
+[time]     [rsnn s8_r5] pretrain epoch 250/500 | val_loss 1.4376 | elapsed 20m06s, phase ETA 20m06s
+[time]     [rsnn s8_r5] pretrain epoch 300/500 | val_loss 1.4247 | elapsed 24m09s, phase ETA 16m06s
+[time]     [rsnn s8_r5] pretrain epoch 350/500 | val_loss 1.4859 | elapsed 28m12s, phase ETA 12m05s
+[time]     [rsnn s8_r5] pretrain epoch 400/500 | val_loss 1.4271 | elapsed 32m12s, phase ETA 8m03s
+[time]     [rsnn s8_r5] pretrain epoch 450/500 | val_loss 1.4419 | elapsed 36m13s, phase ETA 4m01s
+[time]     [rsnn s8_r5] finetune epoch 50/100 | val_loss 1.3029 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 5: acc=0.448 kappa=0.264
+[time] [rsnn] fold 15/29 done in 41m30s (pretrain 40m14s, finetune 1m15s) | avg 41m39s | rsnn elapsed 10h24m40s, ETA 9h43m02s | benchmark ETA 9h43m02s (excl. unknown: rnn)
+[time] [rsnn] fold 16/29 start (subject 8, repeat 6)
+[time]     [rsnn s8_r6] pretrain epoch 50/500 | val_loss 1.3873 | elapsed 4m01s, phase ETA 36m08s
+[time]     [rsnn s8_r6] pretrain epoch 100/500 | val_loss 1.3921 | elapsed 8m02s, phase ETA 32m07s
+[time]     [rsnn s8_r6] pretrain epoch 150/500 | val_loss 1.3928 | elapsed 12m04s, phase ETA 28m09s
+[time]     [rsnn s8_r6] pretrain epoch 200/500 | val_loss 1.3791 | elapsed 16m06s, phase ETA 24m09s
+[time]     [rsnn s8_r6] pretrain epoch 250/500 | val_loss 1.3910 | elapsed 20m10s, phase ETA 20m10s
+[time]     [rsnn s8_r6] pretrain epoch 300/500 | val_loss 1.3753 | elapsed 24m17s, phase ETA 16m11s
+[time]     [rsnn s8_r6] pretrain epoch 350/500 | val_loss 1.3828 | elapsed 28m25s, phase ETA 12m11s
+[time]     [rsnn s8_r6] pretrain epoch 400/500 | val_loss 1.3709 | elapsed 32m34s, phase ETA 8m08s
+[time]     [rsnn s8_r6] pretrain epoch 450/500 | val_loss 1.3853 | elapsed 36m40s, phase ETA 4m04s
+[time]     [rsnn s8_r6] finetune epoch 50/100 | val_loss 1.1720 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 6: acc=0.569 kappa=0.426
+[time] [rsnn] fold 16/29 done in 42m04s (pretrain 40m48s, finetune 1m16s) | avg 41m40s | rsnn elapsed 11h06m44s, ETA 9h01m44s | benchmark ETA 9h01m44s (excl. unknown: rnn)
+[time] [rsnn] fold 17/29 start (subject 8, repeat 7)
+[time]     [rsnn s8_r7] pretrain epoch 50/500 | val_loss 1.3877 | elapsed 4m02s, phase ETA 36m22s
+[time]     [rsnn s8_r7] pretrain epoch 100/500 | val_loss 1.3824 | elapsed 8m06s, phase ETA 32m25s
+[time]     [rsnn s8_r7] pretrain epoch 150/500 | val_loss 1.4273 | elapsed 12m11s, phase ETA 28m27s
+[time]     [rsnn s8_r7] pretrain epoch 200/500 | val_loss 1.4175 | elapsed 16m19s, phase ETA 24m29s
+[time]     [rsnn s8_r7] pretrain epoch 250/500 | val_loss 1.4184 | elapsed 20m28s, phase ETA 20m28s
+[time]     [rsnn s8_r7] pretrain epoch 300/500 | val_loss 1.3980 | elapsed 24m33s, phase ETA 16m22s
+[time]     [rsnn s8_r7] pretrain epoch 350/500 | val_loss 1.4430 | elapsed 28m42s, phase ETA 12m18s
+[time]     [rsnn s8_r7] pretrain epoch 400/500 | val_loss 1.4060 | elapsed 32m44s, phase ETA 8m11s
+[time]     [rsnn s8_r7] pretrain epoch 450/500 | val_loss 1.4514 | elapsed 36m46s, phase ETA 4m05s
+[time]     [rsnn s8_r7] finetune epoch 50/100 | val_loss 1.2096 | elapsed 38s, phase ETA 38s
+[rsnn] subject 8 repeat 7: acc=0.455 kappa=0.273
+[time] [rsnn] fold 17/29 done in 42m09s (pretrain 40m51s, finetune 1m16s) | avg 41m42s | rsnn elapsed 11h48m53s, ETA 8h20m23s | benchmark ETA 8h20m23s (excl. unknown: rnn)
+[time] [rsnn] fold 18/29 start (subject 8, repeat 8)
+[time]     [rsnn s8_r8] pretrain epoch 50/500 | val_loss 1.3949 | elapsed 4m06s, phase ETA 36m55s
+[time]     [rsnn s8_r8] pretrain epoch 100/500 | val_loss 1.4101 | elapsed 8m14s, phase ETA 32m56s
+[time]     [rsnn s8_r8] pretrain epoch 150/500 | val_loss 1.4692 | elapsed 12m20s, phase ETA 28m46s
+[time]     [rsnn s8_r8] pretrain epoch 200/500 | val_loss 1.4343 | elapsed 16m31s, phase ETA 24m46s
+[time]     [rsnn s8_r8] pretrain epoch 250/500 | val_loss 1.4238 | elapsed 20m43s, phase ETA 20m43s
+[time]     [rsnn s8_r8] pretrain epoch 300/500 | val_loss 1.4256 | elapsed 24m53s, phase ETA 16m35s
+[time]     [rsnn s8_r8] pretrain epoch 350/500 | val_loss 1.4354 | elapsed 28m55s, phase ETA 12m24s
+[time]     [rsnn s8_r8] pretrain epoch 400/500 | val_loss 1.4679 | elapsed 32m57s, phase ETA 8m14s
+[time]     [rsnn s8_r8] pretrain epoch 450/500 | val_loss 1.4572 | elapsed 37m01s, phase ETA 4m07s
+[time]     [rsnn s8_r8] finetune epoch 50/100 | val_loss 1.2628 | elapsed 39s, phase ETA 39s
+[rsnn] subject 8 repeat 8: acc=0.420 kappa=0.227
+[time] [rsnn] fold 18/29 done in 42m25s (pretrain 41m07s, finetune 1m17s) | avg 41m44s | rsnn elapsed 12h31m18s, ETA 7h39m08s | benchmark ETA 7h39m08s (excl. unknown: rnn)
+[time] [rsnn] fold 19/29 start (subject 8, repeat 9)
+[time]     [rsnn s8_r9] pretrain epoch 50/500 | val_loss 1.3860 | elapsed 4m09s, phase ETA 37m18s
+[time]     [rsnn s8_r9] pretrain epoch 100/500 | val_loss 1.3866 | elapsed 8m16s, phase ETA 33m04s
+[time]     [rsnn s8_r9] pretrain epoch 150/500 | val_loss 1.3984 | elapsed 12m27s, phase ETA 29m03s
+[time]     [rsnn s8_r9] pretrain epoch 200/500 | val_loss 1.3921 | elapsed 16m41s, phase ETA 25m01s
+[time]     [rsnn s8_r9] pretrain epoch 250/500 | val_loss 1.4147 | elapsed 20m55s, phase ETA 20m55s
+[time]     [rsnn s8_r9] pretrain epoch 300/500 | val_loss 1.4142 | elapsed 24m58s, phase ETA 16m39s
+[time]     [rsnn s8_r9] pretrain epoch 350/500 | val_loss 1.4178 | elapsed 29m02s, phase ETA 12m26s
+[time]     [rsnn s8_r9] pretrain epoch 400/500 | val_loss 1.4108 | elapsed 33m07s, phase ETA 8m17s
+[time]     [rsnn s8_r9] pretrain epoch 450/500 | val_loss 1.4152 | elapsed 37m15s, phase ETA 4m08s
+[time]     [rsnn s8_r9] finetune epoch 50/100 | val_loss 1.2156 | elapsed 39s, phase ETA 39s
+[rsnn] subject 8 repeat 9: acc=0.535 kappa=0.380
+[time] [rsnn] fold 19/29 done in 42m43s (pretrain 41m24s, finetune 1m18s) | avg 41m47s | rsnn elapsed 13h14m01s, ETA 6h57m54s | benchmark ETA 6h57m54s (excl. unknown: rnn)
+[time] [rsnn] SUBJECT 8 finished: 10 folds in 6h59m13s (41m55s/fold) | subjects done 2/3
+[time] [rsnn] fold 20/29 start (subject 9, repeat 0)
+[time]     [rsnn s9_r0] pretrain epoch 50/500 | val_loss 1.4413 | elapsed 4m09s, phase ETA 37m17s
+[time]     [rsnn s9_r0] pretrain epoch 100/500 | val_loss 1.4167 | elapsed 8m20s, phase ETA 33m18s
+[time]     [rsnn s9_r0] pretrain epoch 150/500 | val_loss 1.4431 | elapsed 12m33s, phase ETA 29m18s
+[time]     [rsnn s9_r0] pretrain epoch 200/500 | val_loss 1.4921 | elapsed 16m47s, phase ETA 25m11s
+[time]     [rsnn s9_r0] pretrain epoch 250/500 | val_loss 1.5565 | elapsed 20m51s, phase ETA 20m51s
+[time]     [rsnn s9_r0] pretrain epoch 300/500 | val_loss 1.5106 | elapsed 24m54s, phase ETA 16m36s
+[time]     [rsnn s9_r0] pretrain epoch 350/500 | val_loss 1.5144 | elapsed 28m59s, phase ETA 12m25s
+[time]     [rsnn s9_r0] pretrain epoch 400/500 | val_loss 1.5965 | elapsed 33m05s, phase ETA 8m16s
+[time]     [rsnn s9_r0] pretrain epoch 450/500 | val_loss 1.5892 | elapsed 37m14s, phase ETA 4m08s
+[time]     [rsnn s9_r0] finetune epoch 50/100 | val_loss 1.2741 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 0: acc=0.490 kappa=0.319
+[time] [rsnn] fold 20/29 done in 42m38s (pretrain 41m22s, finetune 1m16s) | avg 41m50s | rsnn elapsed 13h56m39s, ETA 6h16m30s | benchmark ETA 6h16m30s (excl. unknown: rnn)
+[time] [rsnn] fold 21/29 start (subject 9, repeat 1)
+[time]     [rsnn s9_r1] pretrain epoch 50/500 | val_loss 1.4041 | elapsed 4m10s, phase ETA 37m26s
+[time]     [rsnn s9_r1] pretrain epoch 100/500 | val_loss 1.4529 | elapsed 8m22s, phase ETA 33m28s
+[time]     [rsnn s9_r1] pretrain epoch 150/500 | val_loss 1.4638 | elapsed 12m34s, phase ETA 29m20s
+[time]     [rsnn s9_r1] pretrain epoch 200/500 | val_loss 1.5677 | elapsed 16m36s, phase ETA 24m55s
+[time]     [rsnn s9_r1] pretrain epoch 250/500 | val_loss 1.5864 | elapsed 20m39s, phase ETA 20m39s
+[time]     [rsnn s9_r1] pretrain epoch 300/500 | val_loss 1.5912 | elapsed 24m41s, phase ETA 16m27s
+[time]     [rsnn s9_r1] pretrain epoch 350/500 | val_loss 1.6698 | elapsed 28m43s, phase ETA 12m18s
+[time]     [rsnn s9_r1] pretrain epoch 400/500 | val_loss 1.6738 | elapsed 32m45s, phase ETA 8m11s
+[time]     [rsnn s9_r1] pretrain epoch 450/500 | val_loss 1.6320 | elapsed 36m49s, phase ETA 4m05s
+[time]     [rsnn s9_r1] finetune epoch 50/100 | val_loss 1.2875 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 1: acc=0.420 kappa=0.227
+[time] [rsnn] fold 21/29 done in 42m09s (pretrain 40m53s, finetune 1m16s) | avg 41m51s | rsnn elapsed 14h38m48s, ETA 5h34m47s | benchmark ETA 5h34m47s (excl. unknown: rnn)
+[time] [rsnn] fold 22/29 start (subject 9, repeat 2)
+[time]     [rsnn s9_r2] pretrain epoch 50/500 | val_loss 1.3840 | elapsed 4m04s, phase ETA 36m33s
+[time]     [rsnn s9_r2] pretrain epoch 100/500 | val_loss 1.4084 | elapsed 8m07s, phase ETA 32m28s
+[time]     [rsnn s9_r2] pretrain epoch 150/500 | val_loss 1.4245 | elapsed 12m11s, phase ETA 28m25s
+[time]     [rsnn s9_r2] pretrain epoch 200/500 | val_loss 1.4414 | elapsed 16m14s, phase ETA 24m21s
+[time]     [rsnn s9_r2] pretrain epoch 250/500 | val_loss 1.4435 | elapsed 20m17s, phase ETA 20m17s
+[time]     [rsnn s9_r2] pretrain epoch 300/500 | val_loss 1.4551 | elapsed 24m20s, phase ETA 16m13s
+[time]     [rsnn s9_r2] pretrain epoch 350/500 | val_loss 1.4116 | elapsed 28m23s, phase ETA 12m10s
+[time]     [rsnn s9_r2] pretrain epoch 400/500 | val_loss 1.5101 | elapsed 32m26s, phase ETA 8m06s
+[time]     [rsnn s9_r2] pretrain epoch 450/500 | val_loss 1.4931 | elapsed 36m29s, phase ETA 4m03s
+[time]     [rsnn s9_r2] finetune epoch 50/100 | val_loss 1.2321 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 2: acc=0.490 kappa=0.319
+[time] [rsnn] fold 22/29 done in 41m48s (pretrain 40m32s, finetune 1m16s) | avg 41m51s | rsnn elapsed 15h20m37s, ETA 4h52m55s | benchmark ETA 4h52m55s (excl. unknown: rnn)
+[time] [rsnn] fold 23/29 start (subject 9, repeat 3)
+[time]     [rsnn s9_r3] pretrain epoch 50/500 | val_loss 1.3870 | elapsed 4m03s, phase ETA 36m27s
+[time]     [rsnn s9_r3] pretrain epoch 100/500 | val_loss 1.4024 | elapsed 8m06s, phase ETA 32m25s
+[time]     [rsnn s9_r3] pretrain epoch 150/500 | val_loss 1.4323 | elapsed 12m09s, phase ETA 28m22s
+[time]     [rsnn s9_r3] pretrain epoch 200/500 | val_loss 1.4403 | elapsed 16m13s, phase ETA 24m19s
+[time]     [rsnn s9_r3] pretrain epoch 250/500 | val_loss 1.4250 | elapsed 20m17s, phase ETA 20m17s
+[time]     [rsnn s9_r3] pretrain epoch 300/500 | val_loss 1.4132 | elapsed 24m21s, phase ETA 16m14s
+[time]     [rsnn s9_r3] pretrain epoch 350/500 | val_loss 1.4159 | elapsed 28m26s, phase ETA 12m11s
+[time]     [rsnn s9_r3] pretrain epoch 400/500 | val_loss 1.4247 | elapsed 32m30s, phase ETA 8m08s
+[time]     [rsnn s9_r3] pretrain epoch 450/500 | val_loss 1.4216 | elapsed 36m34s, phase ETA 4m04s
+[time]     [rsnn s9_r3] finetune epoch 50/100 | val_loss 1.2079 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 3: acc=0.465 kappa=0.287
+[time] [rsnn] fold 23/29 done in 41m55s (pretrain 40m39s, finetune 1m16s) | avg 41m51s | rsnn elapsed 16h02m32s, ETA 4h11m06s | benchmark ETA 4h11m06s (excl. unknown: rnn)
+[time] [rsnn] fold 24/29 start (subject 9, repeat 4)
+[time]     [rsnn s9_r4] pretrain epoch 50/500 | val_loss 1.3734 | elapsed 4m05s, phase ETA 36m42s
+[time]     [rsnn s9_r4] pretrain epoch 100/500 | val_loss 1.3717 | elapsed 8m09s, phase ETA 32m38s
+[time]     [rsnn s9_r4] pretrain epoch 150/500 | val_loss 1.3976 | elapsed 12m14s, phase ETA 28m32s
+[time]     [rsnn s9_r4] pretrain epoch 200/500 | val_loss 1.3856 | elapsed 16m18s, phase ETA 24m28s
+[time]     [rsnn s9_r4] pretrain epoch 250/500 | val_loss 1.4160 | elapsed 20m22s, phase ETA 20m22s
+[time]     [rsnn s9_r4] pretrain epoch 300/500 | val_loss 1.3877 | elapsed 24m26s, phase ETA 16m17s
+[time]     [rsnn s9_r4] pretrain epoch 350/500 | val_loss 1.3892 | elapsed 28m29s, phase ETA 12m12s
+[time]     [rsnn s9_r4] pretrain epoch 400/500 | val_loss 1.4290 | elapsed 32m32s, phase ETA 8m08s
+[time]     [rsnn s9_r4] pretrain epoch 450/500 | val_loss 1.4399 | elapsed 36m36s, phase ETA 4m04s
+[time]     [rsnn s9_r4] finetune epoch 50/100 | val_loss 1.0830 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 4: acc=0.479 kappa=0.306
+[time] [rsnn] fold 24/29 done in 41m56s (pretrain 40m39s, finetune 1m16s) | avg 41m51s | rsnn elapsed 16h44m28s, ETA 3h29m16s | benchmark ETA 3h29m16s (excl. unknown: rnn)
+[time] [rsnn] fold 25/29 start (subject 9, repeat 5)
+[time]     [rsnn s9_r5] pretrain epoch 50/500 | val_loss 1.4425 | elapsed 4m04s, phase ETA 36m32s
+[time]     [rsnn s9_r5] pretrain epoch 100/500 | val_loss 1.4484 | elapsed 8m06s, phase ETA 32m25s
+[time]     [rsnn s9_r5] pretrain epoch 150/500 | val_loss 1.4893 | elapsed 12m09s, phase ETA 28m21s
+[time]     [rsnn s9_r5] pretrain epoch 200/500 | val_loss 1.5214 | elapsed 16m12s, phase ETA 24m18s
+[time]     [rsnn s9_r5] pretrain epoch 250/500 | val_loss 1.5641 | elapsed 20m15s, phase ETA 20m15s
+[time]     [rsnn s9_r5] pretrain epoch 300/500 | val_loss 1.6329 | elapsed 24m16s, phase ETA 16m11s
+[time]     [rsnn s9_r5] pretrain epoch 350/500 | val_loss 1.5965 | elapsed 28m18s, phase ETA 12m08s
+[time]     [rsnn s9_r5] pretrain epoch 400/500 | val_loss 1.5384 | elapsed 32m20s, phase ETA 8m05s
+[time]     [rsnn s9_r5] pretrain epoch 450/500 | val_loss 1.7011 | elapsed 36m22s, phase ETA 4m02s
+[time]     [rsnn s9_r5] finetune epoch 50/100 | val_loss 1.1518 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 5: acc=0.476 kappa=0.301
+[time] [rsnn] fold 25/29 done in 41m40s (pretrain 40m24s, finetune 1m15s) | avg 41m51s | rsnn elapsed 17h26m08s, ETA 2h47m23s | benchmark ETA 2h47m23s (excl. unknown: rnn)
+[time] [rsnn] fold 26/29 start (subject 9, repeat 6)
+[time]     [rsnn s9_r6] pretrain epoch 50/500 | val_loss 1.4092 | elapsed 4m02s, phase ETA 36m18s
+[time]     [rsnn s9_r6] pretrain epoch 100/500 | val_loss 1.4450 | elapsed 8m04s, phase ETA 32m16s
+[time]     [rsnn s9_r6] pretrain epoch 150/500 | val_loss 1.4697 | elapsed 12m06s, phase ETA 28m14s
+[time]     [rsnn s9_r6] pretrain epoch 200/500 | val_loss 1.4228 | elapsed 16m08s, phase ETA 24m13s
+[time]     [rsnn s9_r6] pretrain epoch 250/500 | val_loss 1.4514 | elapsed 20m10s, phase ETA 20m10s
+[time]     [rsnn s9_r6] pretrain epoch 300/500 | val_loss 1.4900 | elapsed 24m12s, phase ETA 16m08s
+[time]     [rsnn s9_r6] pretrain epoch 350/500 | val_loss 1.4567 | elapsed 28m15s, phase ETA 12m06s
+[time]     [rsnn s9_r6] pretrain epoch 400/500 | val_loss 1.4895 | elapsed 32m18s, phase ETA 8m04s
+[time]     [rsnn s9_r6] pretrain epoch 450/500 | val_loss 1.5088 | elapsed 36m21s, phase ETA 4m02s
+[time]     [rsnn s9_r6] finetune epoch 50/100 | val_loss 1.1693 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 6: acc=0.434 kappa=0.245
+[time] [rsnn] fold 26/29 done in 41m41s (pretrain 40m24s, finetune 1m16s) | avg 41m50s | rsnn elapsed 18h07m49s, ETA 2h05m31s | benchmark ETA 2h05m31s (excl. unknown: rnn)
+[time] [rsnn] fold 27/29 start (subject 9, repeat 7)
+[time]     [rsnn s9_r7] pretrain epoch 50/500 | val_loss 1.3869 | elapsed 4m03s, phase ETA 36m29s
+[time]     [rsnn s9_r7] pretrain epoch 100/500 | val_loss 1.4129 | elapsed 8m07s, phase ETA 32m28s
+[time]     [rsnn s9_r7] pretrain epoch 150/500 | val_loss 1.3984 | elapsed 12m11s, phase ETA 28m26s
+[time]     [rsnn s9_r7] pretrain epoch 200/500 | val_loss 1.4214 | elapsed 16m15s, phase ETA 24m22s
+[time]     [rsnn s9_r7] pretrain epoch 250/500 | val_loss 1.5253 | elapsed 20m19s, phase ETA 20m19s
+[time]     [rsnn s9_r7] pretrain epoch 300/500 | val_loss 1.4793 | elapsed 24m23s, phase ETA 16m16s
+[time]     [rsnn s9_r7] pretrain epoch 350/500 | val_loss 1.4683 | elapsed 28m28s, phase ETA 12m12s
+[time]     [rsnn s9_r7] pretrain epoch 400/500 | val_loss 1.4502 | elapsed 32m32s, phase ETA 8m08s
+[time]     [rsnn s9_r7] pretrain epoch 450/500 | val_loss 1.5007 | elapsed 36m36s, phase ETA 4m04s
+[time]     [rsnn s9_r7] finetune epoch 50/100 | val_loss 1.2015 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 7: acc=0.406 kappa=0.208
+[time] [rsnn] fold 27/29 done in 41m57s (pretrain 40m40s, finetune 1m16s) | avg 41m51s | rsnn elapsed 18h49m46s, ETA 1h23m41s | benchmark ETA 1h23m41s (excl. unknown: rnn)
+[time] [rsnn] fold 28/29 start (subject 9, repeat 8)
+[time]     [rsnn s9_r8] pretrain epoch 50/500 | val_loss 1.3645 | elapsed 4m04s, phase ETA 36m36s
+[time]     [rsnn s9_r8] pretrain epoch 100/500 | val_loss 1.3621 | elapsed 8m08s, phase ETA 32m32s
+[time]     [rsnn s9_r8] pretrain epoch 150/500 | val_loss 1.3584 | elapsed 12m11s, phase ETA 28m25s
+[time]     [rsnn s9_r8] pretrain epoch 200/500 | val_loss 1.3624 | elapsed 16m13s, phase ETA 24m19s
+[time]     [rsnn s9_r8] pretrain epoch 250/500 | val_loss 1.3856 | elapsed 20m16s, phase ETA 20m16s
+[time]     [rsnn s9_r8] pretrain epoch 300/500 | val_loss 1.3627 | elapsed 24m18s, phase ETA 16m12s
+[time]     [rsnn s9_r8] pretrain epoch 350/500 | val_loss 1.3720 | elapsed 28m21s, phase ETA 12m09s
+[time]     [rsnn s9_r8] pretrain epoch 400/500 | val_loss 1.3751 | elapsed 32m24s, phase ETA 8m06s
+[time]     [rsnn s9_r8] pretrain epoch 450/500 | val_loss 1.3916 | elapsed 36m26s, phase ETA 4m03s
+[time]     [rsnn s9_r8] finetune epoch 50/100 | val_loss 1.1910 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 8: acc=0.469 kappa=0.292
+[time] [rsnn] fold 28/29 done in 41m46s (pretrain 40m29s, finetune 1m16s) | avg 41m50s | rsnn elapsed 19h31m31s, ETA 41m50s | benchmark ETA 41m50s (excl. unknown: rnn)
+[time] [rsnn] fold 29/29 start (subject 9, repeat 9)
+[time]     [rsnn s9_r9] pretrain epoch 50/500 | val_loss 1.4156 | elapsed 4m03s, phase ETA 36m28s
+[time]     [rsnn s9_r9] pretrain epoch 100/500 | val_loss 1.4431 | elapsed 8m06s, phase ETA 32m24s
+[time]     [rsnn s9_r9] pretrain epoch 150/500 | val_loss 1.4864 | elapsed 12m09s, phase ETA 28m21s
+[time]     [rsnn s9_r9] pretrain epoch 200/500 | val_loss 1.5983 | elapsed 16m12s, phase ETA 24m18s
+[time]     [rsnn s9_r9] pretrain epoch 250/500 | val_loss 1.6502 | elapsed 20m15s, phase ETA 20m15s
+[time]     [rsnn s9_r9] pretrain epoch 300/500 | val_loss 1.7856 | elapsed 24m18s, phase ETA 16m12s
+[time]     [rsnn s9_r9] pretrain epoch 350/500 | val_loss 1.6385 | elapsed 28m22s, phase ETA 12m09s
+[time]     [rsnn s9_r9] pretrain epoch 400/500 | val_loss 1.5991 | elapsed 32m25s, phase ETA 8m06s
+[time]     [rsnn s9_r9] pretrain epoch 450/500 | val_loss 1.6577 | elapsed 36m28s, phase ETA 4m03s
+[time]     [rsnn s9_r9] finetune epoch 50/100 | val_loss 1.2203 | elapsed 38s, phase ETA 38s
+[rsnn] subject 9 repeat 9: acc=0.483 kappa=0.310
+[time] [rsnn] fold 29/29 done in 41m48s (pretrain 40m32s, finetune 1m16s) | avg 41m50s | rsnn elapsed 20h13m19s, ETA 0.0s | benchmark ETA 0.0s (excl. unknown: rnn)
+[time] [rsnn] SUBJECT 9 finished: 10 folds in 6h59m18s (41m56s/fold) | subjects done 3/3
+[time] [rsnn] ALL 29 folds finished in 20h13m19s
+[time] <<< benchmark: rsnn: 20h13m19s (pipeline elapsed 20h14m51s)
+[time] >>> benchmark: rnn
+[time] [rnn] 90 folds to run over 9 subject(s)
+[time] [rnn] fold 1/90 start (subject 1, repeat 0)
+[time]     [rnn s1_r0] pretrain epoch 50/500 | val_loss 1.3900 | elapsed 1m51s, phase ETA 16m35s
+[time]     [rnn s1_r0] pretrain epoch 100/500 | val_loss 1.3819 | elapsed 3m41s, phase ETA 14m44s
+[time]     [rnn s1_r0] pretrain epoch 150/500 | val_loss 1.3782 | elapsed 5m31s, phase ETA 12m53s
+[time]     [rnn s1_r0] pretrain epoch 200/500 | val_loss 1.3769 | elapsed 7m22s, phase ETA 11m03s
+[time]     [rnn s1_r0] pretrain epoch 250/500 | val_loss 1.3767 | elapsed 9m12s, phase ETA 9m12s
+[time]     [rnn s1_r0] pretrain epoch 300/500 | val_loss 1.3757 | elapsed 11m03s, phase ETA 7m22s
+[time]     [rnn s1_r0] pretrain epoch 350/500 | val_loss 1.3751 | elapsed 12m53s, phase ETA 5m31s
+[time]     [rnn s1_r0] pretrain epoch 400/500 | val_loss 1.3748 | elapsed 14m44s, phase ETA 3m41s
+[time]     [rnn s1_r0] pretrain epoch 450/500 | val_loss 1.3754 | elapsed 16m34s, phase ETA 1m50s
+[time]     [rnn s1_r0] finetune epoch 50/100 | val_loss 1.2210 | elapsed 18s, phase ETA 18s
+[rnn] subject 1 repeat 0: acc=0.542 kappa=0.389
+[time] [rnn] fold 1/90 done in 19m00s (pretrain 18m25s, finetune 35s) | avg 19m00s | rnn elapsed 19m00s, ETA 28h11m20s | benchmark ETA 28h11m20s -> finish ~Sat 31 Oct 15:13
+[time] [rnn] fold 2/90 start (subject 1, repeat 1)
+[time]     [rnn s1_r1] pretrain epoch 50/500 | val_loss 1.5674 | elapsed 1m50s, phase ETA 16m34s
+[time]     [rnn s1_r1] pretrain epoch 100/500 | val_loss 1.5737 | elapsed 3m41s, phase ETA 14m44s
+[time]     [rnn s1_r1] pretrain epoch 150/500 | val_loss 1.6747 | elapsed 5m31s, phase ETA 12m53s
+[time]     [rnn s1_r1] pretrain epoch 200/500 | val_loss 1.8237 | elapsed 7m21s, phase ETA 11m01s
+[time]     [rnn s1_r1] pretrain epoch 250/500 | val_loss 1.6073 | elapsed 9m11s, phase ETA 9m11s
+[time]     [rnn s1_r1] pretrain epoch 300/500 | val_loss 1.5083 | elapsed 11m01s, phase ETA 7m21s
+[time]     [rnn s1_r1] pretrain epoch 350/500 | val_loss 2.0883 | elapsed 12m51s, phase ETA 5m30s
+[time]     [rnn s1_r1] pretrain epoch 400/500 | val_loss 1.4316 | elapsed 14m40s, phase ETA 3m40s
+[time]     [rnn s1_r1] pretrain epoch 450/500 | val_loss 1.7989 | elapsed 16m30s, phase ETA 1m50s
+[time]     [rnn s1_r1] finetune epoch 50/100 | val_loss 1.0298 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 1: acc=0.427 kappa=0.236
+[time] [rnn] fold 2/90 done in 18m55s (pretrain 18m20s, finetune 35s) | avg 18m57s | rnn elapsed 37m55s, ETA 27h48m09s | benchmark ETA 27h48m09s -> finish ~Sat 31 Oct 15:09
+[time] [rnn] fold 3/90 start (subject 1, repeat 2)
+[time]     [rnn s1_r2] pretrain epoch 50/500 | val_loss 1.2639 | elapsed 1m50s, phase ETA 16m28s
+[time]     [rnn s1_r2] pretrain epoch 100/500 | val_loss 1.3073 | elapsed 3m39s, phase ETA 14m38s
+[time]     [rnn s1_r2] pretrain epoch 150/500 | val_loss 1.2913 | elapsed 5m29s, phase ETA 12m48s
+[time]     [rnn s1_r2] pretrain epoch 200/500 | val_loss 1.3012 | elapsed 7m18s, phase ETA 10m58s
+[time]     [rnn s1_r2] pretrain epoch 250/500 | val_loss 1.3427 | elapsed 9m08s, phase ETA 9m08s
+[time]     [rnn s1_r2] pretrain epoch 300/500 | val_loss 1.3207 | elapsed 10m57s, phase ETA 7m18s
+[time]     [rnn s1_r2] pretrain epoch 350/500 | val_loss 1.2907 | elapsed 12m46s, phase ETA 5m28s
+[time]     [rnn s1_r2] pretrain epoch 400/500 | val_loss 1.3857 | elapsed 14m35s, phase ETA 3m39s
+[time]     [rnn s1_r2] pretrain epoch 450/500 | val_loss 1.3398 | elapsed 16m25s, phase ETA 1m49s
+[time]     [rnn s1_r2] finetune epoch 50/100 | val_loss 1.1944 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 2: acc=0.486 kappa=0.315
+[time] [rnn] fold 3/90 done in 18m49s (pretrain 18m14s, finetune 35s) | avg 18m55s | rnn elapsed 56m44s, ETA 27h25m02s | benchmark ETA 27h25m02s -> finish ~Sat 31 Oct 15:04
+[time] [rnn] fold 4/90 start (subject 1, repeat 3)
+[time]     [rnn s1_r3] pretrain epoch 50/500 | val_loss 1.4082 | elapsed 1m49s, phase ETA 16m25s
+[time]     [rnn s1_r3] pretrain epoch 100/500 | val_loss 1.4458 | elapsed 3m39s, phase ETA 14m35s
+[time]     [rnn s1_r3] pretrain epoch 150/500 | val_loss 1.3953 | elapsed 5m28s, phase ETA 12m46s
+[time]     [rnn s1_r3] pretrain epoch 200/500 | val_loss 1.4439 | elapsed 7m18s, phase ETA 10m56s
+[time]     [rnn s1_r3] pretrain epoch 250/500 | val_loss 1.4665 | elapsed 9m07s, phase ETA 9m07s
+[time]     [rnn s1_r3] pretrain epoch 300/500 | val_loss 1.5069 | elapsed 10m56s, phase ETA 7m18s
+[time]     [rnn s1_r3] pretrain epoch 350/500 | val_loss 1.5842 | elapsed 12m46s, phase ETA 5m28s
+[time]     [rnn s1_r3] pretrain epoch 400/500 | val_loss 1.5353 | elapsed 14m35s, phase ETA 3m39s
+[time]     [rnn s1_r3] pretrain epoch 450/500 | val_loss 1.5221 | elapsed 16m24s, phase ETA 1m49s
+[time]     [rnn s1_r3] finetune epoch 50/100 | val_loss 0.9565 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 3: acc=0.469 kappa=0.292
+[time] [rnn] fold 4/90 done in 18m49s (pretrain 18m14s, finetune 35s) | avg 18m53s | rnn elapsed 1h15m32s, ETA 27h04m07s | benchmark ETA 27h04m07s -> finish ~Sat 31 Oct 15:02
+[time] [rnn] fold 5/90 start (subject 1, repeat 4)
+[time]     [rnn s1_r4] pretrain epoch 50/500 | val_loss 1.3268 | elapsed 1m50s, phase ETA 16m26s
+[time]     [rnn s1_r4] pretrain epoch 100/500 | val_loss 1.3380 | elapsed 3m39s, phase ETA 14m36s
+[time]     [rnn s1_r4] pretrain epoch 150/500 | val_loss 1.4136 | elapsed 5m29s, phase ETA 12m47s
+[time]     [rnn s1_r4] pretrain epoch 200/500 | val_loss 1.4274 | elapsed 7m18s, phase ETA 10m57s
+[time]     [rnn s1_r4] pretrain epoch 250/500 | val_loss 1.4441 | elapsed 9m08s, phase ETA 9m08s
+[time]     [rnn s1_r4] pretrain epoch 300/500 | val_loss 1.4522 | elapsed 10m57s, phase ETA 7m18s
+[time]     [rnn s1_r4] pretrain epoch 350/500 | val_loss 1.5037 | elapsed 12m47s, phase ETA 5m29s
+[time]     [rnn s1_r4] pretrain epoch 400/500 | val_loss 1.5221 | elapsed 14m36s, phase ETA 3m39s
+[time]     [rnn s1_r4] pretrain epoch 450/500 | val_loss 1.5081 | elapsed 16m26s, phase ETA 1m50s
+[time]     [rnn s1_r4] finetune epoch 50/100 | val_loss 1.0356 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 4: acc=0.497 kappa=0.329
+[time] [rnn] fold 5/90 done in 18m50s (pretrain 18m15s, finetune 35s) | avg 18m52s | rnn elapsed 1h34m23s, ETA 26h44m22s | benchmark ETA 26h44m22s -> finish ~Sat 31 Oct 15:01
+[time] [rnn] fold 6/90 start (subject 1, repeat 5)
+[time]     [rnn s1_r5] pretrain epoch 50/500 | val_loss 1.4386 | elapsed 1m50s, phase ETA 16m26s
+[time]     [rnn s1_r5] pretrain epoch 100/500 | val_loss 1.5152 | elapsed 3m39s, phase ETA 14m36s
+[time]     [rnn s1_r5] pretrain epoch 150/500 | val_loss 1.5108 | elapsed 5m29s, phase ETA 12m47s
+[time]     [rnn s1_r5] pretrain epoch 200/500 | val_loss 1.4970 | elapsed 7m18s, phase ETA 10m57s
+[time]     [rnn s1_r5] pretrain epoch 250/500 | val_loss 1.5050 | elapsed 9m07s, phase ETA 9m07s
+[time]     [rnn s1_r5] pretrain epoch 300/500 | val_loss 1.4748 | elapsed 10m57s, phase ETA 7m18s
+[time]     [rnn s1_r5] pretrain epoch 350/500 | val_loss 1.4947 | elapsed 12m46s, phase ETA 5m28s
+[time]     [rnn s1_r5] pretrain epoch 400/500 | val_loss 1.4591 | elapsed 14m36s, phase ETA 3m39s
+[time]     [rnn s1_r5] pretrain epoch 450/500 | val_loss 1.5105 | elapsed 16m25s, phase ETA 1m49s
+[time]     [rnn s1_r5] finetune epoch 50/100 | val_loss 1.0586 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 5: acc=0.569 kappa=0.426
+[time] [rnn] fold 6/90 done in 18m50s (pretrain 18m15s, finetune 35s) | avg 18m52s | rnn elapsed 1h53m12s, ETA 26h24m48s | benchmark ETA 26h24m48s -> finish ~Sat 31 Oct 15:01
+[time] [rnn] fold 7/90 start (subject 1, repeat 6)
+[time]     [rnn s1_r6] pretrain epoch 50/500 | val_loss 1.3630 | elapsed 1m49s, phase ETA 16m25s
+[time]     [rnn s1_r6] pretrain epoch 100/500 | val_loss 1.4001 | elapsed 3m39s, phase ETA 14m36s
+[time]     [rnn s1_r6] pretrain epoch 150/500 | val_loss 1.3760 | elapsed 5m28s, phase ETA 12m46s
+[time]     [rnn s1_r6] pretrain epoch 200/500 | val_loss 1.4616 | elapsed 7m18s, phase ETA 10m57s
+[time]     [rnn s1_r6] pretrain epoch 250/500 | val_loss 1.4427 | elapsed 9m07s, phase ETA 9m07s
+[time]     [rnn s1_r6] pretrain epoch 300/500 | val_loss 1.4227 | elapsed 10m57s, phase ETA 7m18s
+[time]     [rnn s1_r6] pretrain epoch 350/500 | val_loss 1.5491 | elapsed 12m46s, phase ETA 5m28s
+[time]     [rnn s1_r6] pretrain epoch 400/500 | val_loss 1.5752 | elapsed 14m36s, phase ETA 3m39s
+[time]     [rnn s1_r6] pretrain epoch 450/500 | val_loss 1.4301 | elapsed 16m25s, phase ETA 1m49s
+[time]     [rnn s1_r6] finetune epoch 50/100 | val_loss 0.9872 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 6: acc=0.587 kappa=0.449
+[time] [rnn] fold 7/90 done in 18m50s (pretrain 18m15s, finetune 35s) | avg 18m52s | rnn elapsed 2h12m02s, ETA 26h05m28s | benchmark ETA 26h05m28s -> finish ~Sat 31 Oct 15:00
+[time] [rnn] fold 8/90 start (subject 1, repeat 7)
+[time]     [rnn s1_r7] pretrain epoch 50/500 | val_loss 1.8989 | elapsed 1m49s, phase ETA 16m23s
+[time]     [rnn s1_r7] pretrain epoch 100/500 | val_loss 2.5400 | elapsed 3m38s, phase ETA 14m33s
+[time]     [rnn s1_r7] pretrain epoch 150/500 | val_loss 1.4757 | elapsed 5m28s, phase ETA 12m44s
+[time]     [rnn s1_r7] pretrain epoch 200/500 | val_loss 2.4762 | elapsed 7m17s, phase ETA 10m56s
+[time]     [rnn s1_r7] pretrain epoch 250/500 | val_loss 2.2918 | elapsed 9m07s, phase ETA 9m07s
+[time]     [rnn s1_r7] pretrain epoch 300/500 | val_loss 2.6508 | elapsed 10m56s, phase ETA 7m17s
+[time]     [rnn s1_r7] pretrain epoch 350/500 | val_loss 2.4158 | elapsed 12m46s, phase ETA 5m28s
+[time]     [rnn s1_r7] pretrain epoch 400/500 | val_loss 2.5891 | elapsed 14m35s, phase ETA 3m39s
+[time]     [rnn s1_r7] pretrain epoch 450/500 | val_loss 2.1983 | elapsed 16m25s, phase ETA 1m49s
+[time]     [rnn s1_r7] finetune epoch 50/100 | val_loss 0.9865 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 7: acc=0.559 kappa=0.412
+[time] [rnn] fold 8/90 done in 18m49s (pretrain 18m14s, finetune 35s) | avg 18m51s | rnn elapsed 2h30m51s, ETA 25h46m11s | benchmark ETA 25h46m11s -> finish ~Sat 31 Oct 15:00
+[time] [rnn] fold 9/90 start (subject 1, repeat 8)
+[time]     [rnn s1_r8] pretrain epoch 50/500 | val_loss 1.5274 | elapsed 1m50s, phase ETA 16m28s
+[time]     [rnn s1_r8] pretrain epoch 100/500 | val_loss 1.7889 | elapsed 3m40s, phase ETA 14m38s
+[time]     [rnn s1_r8] pretrain epoch 150/500 | val_loss 1.9622 | elapsed 5m29s, phase ETA 12m48s
+[time]     [rnn s1_r8] pretrain epoch 200/500 | val_loss 1.8356 | elapsed 7m19s, phase ETA 10m58s
+[time]     [rnn s1_r8] pretrain epoch 250/500 | val_loss 1.9790 | elapsed 9m08s, phase ETA 9m08s
+[time]     [rnn s1_r8] pretrain epoch 300/500 | val_loss 2.2458 | elapsed 10m58s, phase ETA 7m18s
+[time]     [rnn s1_r8] pretrain epoch 350/500 | val_loss 2.0838 | elapsed 12m47s, phase ETA 5m29s
+[time]     [rnn s1_r8] pretrain epoch 400/500 | val_loss 2.7530 | elapsed 14m36s, phase ETA 3m39s
+[time]     [rnn s1_r8] pretrain epoch 450/500 | val_loss 2.4665 | elapsed 16m26s, phase ETA 1m50s
+[time]     [rnn s1_r8] finetune epoch 50/100 | val_loss 1.1571 | elapsed 17s, phase ETA 17s
+[rnn] subject 1 repeat 8: acc=0.514 kappa=0.352
+[time] [rnn] fold 9/90 done in 18m50s (pretrain 18m15s, finetune 35s) | avg 18m51s | rnn elapsed 2h49m41s, ETA 25h27m09s | benchmark ETA 25h27m09s -> finish ~Sat 31 Oct 14:59
+[time] deadline close (next rnn fold needs ~23m45s, 22m53s left): starting no more folds in this job.
+[time] <<< benchmark: rnn: 2h49m41s (pipeline elapsed 23h04m32s)
+[chain] INCOMPLETE: folds still pending per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 81}. Analysis skipped; rerun/resubmit with BENCH_RUN_ID=20261027_153619 to continue.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 23h04m32s
+[time]   stage download_data                       26s  ( 0.0%)
+[time]   stage preprocess_data                     34s  ( 0.0%)
+[time]   stage data_statistics                     30s  ( 0.0%)
+[time]   stage benchmark: ann                     0.0s  ( 0.0%)
+[time]   stage benchmark: snn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn               20h13m19s  (87.6%)
+[time]   stage benchmark: rnn                 2h49m41s  (12.3%)
+[time]   rsnn: 29 folds, total 20h13m19s, mean 41m50s (min 41m29s, max 42m43s)
+[time]     per subject: S7 6h14m48s, S8 6h59m13s, S9 6h59m18s
+[time]   rnn: 9 folds, total 2h49m41s, mean 18m51s (min 18m49s, max 19m00s)
+[time]     per subject: S1 2h49m41s
+-----------------------------------------------------------------------
+Finished  : Fri Oct 30 13:32:43 MDT 2026
+Exit code : 0
