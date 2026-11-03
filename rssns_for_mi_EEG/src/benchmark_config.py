@@ -74,13 +74,14 @@ class SNNConfig:
 
 @dataclass(frozen=True)
 class RSNNConfig:
-    n_hidden: int | None = None  # None -> chosen to match the converted SNN's parameter count
+    n_hidden: int | None = None  # None -> chosen to match the converted SNN's parameter count (parameter-matched models)
+    n_hidden_wide: int | None = None  # None -> number of hidden neurons of EEGNet / the converted SNN (neuron-matched models)
     n_steps: int = N_SAMPLES  # one simulation step per EEG sample (128 Hz)
     beta: float = 0.9  # membrane decay per step (fixed). The converted SNN's IF neurons have no leak (beta=1)
     threshold: float = 1.0  # copied from the converted SNN
     surrogate_slope: float = 25.0  # snntorch.surrogate.fast_sigmoid default
     recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2)
-    batch_size: int = 64  # larger than the ANN's to keep BPTT over 256 steps tractable
+    batch_size: int = 16  # same as the ANN (TrainConfig), so every trained model takes the same number of optimizer steps per epoch
     # Per-channel standardization of the input (mean/std over trials and time of the PRETRAINING subjects' session 1
     # only; fixed afterwards, so no target or test information is used). The ANN has BatchNorm and the converted SNN
     # divides by lambda_0; this gives the RSNN the equivalent scale handling. False = previous behaviour (raw uV).
@@ -93,8 +94,9 @@ class RNNConfig:
     linear readout on the time-averaged hidden activity), but the LIF neurons are replaced by the ELU of the EEGNet ANN
     (Elman style: h_t = ELU(W_in x_t + b + W_rec h_{t-1}); no leak, no threshold, no reset).
 
-    The hidden size is NOT set here: it is always the RSNN's hidden size (model_summary()["rsnn_hidden"]), so both
-    models have exactly the same number of recurrent nodes and parameters. Init, input standardization, simulation steps,
+    The hidden size is NOT set here: it is always the RSNN's hidden size (model_summary()["rsnn_hidden"] for the
+    parameter-matched pair, ["rsnn_wide_hidden"] for the neuron-matched pair), so each RNN and its RSNN have exactly the
+    same number of recurrent nodes and parameters. Init, input standardization, simulation steps,
     batch size and the pretrain/finetune schedule mirror the RSNN.
 
     Stability note: ELU is unbounded for x > 0, so a recurrent loop over 256 steps can in principle diverge. The RSNN init
@@ -105,7 +107,7 @@ class RNNConfig:
 
     n_steps: int = N_SAMPLES  # one step per EEG sample, same as the RSNN
     recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2), same as the RSNN
-    batch_size: int = 64  # same as the RSNN
+    batch_size: int = 16  # same as the RSNN and the ANN
     normalize_input: bool = True  # same per-channel standardization (pretraining subjects only) as the RSNN
 
 

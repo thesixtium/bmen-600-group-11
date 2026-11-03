@@ -1,8 +1,8 @@
-"""Benchmark driver: trains/evaluates the three models on the shared folds and saves per-fold results.
+"""Benchmark driver: trains/evaluates the models on the shared folds and saves per-fold results.
 
 Output layout (<run_dir> = results/benchmark/<run id>, run id = $BENCH_RUN_ID or a timestamp):
   config.json, folds.json            configuration, parameter counts, fold definitions and seeds
-  checkpoints/<model>/s<S>_r<R>.pt   pretrained + fine-tuned weights (ann, rsnn, rnn)
+  checkpoints/<model>/s<S>_r<R>.pt   pretrained + fine-tuned weights (ann, rsnn, rnn, rsnn_wide, rnn_wide)
   histories/<model>/s<S>_r<R>.json   per-epoch train/validation loss
   metrics/<model>/s<S>_r<R>.json     accuracy, kappa, macro-F1, confusion matrix, config metadata (one per fold)
   predictions/<model>/s<S>_r<R>.npz  y_true, y_pred, scores (logits / output spike counts)
@@ -44,7 +44,9 @@ from timing import PipelineTimer
 from training import TrainingOutcome, predict_logits, pretrain_then_finetune
 
 EEGNET_CFG, SNN_CFG, RSNN_CFG, FOLD_CFG = EEGNetConfig(), SNNConfig(), RSNNConfig(), FoldConfig()
-MODELS: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
+# ann / snn: EEGNet and its conversion. rsnn / rnn: recurrent nets whose parameter count matches the converted SNN.
+# rsnn_wide / rnn_wide: recurrent nets with as many hidden neurons as EEGNet / the converted SNN (2560).
+MODELS: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn", "rsnn_wide", "rnn_wide")
 
 
 # ---------------------------------------------------------------- setup
@@ -85,7 +87,7 @@ def prepare_run_dir(folds: list[Fold], run_id: str | None = None) -> Path:
 
 
 def compute_metrics(y_true: NDArray[np.int64], y_pred: NDArray[np.int64]) -> dict:
-    """The single metric function used for all three models."""
+    """The single metric function used for all models."""
     labels = list(range(N_CLASSES))
     return {
         "accuracy": float(accuracy_score(y_true, y_pred)),
@@ -211,14 +213,26 @@ def run_snn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path
             )
 
 
-# ---------------------------------------------------------------- Model 3: RSNN
+# ---------------------------------------------------------------- Models 3 and 5: RSNN (parameter- / neuron-matched)
 
 
-def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
-    n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]
-    tracker = timer.track("rsnn", pending_folds(run_dir, "rsnn", folds))
+def _recurrent_hidden(wide: bool) -> int:
+    """Hidden size shared by an RSNN and its RNN twin: parameter-matched to the converted SNN, or neuron-matched."""
+    summary = model_summary(EEGNET_CFG, RSNN_CFG)
+    return summary["rsnn_wide_hidden"] if wide else summary["rsnn_hidden"]
+
+
+def run_rsnn_benchmark(
+    processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer, wide: bool = False
+) -> None:
+    """RSNN. wide=False -> model "rsnn": hidden size chosen so the parameter count matches the converted SNN.
+    wide=True -> model "rsnn_wide": hidden size = number of hidden neurons of EEGNet / the converted SNN (many more
+    parameters). Dynamics, init, input standardization, training schedule, folds and seeds are identical."""
+    key = "rsnn_wide" if wide else "rsnn"
+    n_hidden = _recurrent_hidden(wide)
+    tracker = timer.track(key, pending_folds(run_dir, key, folds))
     for fold in tracker.folds:
-        if timer.out_of_time("rsnn"):
+        if timer.out_of_time(key):
             break
         with tracker.fold(fold) as t:
             data = build_fold_data(processed, fold)
@@ -227,29 +241,33 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
             if RSNN_CFG.normalize_input:
                 # per-channel standardization from the PRETRAINING subjects' session 1 only (no target / test data)
                 model.set_input_stats(data.pre_train.X)
-            outcome = pretrain_then_finetune(model, data, RSNN_TRAIN, fold.seed, device, tag=f"[rsnn {_stem(fold)}]")
+            outcome = pretrain_then_finetune(model, data, RSNN_TRAIN, fold.seed, device, tag=f"[{key} {_stem(fold)}]")
             t["pretrain_s"], t["finetune_s"] = outcome.pretrain_seconds, outcome.finetune_seconds
             torch.save(
                 {"pretrained": outcome.pretrained_state, "finetuned": outcome.finetuned_state},
-                run_dir / "checkpoints" / "rsnn" / f"{_stem(fold)}.pt",
+                run_dir / "checkpoints" / key / f"{_stem(fold)}.pt",
             )
-            _save_history(run_dir, "rsnn", fold, outcome)
+            _save_history(run_dir, key, fold, outcome)
             logits = predict_logits(model, data.test.X, device)
             _save_result(
-                run_dir, "rsnn", fold, data.test.y, logits.argmax(1), logits,
+                run_dir, key, fold, data.test.y, logits.argmax(1), logits,
                 {"n_params": count_parameters(model), "n_hidden": n_hidden, **_best_epochs(outcome)},
             )
 
 
-# ---------------------------------------------------------------- Model 4: RNN (non-spiking control of the RSNN)
+# ---------------------------------------------------------------- Models 4 and 6: RNN (non-spiking control of the RSNN)
 
 
-def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
-    """Elman RNN with ELU, same hidden size / init / input handling / training schedule / folds as the RSNN."""
-    n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]  # identical number of recurrent nodes as the RSNN
-    tracker = timer.track("rnn", pending_folds(run_dir, "rnn", folds))
+def run_rnn_benchmark(
+    processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer, wide: bool = False
+) -> None:
+    """Elman RNN with ELU, same hidden size / init / input handling / training schedule / folds as its RSNN twin.
+    wide=False -> model "rnn" (parameter-matched), wide=True -> model "rnn_wide" (neuron-matched)."""
+    key = "rnn_wide" if wide else "rnn"
+    n_hidden = _recurrent_hidden(wide)  # identical number of recurrent nodes as the RSNN twin
+    tracker = timer.track(key, pending_folds(run_dir, key, folds))
     for fold in tracker.folds:
-        if timer.out_of_time("rnn"):
+        if timer.out_of_time(key):
             break
         with tracker.fold(fold) as t:
             data = build_fold_data(processed, fold)
@@ -258,16 +276,16 @@ def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path
             if RNN_CFG.normalize_input:
                 # per-channel standardization from the PRETRAINING subjects' session 1 only (no target / test data)
                 model.set_input_stats(data.pre_train.X)
-            outcome = pretrain_then_finetune(model, data, RNN_TRAIN, fold.seed, device, tag=f"[rnn {_stem(fold)}]")
+            outcome = pretrain_then_finetune(model, data, RNN_TRAIN, fold.seed, device, tag=f"[{key} {_stem(fold)}]")
             t["pretrain_s"], t["finetune_s"] = outcome.pretrain_seconds, outcome.finetune_seconds
             torch.save(
                 {"pretrained": outcome.pretrained_state, "finetuned": outcome.finetuned_state},
-                run_dir / "checkpoints" / "rnn" / f"{_stem(fold)}.pt",
+                run_dir / "checkpoints" / key / f"{_stem(fold)}.pt",
             )
-            _save_history(run_dir, "rnn", fold, outcome)
+            _save_history(run_dir, key, fold, outcome)
             logits = predict_logits(model, data.test.X, device)
             _save_result(
-                run_dir, "rnn", fold, data.test.y, logits.argmax(1), logits,
+                run_dir, key, fold, data.test.y, logits.argmax(1), logits,
                 {"n_params": count_parameters(model), "n_hidden": n_hidden, **_best_epochs(outcome)},
             )
 

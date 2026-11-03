@@ -23,6 +23,7 @@ from download_data import download_data
 from folds import filter_folds, generate_folds
 from preprocess_data import preprocess_data
 from timing import PipelineTimer
+from training_plots import plot_training
 
 
 def _env_int_list(name: str) -> list[int] | None:
@@ -43,7 +44,7 @@ try:
     with timer.stage("data_statistics"):
         data_statistics(data, processed)
 
-    # Folds shared by all three models. The full set is always saved; BENCH_TARGETS / BENCH_REPEATS only select
+    # Folds shared by all models. The full set is always saved; BENCH_TARGETS / BENCH_REPEATS only select
     # which folds this process runs. Set BENCH_RUN_ID to resume or to share one run directory between jobs.
     all_folds = generate_folds(processed)
     run_dir = prepare_run_dir(all_folds)
@@ -67,6 +68,12 @@ try:
     with timer.stage("benchmark: rnn"):
         run_rnn_benchmark(processed, folds, run_dir, device, timer)
 
+    # Neuron-matched pair: RSNN and RNN with as many hidden neurons as EEGNet / the converted SNN (2560)
+    with timer.stage("benchmark: rsnn_wide"):
+        run_rsnn_benchmark(processed, folds, run_dir, device, timer, wide=True)
+    with timer.stage("benchmark: rnn_wide"):
+        run_rnn_benchmark(processed, folds, run_dir, device, timer, wide=True)
+
     # Chained jobs: a job that ran out of time ends cleanly with folds still pending. The analysis only makes sense on
     # the finished set, so it is skipped until every selected fold of every model has metrics; the final job runs it
     # and writes the COMPLETE marker, which makes any further queued job with the same BENCH_RUN_ID exit immediately.
@@ -79,6 +86,8 @@ try:
             collect_results(run_dir)
         with timer.stage("plot_benchmarks"):
             plot_benchmarks(run_dir)
+        with timer.stage("plot_training"):
+            plot_training(run_dir)
 
         # Comparative metrics between models (chance tests, paired Wilcoxon + Holm, bootstrap CIs, figures)
         with timer.stage("compare_models"):

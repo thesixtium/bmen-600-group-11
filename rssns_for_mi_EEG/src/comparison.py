@@ -1,4 +1,4 @@
-"""Comparative metrics between the three models (research plan, Section 4).
+"""Comparative metrics between the models (research plan, Section 4).
 
 Implements 'Outcome and comparisons' and 'Avoiding misleading results and showing uncertainty':
   * The subject is the independent case: the 10 repeats are averaged to ONE value per subject, model and metric,
@@ -10,8 +10,11 @@ Implements 'Outcome and comparisons' and 'Avoiding misleading results and showin
         (1 - alpha) quantile of the permutation null).
     The permutation null matches the subject-level mean: in each of the 10 repeats the session-2 labels are shuffled
     against that repeat's predictions, the metric is computed, and the 10 values are averaged (independent shuffles).
-  * Differences between models: exact two-sided Wilcoxon signed-rank test on the nine subject means, Holm-corrected
-    across the five comparisons of each metric, plus the median paired difference with a bootstrap CI over subjects.
+  * Differences between models: exact two-sided Wilcoxon signed-rank test on the nine subject means, plus the median
+    paired difference with a bootstrap CI over subjects. Holm correction is applied within each pre-specified family of
+    comparisons, separately for every metric: the PRIMARY family (the original five comparisons, which use the
+    parameter-matched RSNN/RNN) and the SECONDARY family (six comparisons that involve the neuron-matched RSNN/RNN).
+    Keeping the families apart means adding the neuron-matched models does not change any primary p-value or CI.
   * Summaries: per-subject mean +/- SD across repeats, and mean +/- SD across subjects.
 All three metrics are tested; accuracy is the primary one.
 
@@ -31,7 +34,7 @@ from scipy import stats
 
 from benchmark_config import COMPARISON_CFG, N_CLASSES, ComparisonConfig
 
-MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")  # new models are appended: keeps existing RNG seeds
+MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn", "rsnn_wide", "rnn_wide")  # new models are appended: keeps existing RNG seeds
 METRIC_NAMES: tuple[str, ...] = ("accuracy", "kappa", "macro_f1")
 PRIMARY_METRIC: str = "accuracy"
 # (model a, model b, label): the paired difference is always a - b
@@ -43,6 +46,21 @@ COMPARISONS: tuple[tuple[str, str, str], ...] = (
     ("rnn", "rsnn", "RNN - RSNN (effect of spiking)"),
     ("rnn", "ann", "RNN - ANN (vs baseline)"),
 )
+# Secondary family: comparisons that involve the neuron-matched models ("_wide": as many hidden neurons as the converted
+# SNN / EEGNet, far more parameters). The first two isolate the effect of width, the third the effect of spiking at the
+# larger size, the last three place the neuron-matched models against the SNN and the ANN.
+COMPARISONS_SECONDARY: tuple[tuple[str, str, str], ...] = (
+    ("rsnn_wide", "rsnn", "RSNN: neuron- vs param-matched"),
+    ("rnn_wide", "rnn", "RNN: neuron- vs param-matched"),
+    ("rnn_wide", "rsnn_wide", "RNN - RSNN (neuron-matched)"),
+    ("rsnn_wide", "snn", "RSNN (neuron-m.) - SNN"),
+    ("rsnn_wide", "ann", "RSNN (neuron-m.) - ANN"),
+    ("rnn_wide", "ann", "RNN (neuron-m.) - ANN"),
+)
+FAMILIES: tuple[tuple[str, tuple[tuple[str, str, str], ...]], ...] = (
+    ("primary", COMPARISONS),
+    ("secondary", COMPARISONS_SECONDARY),
+)  # Holm correction is applied within each family (and metric)
 
 
 # ---------------------------------------------------------------- metrics from confusion matrices (vectorized)
@@ -165,39 +183,48 @@ def chance_tests(df: pd.DataFrame, run_dir: Path, cfg: ComparisonConfig) -> pd.D
 
 
 def paired_tests(df: pd.DataFrame, cfg: ComparisonConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Paired model comparisons on subject-level means: (test table, per-subject differences)."""
+    """Paired model comparisons on subject-level means: (test table, per-subject differences).
+
+    Holm correction is applied within each family of FAMILIES, separately for every metric. The bootstrap seed of the
+    primary family does not depend on the family, so its CIs are the same as before the secondary family was added.
+    """
     means = df.groupby(["model", "subject"])[list(METRIC_NAMES)].mean()
     test_rows, diff_rows = [], []
     for metric in METRIC_NAMES:
         wide = means[metric].unstack("model")
-        family = []
-        for a, b, label in COMPARISONS:
-            if a not in wide.columns or b not in wide.columns:
-                continue
-            pair = wide[[a, b]].dropna()
-            diff = (pair[a] - pair[b]).to_numpy()
-            rng = np.random.default_rng([cfg.seed, METRIC_NAMES.index(metric), len(family)])
-            statistic, p = _wilcoxon(diff)
-            lo, hi = _bootstrap_median_ci(diff, cfg, rng)
-            family.append(
-                {
-                    "metric": metric, "comparison": f"{a}-{b}", "label": label, "n_subjects": len(diff),
-                    "mean_a": float(pair[a].mean()) if len(diff) else np.nan,
-                    "mean_b": float(pair[b].mean()) if len(diff) else np.nan,
-                    "median_diff": float(np.median(diff)) if len(diff) else np.nan,
-                    "ci_low": lo, "ci_high": hi, "n_a_better": int(np.sum(diff > 0)), "n_b_better": int(np.sum(diff < 0)),
-                    "wilcoxon_statistic": statistic, "p_raw": p,
-                }
-            )
-            for subject, va, vb in zip(pair.index, pair[a], pair[b]):
-                diff_rows.append(
-                    {"metric": metric, "comparison": f"{a}-{b}", "subject": subject, "a": va, "b": vb, "diff": va - vb}
+        for family_index, (family_name, comparisons) in enumerate(FAMILIES):
+            family = []
+            for a, b, label in comparisons:
+                if a not in wide.columns or b not in wide.columns:
+                    continue
+                pair = wide[[a, b]].dropna()
+                diff = (pair[a] - pair[b]).to_numpy()
+                seed_key = [cfg.seed, METRIC_NAMES.index(metric), len(family)] + ([family_index] if family_index else [])
+                rng = np.random.default_rng(seed_key)
+                statistic, p = _wilcoxon(diff)
+                lo, hi = _bootstrap_median_ci(diff, cfg, rng)
+                family.append(
+                    {
+                        "family": family_name, "metric": metric, "comparison": f"{a}-{b}", "label": label,
+                        "n_subjects": len(diff),
+                        "mean_a": float(pair[a].mean()) if len(diff) else np.nan,
+                        "mean_b": float(pair[b].mean()) if len(diff) else np.nan,
+                        "median_diff": float(np.median(diff)) if len(diff) else np.nan,
+                        "ci_low": lo, "ci_high": hi, "n_a_better": int(np.sum(diff > 0)), "n_b_better": int(np.sum(diff < 0)),
+                        "wilcoxon_statistic": statistic, "p_raw": p,
+                    }
                 )
-        p_holm = holm_correction(np.array([r["p_raw"] for r in family], dtype=float))  # family = 5 comparisons per metric
-        for r, ph in zip(family, p_holm):
-            r["p_holm"] = float(ph)
-            r["significant"] = bool(ph < cfg.alpha)
-        test_rows.extend(family)
+                for subject, va, vb in zip(pair.index, pair[a], pair[b]):
+                    diff_rows.append(
+                        {"family": family_name, "metric": metric, "comparison": f"{a}-{b}", "subject": subject,
+                         "a": va, "b": vb, "diff": va - vb}
+                    )
+            p_holm = holm_correction(np.array([r["p_raw"] for r in family], dtype=float))  # one Holm family
+            for r, ph in zip(family, p_holm):
+                r["p_holm"] = float(ph)
+                r["family_size"] = len(family)
+                r["significant"] = bool(ph < cfg.alpha)
+            test_rows.extend(family)
     return pd.DataFrame(test_rows), pd.DataFrame(diff_rows)
 
 
@@ -232,8 +259,8 @@ def compare_models(run_dir: Path, cfg: ComparisonConfig = COMPARISON_CFG) -> Non
     pd.set_option("display.width", 200)
     print("\nMean +/- SD across subjects:")
     print(summary[["model", "metric", "mean_across_subjects", "sd_across_subjects", "n_subjects"]].round(3).to_string(index=False))
-    print("\nPaired comparisons (difference = first - second, Holm across the 5 comparisons of each metric):")
-    cols = ["metric", "comparison", "n_subjects", "median_diff", "ci_low", "ci_high", "p_raw", "p_holm", "significant"]
+    print("\nPaired comparisons (difference = first - second; Holm within each family of comparisons, per metric):")
+    cols = ["family", "metric", "comparison", "n_subjects", "median_diff", "ci_low", "ci_high", "p_raw", "p_holm", "significant"]
     print(tests[cols].round(4).to_string(index=False))
     share = chance.groupby(["model", "metric"])["above_chance"].sum().unstack()
     print(f"\nSubjects above chance (out of {n_subjects}):\n{share.to_string()}")

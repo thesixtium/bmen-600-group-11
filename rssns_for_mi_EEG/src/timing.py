@@ -17,7 +17,7 @@ Files written
 
 Notes
   * Only folds run by THIS process are timed; folds skipped on a resume do not count (they are not re-run).
-  * The pipeline ETA covers the three model benchmarks only. collect_results, plotting and compare_models are timed as
+  * The pipeline ETA covers the model benchmarks only. collect_results, plotting and compare_models are timed as
     stages but not predicted.
 """
 

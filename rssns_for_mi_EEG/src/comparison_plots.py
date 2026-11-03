@@ -18,7 +18,7 @@ import pandas as pd
 from matplotlib.figure import Figure
 
 from benchmark_plots import CHANCE_ACCURACY, METRICS, MODEL_COLORS, MODEL_LABELS
-from comparison import COMPARISONS, METRIC_NAMES, MODEL_ORDER, PRIMARY_METRIC
+from comparison import COMPARISONS, COMPARISONS_SECONDARY, METRIC_NAMES, MODEL_ORDER, PRIMARY_METRIC
 
 METRIC_TITLES: dict[str, str] = {m: (t + " (primary)" if m == PRIMARY_METRIC else t) for m, t, _ in METRICS}
 METRIC_YLIM: dict[str, tuple[float, float]] = {m: lim for m, _, lim in METRICS}
@@ -34,16 +34,28 @@ NOTES: dict[str, tuple[str, str]] = {
         "accuracy lost in conversion and SNN to RSNN for the research question.",
     ),
     "paired_differences.png": (
-        "One column per comparison (difference = first minus second model), one row per metric. Each dot is one subject's "
-        "paired difference of subject means (nine per panel). The solid line is the median, the shaded band its bootstrap "
-        "95% confidence interval over subjects, and the dashed line marks zero (no difference). Titles give the "
-        "Holm-corrected p-value of the exact two-sided Wilcoxon signed-rank test (5 comparisons per metric). Rows have "
+        "Primary family (RSNN and RNN are the parameter-matched models). One column per comparison (difference = first "
+        "minus second model), one row per metric. Each dot is one subject's paired difference of subject means (nine per "
+        "panel). The solid line is the median, the shaded band its bootstrap 95% confidence interval over subjects, and "
+        "the dashed line marks zero (no difference). Titles give the Holm-corrected p-value of the exact two-sided "
+        "Wilcoxon signed-rank test (Holm over the 5 comparisons of this figure, separately for each metric). Rows have "
         "their own y-axis.",
         "A band that excludes zero together with p(Holm) < 0.05 supports a real difference between the models. Dots mostly "
         "on one side of zero but a band touching zero mean a consistent but small or uncertain effect. With nine subjects "
         "the smallest possible exact two-sided p is 2/512 (about 0.004), and the Holm correction raises it further, so "
         "only consistent effects can reach significance. RSNN vs SNN differs in more than recurrence; RNN vs RSNN isolates the spiking "
         "neuron model (same topology and size), and RNN vs ANN isolates the recurrent architecture.",
+    ),
+    "paired_differences_secondary.png": (
+        "Secondary family: same layout as paired_differences.png, for the comparisons that involve the neuron-matched "
+        "RSNN and RNN (as many hidden neurons as the converted SNN, but far more parameters). Holm correction is applied "
+        "over the 6 comparisons of this figure, separately for each metric and separately from the primary family.",
+        "The first two columns show what changes when the recurrent layer is widened from the parameter-matched to the "
+        "neuron-matched size, for spiking and non-spiking neurons. RNN - RSNN (neuron-matched) isolates the spiking neuron "
+        "model at the larger size. The last three columns place the neuron-matched models against the converted SNN and "
+        "the ANN. After Holm over 6 comparisons the smallest reachable p is 6 x 2/512 (about 0.023), so only an effect "
+        "that has the same sign in all nine subjects can pass p < 0.05. The neuron-matched models have many more "
+        "parameters than the SNN, so a gain over the parameter-matched models is a capacity effect, not an efficiency one.",
     ),
     "chance_tests.png": (
         "One panel per metric; rows = models, columns = target subjects, cell = subject-level mean over the 10 repeats. "
@@ -68,7 +80,7 @@ def _save(fig: Figure, out_dir: Path, name: str) -> None:
 def _accuracy_slopes(subjects: pd.DataFrame, chance: pd.DataFrame, models: list[str], out_dir: Path) -> None:
     acc = subjects[subjects["metric"] == PRIMARY_METRIC].pivot(index="subject", columns="model", values="mean")[models]
     passed = chance[chance["metric"] == PRIMARY_METRIC].pivot(index="subject", columns="model", values="above_chance")[models]
-    fig, ax = plt.subplots(figsize=(8, 5.5))
+    fig, ax = plt.subplots(figsize=(10, 5.5))
     x = np.arange(len(models))
     for s in acc.index:
         ax.plot(x, acc.loc[s].to_numpy(), color="gray", alpha=0.45, lw=1)
@@ -84,14 +96,18 @@ def _accuracy_slopes(subjects: pd.DataFrame, chance: pd.DataFrame, models: list[
     thr = chance[chance["metric"] == PRIMARY_METRIC]["binomial_threshold"].dropna()
     if len(thr):
         ax.axhline(thr.iloc[0], ls=":", c="k", label=f"binomial threshold ({thr.iloc[0]:.1%})")
-    ax.set_xticks(x, [MODEL_LABELS[m] for m in models])
+    ax.set_xticks(x, [MODEL_LABELS[m] for m in models], rotation=15)
     ax.set(ylim=(0, 1), xlim=(-0.4, len(models) - 0.4), ylabel="Accuracy (session 2)", title="Accuracy per subject across models")
     ax.legend(fontsize=7, ncol=2, loc="upper right")
     _save(fig, out_dir, "accuracy_slopes.png")
 
 
-def _paired_differences(diffs: pd.DataFrame, tests: pd.DataFrame, out_dir: Path) -> None:
-    comparisons = [c for c in COMPARISONS if f"{c[0]}-{c[1]}" in set(tests["comparison"])]
+def _paired_differences(
+    diffs: pd.DataFrame, tests: pd.DataFrame, comparisons: tuple, out_dir: Path, name: str, title: str
+) -> None:
+    comparisons = [c for c in comparisons if f"{c[0]}-{c[1]}" in set(tests["comparison"])]
+    if not comparisons:
+        return
     fig, axes = plt.subplots(len(METRIC_NAMES), len(comparisons), figsize=(4.6 * len(comparisons), 3.3 * len(METRIC_NAMES)),
                              squeeze=False, sharey="row")
     rng = np.random.default_rng(0)  # jitter only
@@ -112,13 +128,13 @@ def _paired_differences(diffs: pd.DataFrame, tests: pd.DataFrame, out_dir: Path)
             ax.set_xticks([])
             if c == 0:
                 ax.set_ylabel(f"Difference in {METRIC_TITLES[metric]}")
-    fig.suptitle("Paired differences between models (dots: subjects; line: median; band: bootstrap 95% CI)")
+    fig.suptitle(title)
     fig.tight_layout()
-    _save(fig, out_dir, "paired_differences.png")
+    _save(fig, out_dir, name)
 
 
 def _chance_tests(chance: pd.DataFrame, models: list[str], out_dir: Path) -> None:
-    fig, axes = plt.subplots(1, len(METRIC_NAMES), figsize=(5.2 * len(METRIC_NAMES), 3.0), squeeze=False)
+    fig, axes = plt.subplots(1, len(METRIC_NAMES), figsize=(5.2 * len(METRIC_NAMES), 1.2 + 0.6 * len(models)), squeeze=False)
     for ax, metric in zip(axes[0], METRIC_NAMES):
         sub = chance[chance["metric"] == metric]
         value = sub.pivot(index="model", columns="subject", values="observed").loc[models]
@@ -152,6 +168,10 @@ def plot_comparison(run_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     _accuracy_slopes(subjects, chance, models, out_dir)
     if len(tests):
-        _paired_differences(diffs, tests, out_dir)
+        _paired_differences(diffs, tests, COMPARISONS, out_dir, "paired_differences.png",
+                            "Paired differences, primary family (dots: subjects; line: median; band: bootstrap 95% CI)")
+        _paired_differences(diffs, tests, COMPARISONS_SECONDARY, out_dir, "paired_differences_secondary.png",
+                            "Paired differences, secondary family with the neuron-matched models "
+                            "(dots: subjects; line: median; band: bootstrap 95% CI)")
     _chance_tests(chance, models, out_dir)
     print(f"Saved comparison figures to {out_dir}")

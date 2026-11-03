@@ -215,6 +215,13 @@ def converted_snn_param_count(c: EEGNetConfig = EEGNetConfig()) -> int:
     )
 
 
+def eegnet_hidden_neurons(c: EEGNetConfig = EEGNetConfig()) -> int:
+    """Hidden (non-output) neurons of the ELU EEGNet and of the converted SNN: the units of block 1 (F1*D maps x
+    n_samples time points; the 'same'-padded convs keep the length and pooling comes after the ELU) plus those of block 2
+    (F2 maps x n_samples // pool1 time points) = 2048 + 512 = 2560 for EEGNet-4,2. The 4 output neurons are not counted."""
+    return c.F1 * c.D * c.n_samples + c.F2 * (c.n_samples // c.pool1)
+
+
 def rsnn_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
     """input_proj (W + b) + dense recurrent H x H (no bias) + readout (W + b). The fixed input standardization
     buffers are not trainable and not counted."""
@@ -235,6 +242,9 @@ def model_summary(eegnet_cfg: EEGNetConfig, rsnn_cfg: RSNNConfig) -> dict:
     snn_params = converted_snn_param_count(eegnet_cfg)
     hidden = rsnn_cfg.n_hidden or choose_hidden_size(snn_params, eegnet_cfg.n_channels, eegnet_cfg.n_classes)
     rsnn_params = rsnn_param_count(eegnet_cfg.n_channels, hidden, eegnet_cfg.n_classes)
+    # neuron-matched pair: as many recurrent neurons as EEGNet / the converted SNN have hidden neurons
+    wide = rsnn_cfg.n_hidden_wide or eegnet_hidden_neurons(eegnet_cfg)
+    wide_params = rsnn_param_count(eegnet_cfg.n_channels, wide, eegnet_cfg.n_classes)
     return {
         "ann_params": eegnet_param_count(eegnet_cfg),
         "converted_snn_params": snn_params,
@@ -244,4 +254,10 @@ def model_summary(eegnet_cfg: EEGNetConfig, rsnn_cfg: RSNNConfig) -> dict:
         "rnn_params": rnn_param_count(eegnet_cfg.n_channels, hidden, eegnet_cfg.n_classes),
         "rsnn_minus_snn_params": rsnn_params - snn_params,
         "rsnn_relative_difference": (rsnn_params - snn_params) / snn_params,
+        "eegnet_hidden_neurons": eegnet_hidden_neurons(eegnet_cfg),
+        "rsnn_wide_hidden": wide,
+        "rsnn_wide_params": wide_params,
+        "rnn_wide_hidden": wide,  # the neuron-matched RNN uses the neuron-matched RSNN's hidden size
+        "rnn_wide_params": rnn_param_count(eegnet_cfg.n_channels, wide, eegnet_cfg.n_classes),
+        "rsnn_wide_params_over_snn": wide_params / snn_params,
     }

@@ -20,9 +20,19 @@ from matplotlib.figure import Figure
 
 from data_statistics import CLASSES
 
-MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
-MODEL_LABELS: dict[str, str] = {"ann": "EEGNet ANN", "snn": "Converted SNN", "rsnn": "RSNN", "rnn": "RNN (ELU)"}
-MODEL_COLORS: dict[str, str] = {"ann": "tab:blue", "snn": "tab:orange", "rsnn": "tab:green", "rnn": "tab:red"}
+MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn", "rsnn_wide", "rnn_wide")
+# "params": hidden size chosen so the parameter count matches the converted SNN. "neurons": as many hidden neurons as
+# EEGNet / the converted SNN (2560), many more parameters.
+MODEL_LABELS: dict[str, str] = {
+    "ann": "EEGNet ANN", "snn": "Converted SNN",
+    "rsnn": "RSNN (params)", "rnn": "RNN-ELU (params)",
+    "rsnn_wide": "RSNN (neurons)", "rnn_wide": "RNN-ELU (neurons)",
+}
+MODEL_COLORS: dict[str, str] = {
+    "ann": "tab:blue", "snn": "tab:orange",
+    "rsnn": "tab:green", "rnn": "tab:red",
+    "rsnn_wide": "darkgreen", "rnn_wide": "darkred",
+}
 CHANCE_ACCURACY: float = 0.25
 METRICS: tuple[tuple[str, str, tuple[float, float]], ...] = (
     ("accuracy", "Accuracy", (0.0, 1.0)),
@@ -67,7 +77,7 @@ def _save(fig: Figure, out_dir: Path, name: str) -> None:
 
 def _accuracy_per_subject(df: pd.DataFrame, models: list[str], out_dir: Path) -> None:
     subjects = sorted(df["subject"].unique())
-    fig, ax = plt.subplots(figsize=(11, 5))
+    fig, ax = plt.subplots(figsize=(13, 5.5))
     rng = np.random.default_rng(0)  # jitter only
     width = 0.8 / len(models)
     for m, model in enumerate(models):
@@ -82,12 +92,12 @@ def _accuracy_per_subject(df: pd.DataFrame, models: list[str], out_dir: Path) ->
     ax.axhline(CHANCE_ACCURACY, ls="--", c="gray", label="nominal chance (25%)")
     ax.set_xticks(range(len(subjects)), [f"S{s}" for s in subjects])
     ax.set(ylim=(0, 1), ylabel="Accuracy (session 2)", xlabel="Target subject", title="Accuracy per target subject")
-    ax.legend(ncol=5, fontsize=7)
+    ax.legend(ncol=4, fontsize=7)
     _save(fig, out_dir, "accuracy_per_subject.png")
 
 
 def _metric_distributions(df: pd.DataFrame, models: list[str], out_dir: Path) -> None:
-    fig, axes = plt.subplots(1, len(METRICS), figsize=(14, 4.5), squeeze=False)
+    fig, axes = plt.subplots(1, len(METRICS), figsize=(18, 5), squeeze=False)
     rng = np.random.default_rng(0)
     for ax, (col, title, ylim) in zip(axes[0], METRICS):
         subject_means = [df[df["model"] == m].groupby("subject")[col].mean().to_numpy() for m in models]
@@ -102,7 +112,7 @@ def _metric_distributions(df: pd.DataFrame, models: list[str], out_dir: Path) ->
             ax.axhline(CHANCE_ACCURACY, ls="--", c="gray")
         if col == "kappa":
             ax.axhline(0.0, ls="--", c="gray")
-        ax.set_xticks(range(len(models)), [MODEL_LABELS[m] for m in models], rotation=15)
+        ax.set_xticks(range(len(models)), [MODEL_LABELS[m] for m in models], rotation=30, ha="right")
         ax.set(ylim=ylim, title=title)
     fig.suptitle("Distribution across subjects (boxes: subject means; dots: individual folds)")
     fig.tight_layout()
@@ -110,8 +120,12 @@ def _metric_distributions(df: pd.DataFrame, models: list[str], out_dir: Path) ->
 
 
 def _confusion_matrices(conf: pd.DataFrame, models: list[str], out_dir: Path) -> None:
-    fig, axes = plt.subplots(1, len(models), figsize=(5 * len(models), 4.8), squeeze=False)
-    for ax, model in zip(axes[0], models):
+    ncols = len(models) if len(models) <= 4 else 3  # one row up to four models, otherwise a grid of three columns
+    nrows = -(-len(models) // ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(5 * ncols, 4.6 * nrows), squeeze=False, layout="constrained")
+    for ax in axes.ravel()[len(models):]:
+        ax.set_axis_off()  # unused cell of the grid
+    for ax, model in zip(axes.ravel(), models):
         sub = conf[conf["model"] == model]
         matrix = sub.groupby(["true_class", "pred_class"])["count"].sum().unstack(fill_value=0).to_numpy().astype(float)
         matrix = matrix / matrix.sum(axis=1, keepdims=True)
@@ -122,7 +136,7 @@ def _confusion_matrices(conf: pd.DataFrame, models: list[str], out_dir: Path) ->
         ax.set_xticks(range(len(CLASSES)), CLASSES, rotation=30)
         ax.set_yticks(range(len(CLASSES)), CLASSES)
         ax.set(xlabel="Predicted", ylabel="True", title=MODEL_LABELS[model])
-    fig.colorbar(im, ax=axes[0].tolist(), shrink=0.8, label="Row-normalized fraction")
+    fig.colorbar(im, ax=axes.ravel()[: len(models)].tolist(), shrink=0.8, label="Row-normalized fraction")
     _save(fig, out_dir, "confusion_matrices.png")
 
 
