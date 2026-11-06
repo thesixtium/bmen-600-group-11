@@ -70,7 +70,9 @@ uv venv --python 3.12 .venv
 uv pip install -r experiments/requirements.txt
 ```
 
-`uv sync` is not used here: it needs a `pyproject.toml` and a `uv.lock`, and the repository has neither.
+`uv sync` is not used here: it needs a `pyproject.toml` and a `uv.lock`, and the repository has neither
+
+#
 
 ## Glossary
 
