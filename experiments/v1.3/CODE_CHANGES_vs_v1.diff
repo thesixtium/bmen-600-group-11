@@ -1,0 +1,299 @@
+diff --git a/v1/code/src/benchmark.py b/v1.3/code/src/benchmark.py
+index db146a4..ac8654d 100644
+--- a/v1/code/src/benchmark.py
++++ b/v1.3/code/src/benchmark.py
+@@ -28,8 +28,9 @@ from benchmark_config import (
+     ANN_TRAIN,
+     EEGNET_CFG,
+     FOLD_CFG,
+-    N_CHANNELS,
++    FRONT_END_CFG,
+     N_CLASSES,
++    N_RECURRENT_INPUTS,
+     RESULTS_DIR,
+     RNN_CFG,
+     RNN_TRAIN,
+@@ -64,6 +65,7 @@ def prepare_run_dir(folds: list[Fold], run_id: str | None = None) -> Path:
+     config = {
+         "run_id": run_id,
+         "fold": asdict(FOLD_CFG),
++        "front_end": asdict(FRONT_END_CFG),  # v1.3: mu/beta band input of the RSNN and the RNN
+         "eegnet": asdict(EEGNET_CFG),
+         "ann_train": asdict(ANN_TRAIN),
+         "snn": asdict(SNN_CFG),
+@@ -220,9 +222,9 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
+         if timer.out_of_time("rsnn"):
+             break
+         with tracker.fold(fold) as t:
+-            data = build_fold_data(processed, fold)
++            data = build_fold_data(processed, fold, field="X_bands")  # 44 mu + beta band inputs (v1.3)
+             torch.manual_seed(fold.seed)
+-            model = RecurrentLIFNet(N_CHANNELS, n_hidden, N_CLASSES, RSNN_CFG)
++            model = RecurrentLIFNet(N_RECURRENT_INPUTS, n_hidden, N_CLASSES, RSNN_CFG)
+             if RSNN_CFG.normalize_input:
+                 # per-channel standardization from the PRETRAINING subjects' session 1 only (no target / test data)
+                 model.set_input_stats(data.pre_train.X)
+@@ -251,9 +253,9 @@ def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path
+         if timer.out_of_time("rnn"):
+             break
+         with tracker.fold(fold) as t:
+-            data = build_fold_data(processed, fold)
++            data = build_fold_data(processed, fold, field="X_bands")  # same 44 band inputs as the RSNN (v1.3)
+             torch.manual_seed(fold.seed)
+-            model = RecurrentELUNet(N_CHANNELS, n_hidden, N_CLASSES, RNN_CFG)
++            model = RecurrentELUNet(N_RECURRENT_INPUTS, n_hidden, N_CLASSES, RNN_CFG)
+             if RNN_CFG.normalize_input:
+                 # per-channel standardization from the PRETRAINING subjects' session 1 only (no target / test data)
+                 model.set_input_stats(data.pre_train.X)
+diff --git a/v1/code/src/benchmark_config.py b/v1.3/code/src/benchmark_config.py
+index 83231e9..3a4bdf5 100644
+--- a/v1/code/src/benchmark_config.py
++++ b/v1.3/code/src/benchmark_config.py
+@@ -21,6 +21,28 @@ TEST_SESSION: str = "1test"  # session 2: held out, only used for final predicti
+ INPUT_SCALE: float = 1e6
+ 
+ 
++@dataclass(frozen=True)
++class FrontEndConfig:
++    """Fixed frequency front end of the two recurrent models (RSNN and its RNN control), v1.3 / option B.
++
++    Each of the 22 EEG channels is split into the mu band (8-13 Hz) and the beta band (13-30 Hz), the two motor
++    rhythms that change during motor imagery. The recurrent models then get 22 x 2 = 44 inputs per time step (the 22 mu
++    channels first, then the 22 beta channels). The ANN and the converted SNN keep the 22-channel 4-40 Hz input.
++
++    The filters are FIXED: Butterworth band-passes applied forward and backward (zero phase) to the continuous 128 Hz
++    recording of each run, after the 4-40 Hz filter and the resampling, and before epoching, so the 0.5-2.5 s trial
++    window has no filter edge transients. Nothing is fitted to data and nothing is trained, so the front end adds no
++    parameters and cannot carry target or test information.
++    """
++
++    bands: tuple[tuple[float, float], ...] = ((8.0, 13.0), (13.0, 30.0))  # (low Hz, high Hz): mu, beta
++    filter_order: int = 4  # Butterworth order of one pass; forward-backward filtering doubles the effective order
++
++
++FRONT_END_CFG = FrontEndConfig()
++N_RECURRENT_INPUTS: int = N_CHANNELS * len(FRONT_END_CFG.bands)  # 44 inputs per step for the RSNN and the RNN
++
++
+ @dataclass(frozen=True)
+ class FoldConfig:
+     n_repeats: int = 10
+@@ -94,8 +116,9 @@ class RNNConfig:
+     (Elman style: h_t = ELU(W_in x_t + b + W_rec h_{t-1}); no leak, no threshold, no reset).
+ 
+     The hidden size is NOT set here: it is always the RSNN's hidden size (model_summary()["rsnn_hidden"]), so both
+-    models have exactly the same number of recurrent nodes and parameters. Init, input standardization, simulation steps,
+-    batch size and the pretrain/finetune schedule mirror the RSNN.
++    models have exactly the same number of recurrent nodes and parameters. Init, input (the same 44 mu and beta band
++    inputs, see FrontEndConfig), input standardization, simulation steps, batch size and the pretrain/finetune schedule
++    mirror the RSNN.
+ 
+     Stability note: ELU is unbounded for x > 0, so a recurrent loop over 256 steps can in principle diverge. The RSNN init
+     (recurrent std = gain / sqrt(n_hidden)) is kept on purpose. Add gradient clipping (e.g.
+diff --git a/v1/code/src/folds.py b/v1.3/code/src/folds.py
+index 626185e..7cc6b9d 100644
+--- a/v1/code/src/folds.py
++++ b/v1.3/code/src/folds.py
+@@ -31,7 +31,7 @@ class Fold:
+ 
+ @dataclass(frozen=True)
+ class Split:
+-    X: NDArray[np.float32]  # (n, 22, 256), scaled by INPUT_SCALE
++    X: NDArray[np.float32]  # (n, 22, 256) 4-40 Hz, or (n, 44, 256) mu + beta bands; scaled by INPUT_SCALE
+     y: NDArray[np.int64]
+ 
+ 
+@@ -82,19 +82,21 @@ def save_folds(folds: list[Fold], cfg: FoldConfig, path: Path) -> None:
+     path.write_text(json.dumps({"config": asdict(cfg), "folds": [asdict(f) for f in folds]}, indent=1))
+ 
+ 
+-def _stack(processed: ProcessedData, subjects: list[int], session: str) -> Split:
+-    X = np.concatenate([processed[s][session].X for s in subjects])
++def _stack(processed: ProcessedData, subjects: list[int], session: str, field: str) -> Split:
++    X = np.concatenate([getattr(processed[s][session], field) for s in subjects])
+     y = np.concatenate([processed[s][session].y for s in subjects])
+     return Split(X=(X * INPUT_SCALE).astype(np.float32), y=y)
+ 
+ 
+-def build_fold_data(processed: ProcessedData, fold: Fold) -> FoldData:
+-    target_train = _stack(processed, [fold.target], TRAIN_SESSION)
++def build_fold_data(processed: ProcessedData, fold: Fold, field: str = "X") -> FoldData:
++    """Trials of one fold. field = "X" (22-channel 4-40 Hz input: ANN, SNN) or "X_bands" (44 mu + beta band inputs:
++    RSNN, RNN, v1.3). Both fields hold the same trials in the same order, so the split indices are identical."""
++    target_train = _stack(processed, [fold.target], TRAIN_SESSION, field)
+     tr, va = np.array(fold.finetune_train_idx), np.array(fold.finetune_val_idx)
+     return FoldData(
+-        pre_train=_stack(processed, list(fold.pretrain_subjects), TRAIN_SESSION),
+-        pre_val=_stack(processed, list(fold.val_subjects), TRAIN_SESSION),
++        pre_train=_stack(processed, list(fold.pretrain_subjects), TRAIN_SESSION, field),
++        pre_val=_stack(processed, list(fold.val_subjects), TRAIN_SESSION, field),
+         ft_train=Split(target_train.X[tr], target_train.y[tr]),
+         ft_val=Split(target_train.X[va], target_train.y[va]),
+-        test=_stack(processed, [fold.target], TEST_SESSION),
++        test=_stack(processed, [fold.target], TEST_SESSION, field),
+     )
+diff --git a/v1/code/src/main.py b/v1.3/code/src/main.py
+index f49b16d..cdf10f3 100644
+--- a/v1/code/src/main.py
++++ b/v1.3/code/src/main.py
+@@ -63,7 +63,7 @@ try:
+     with timer.stage("benchmark: rsnn"):
+         run_rsnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+-    # Make and train the non-spiking RNN control (same topology and size as the RSNN, ELU instead of LIF)
++    # Make and train the non-spiking RNN control (same topology, size and 44 band inputs as the RSNN, ELU instead of LIF)
+     with timer.stage("benchmark: rnn"):
+         run_rnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+diff --git a/v1/code/src/models.py b/v1.3/code/src/models.py
+index 427d568..1b9067c 100644
+--- a/v1/code/src/models.py
++++ b/v1.3/code/src/models.py
+@@ -10,7 +10,7 @@ from numpy.typing import NDArray
+ from snntorch import surrogate  # only the surrogate gradient is used; the LIF loop below is written out explicitly
+ from torch import nn
+ 
+-from benchmark_config import EEGNetConfig, RNNConfig, RSNNConfig
++from benchmark_config import N_RECURRENT_INPUTS, EEGNetConfig, RNNConfig, RSNNConfig
+ 
+ 
+ # ---------------------------------------------------------------- EEGNet
+@@ -65,7 +65,8 @@ class RecurrentLIFNet(nn.Module):
+     """(input standardization) -> input projection -> ONE dense all-to-all recurrent LIF layer -> linear readout.
+ 
+     Weights (all trained by surrogate-gradient BPTT):
+-      input_proj : Linear(n_inputs -> n_hidden), applied to the 22 channel values of one EEG sample per step
++      input_proj : Linear(n_inputs -> n_hidden), applied to the n_inputs values of one EEG sample per step (v1.3: the
++                   44 mu and beta band values of the 22 channels, see benchmark_config.FrontEndConfig)
+       recurrent  : Linear(n_hidden -> n_hidden, no bias), dense H x H; entry [i, j] is the trainable weight of the
+                    directed connection from hidden neuron j to hidden neuron i (diagonal = self-connections included)
+       readout    : Linear(n_hidden -> n_classes) on the time-averaged hidden spike rate
+@@ -227,21 +228,29 @@ def rnn_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
+ 
+ 
+ def choose_hidden_size(target_params: int, n_inputs: int, n_classes: int, max_hidden: int = 2000) -> int:
+-    """Integer hidden size whose RSNN parameter count is closest to target_params (smaller size wins ties)."""
+-    return min(range(1, max_hidden + 1), key=lambda h: abs(rsnn_param_count(n_inputs, h, n_classes) - target_params))
++    """Largest integer hidden size whose RSNN parameter count does not exceed target_params.
+ 
++    v1 took the closest count; with 22 inputs both rules give 17 (752 <= 776). With 44 inputs the closest is 13
++    (810 > 776), which would give the recurrent model more parameters than the converted SNN, so v1.3 uses the largest
++    size at or below the SNN: 12 (736)."""
++    fits = [h for h in range(1, max_hidden + 1) if rsnn_param_count(n_inputs, h, n_classes) <= target_params]
++    assert fits, "no hidden size fits under the parameter budget"
++    return max(fits)
+ 
+-def model_summary(eegnet_cfg: EEGNetConfig, rsnn_cfg: RSNNConfig) -> dict:
++
++def model_summary(eegnet_cfg: EEGNetConfig, rsnn_cfg: RSNNConfig, n_recurrent_inputs: int = N_RECURRENT_INPUTS) -> dict:
++    """Parameter counts. n_recurrent_inputs = inputs per step of the RSNN and the RNN (v1.3: 44 mu + beta bands)."""
+     snn_params = converted_snn_param_count(eegnet_cfg)
+-    hidden = rsnn_cfg.n_hidden or choose_hidden_size(snn_params, eegnet_cfg.n_channels, eegnet_cfg.n_classes)
+-    rsnn_params = rsnn_param_count(eegnet_cfg.n_channels, hidden, eegnet_cfg.n_classes)
++    hidden = rsnn_cfg.n_hidden or choose_hidden_size(snn_params, n_recurrent_inputs, eegnet_cfg.n_classes)
++    rsnn_params = rsnn_param_count(n_recurrent_inputs, hidden, eegnet_cfg.n_classes)
+     return {
+         "ann_params": eegnet_param_count(eegnet_cfg),
+         "converted_snn_params": snn_params,
+         "rsnn_hidden": hidden,
+         "rsnn_params": rsnn_params,
+         "rnn_hidden": hidden,  # the RNN always uses the RSNN's hidden size
+-        "rnn_params": rnn_param_count(eegnet_cfg.n_channels, hidden, eegnet_cfg.n_classes),
++        "rnn_params": rnn_param_count(n_recurrent_inputs, hidden, eegnet_cfg.n_classes),
++        "recurrent_inputs": n_recurrent_inputs,
+         "rsnn_minus_snn_params": rsnn_params - snn_params,
+         "rsnn_relative_difference": (rsnn_params - snn_params) / snn_params,
+     }
+\ No newline at end of file
+diff --git a/v1/code/src/preprocess_data.py b/v1.3/code/src/preprocess_data.py
+index ff926c1..56a63d6 100644
+--- a/v1/code/src/preprocess_data.py
++++ b/v1.3/code/src/preprocess_data.py
+@@ -5,6 +5,7 @@ import numpy as np
+ from mne.io import BaseRaw
+ from numpy.typing import NDArray
+ 
++from benchmark_config import FRONT_END_CFG
+ from download_data import RawData
+ 
+ # EEGNet preprocessing parameters
+@@ -26,15 +27,18 @@ class SessionData:
+ 
+     subject: int            # Subject number
+     session: str            # "0train" or "1test"
+-    X: NDArray[np.float32]  # (n_trials, 22, 256)
++    X: NDArray[np.float32]  # (n_trials, 22, 256), 4-40 Hz: input of the ANN and the converted SNN
+     y: NDArray[np.int64]    # (n_trials,) 0=left hand, 1=right hand, 2=feet, 3=tongue
+     run: NDArray[np.int64]  # (n_trials,) run index (0-5) each trial came from
++    # (n_trials, 44, 256): the same trials split into the fixed mu and beta bands (FrontEndConfig); channels 0-21 are
++    # mu, 22-43 are beta, same channel order as X. Input of the RSNN and the RNN control.
++    X_bands: NDArray[np.float32]
+ 
+ 
+ ProcessedData = dict[int, dict[str, SessionData]]  # subject -> session -> data
+ 
+ 
+-def _process_run(raw: BaseRaw) -> tuple[NDArray[np.float32], NDArray[np.int64]]:
++def _process_run(raw: BaseRaw) -> tuple[NDArray[np.float32], NDArray[np.int64], NDArray[np.float32]]:
+     events, _ = mne.events_from_annotations(raw, event_id=EVENT_ID, verbose=False)
+ 
+     # 22 EEG channels only (drops the 3 EOG channels and the STI channel)
+@@ -44,6 +48,25 @@ def _process_run(raw: BaseRaw) -> tuple[NDArray[np.float32], NDArray[np.int64]]:
+     raw.filter(LOW_HZ, HIGH_HZ, verbose=False)
+     raw, events = raw.resample(SFREQ, events=events, verbose=False)
+ 
++    X, y = _epoch(raw, events)
++
++    # Frequency front end (v1.3): band-pass copies of the SAME continuous 4-40 Hz, 128 Hz recording, epoched with the
++    # same events. Zero-phase IIR (Butterworth, forward-backward), fixed, nothing fitted to data.
++    band_X = []
++    for low, high in FRONT_END_CFG.bands:
++        band_raw = raw.copy().filter(
++            low, high, method="iir", iir_params={"order": FRONT_END_CFG.filter_order, "ftype": "butter"},
++            phase="zero", verbose=False,
++        )
++        X_band, y_band = _epoch(band_raw, events)
++        assert np.array_equal(y_band, y), "band epochs must be the same trials as the 4-40 Hz epochs"
++        band_X.append(X_band)
++    X_bands = np.concatenate(band_X, axis=1)  # (n_trials, 22 * n_bands, 256): all mu channels, then all beta channels
++    return X, y, X_bands
++
++
++def _epoch(raw: BaseRaw, events: NDArray[np.int64]) -> tuple[NDArray[np.float32], NDArray[np.int64]]:
++    """Cut the 0.5-2.5 s after-cue window (256 samples) of every trial out of a continuous 128 Hz recording."""
+     # -1/SFREQ so the window is exactly 256 samples (MNE includes both endpoints)
+     epochs = mne.Epochs(
+         raw,
+@@ -64,7 +87,7 @@ def _process_run(raw: BaseRaw) -> tuple[NDArray[np.float32], NDArray[np.int64]]:
+ 
+ 
+ def preprocess_data(data: RawData) -> ProcessedData:
+-    """4-40 Hz band-pass, resample to 128 Hz, epoch 0.5-2.5 s after cue onset."""
++    """4-40 Hz band-pass, resample to 128 Hz, epoch 0.5-2.5 s after cue onset; plus the mu/beta band copies."""
+     out: ProcessedData = {}
+ 
+     for subject, sessions in data.items():
+@@ -72,11 +95,13 @@ def preprocess_data(data: RawData) -> ProcessedData:
+         for session, runs in sessions.items():
+             Xs: list[NDArray[np.float32]] = []
+             ys: list[NDArray[np.int64]] = []
++            Xbs: list[NDArray[np.float32]] = []
+             run_ids: list[NDArray[np.int64]] = []
+ 
+             for run_name in sorted(runs, key=int):
+-                X, y = _process_run(runs[run_name])
++                X, y, X_bands = _process_run(runs[run_name])
+                 Xs.append(X)
++                Xbs.append(X_bands)
+                 ys.append(y)
+                 run_ids.append(np.full(len(y), int(run_name), dtype=np.int64))
+ 
+@@ -86,6 +111,7 @@ def preprocess_data(data: RawData) -> ProcessedData:
+                 X=np.concatenate(Xs),
+                 y=np.concatenate(ys),
+                 run=np.concatenate(run_ids),
++                X_bands=np.concatenate(Xbs),
+             )
+ 
+     return out
+\ No newline at end of file

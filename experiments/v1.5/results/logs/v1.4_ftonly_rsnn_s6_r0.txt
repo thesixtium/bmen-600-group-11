@@ -1,0 +1,2 @@
+[time]     [v1.5 v1.4 ftonly rsnn s6_r0] finetune epoch 50/100 | val_loss 1.3833 | elapsed 12s, phase ETA 12s
+{"variant": "v1.4", "arm": "ftonly", "model": "rsnn", "target": 6, "pre_target_s1": null, "ft_ft_val": 0.3103448275862069, "max_abs_diff_to_saved": null, "seconds": 25.970353741999133}

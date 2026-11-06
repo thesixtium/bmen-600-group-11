@@ -1,0 +1,3 @@
+ann and snn metrics, predictions and histories copied from v1 run 20261029_141407 on 2026-11-02T16:39:09-06:00
+source: experiments/v1/results/20261029_141407
+the rsnn and the rnn (44 mu + beta band inputs, v1.3) are trained in this run

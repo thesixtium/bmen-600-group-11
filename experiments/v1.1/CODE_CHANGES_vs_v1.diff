@@ -1,0 +1,38 @@
+diff --git a/v1/code/src/benchmark.py b/v1.1/code/src/benchmark.py
+index db146a4..cd2c169 100644
+--- a/v1/code/src/benchmark.py
++++ b/v1.1/code/src/benchmark.py
+@@ -244,7 +244,7 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
+ 
+ 
+ def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
+-    """Elman RNN with ELU, same hidden size / init / input handling / training schedule / folds as the RSNN."""
++    """Elman RNN with ELU, same hidden size / init / input handling / epochs / folds as the RSNN (batch size: RNNConfig)."""
+     n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]  # identical number of recurrent nodes as the RSNN
+     tracker = timer.track("rnn", pending_folds(run_dir, "rnn", folds))
+     for fold in tracker.folds:
+diff --git a/v1/code/src/benchmark_config.py b/v1.1/code/src/benchmark_config.py
+index 83231e9..a981620 100644
+--- a/v1/code/src/benchmark_config.py
++++ b/v1.1/code/src/benchmark_config.py
+@@ -80,7 +80,7 @@ class RSNNConfig:
+     threshold: float = 1.0  # copied from the converted SNN
+     surrogate_slope: float = 25.0  # snntorch.surrogate.fast_sigmoid default
+     recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2)
+-    batch_size: int = 64  # larger than the ANN's to keep BPTT over 256 steps tractable
++    batch_size: int = 16  # v1.1: same as the ANN (v1: 64), about 4x the weight updates per epoch in both phases
+     # Per-channel standardization of the input (mean/std over trials and time of the PRETRAINING subjects' session 1
+     # only; fixed afterwards, so no target or test information is used). The ANN has BatchNorm and the converted SNN
+     # divides by lambda_0; this gives the RSNN the equivalent scale handling. False = previous behaviour (raw uV).
+@@ -94,8 +94,9 @@ class RNNConfig:
+     (Elman style: h_t = ELU(W_in x_t + b + W_rec h_{t-1}); no leak, no threshold, no reset).
+ 
+     The hidden size is NOT set here: it is always the RSNN's hidden size (model_summary()["rsnn_hidden"]), so both
+-    models have exactly the same number of recurrent nodes and parameters. Init, input standardization, simulation steps,
+-    batch size and the pretrain/finetune schedule mirror the RSNN.
++    models have exactly the same number of recurrent nodes and parameters. Init, input standardization, simulation steps
++    and the pretrain/finetune schedule mirror the RSNN. The batch size stays 64 (v1): in v1.1 only the RSNN changes to 16,
++    and the v1 RNN results are reused.
+ 
+     Stability note: ELU is unbounded for x > 0, so a recurrent loop over 256 steps can in principle diverge. The RSNN init
+     (recurrent std = gain / sqrt(n_hidden)) is kept on purpose. Add gradient clipping (e.g.

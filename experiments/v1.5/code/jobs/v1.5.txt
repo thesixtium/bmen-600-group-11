@@ -1,0 +1,43 @@
+# v1.5 part B. Part A (saved checkpoints, 90 folds) runs first via eval_saved.py
+--variant v1.4 --arm full --model rsnn --fold 1:0 --check
+--variant v1.4 --arm full --model rsnn --fold 5:0 --check
+--variant v1.4 --arm full --model rsnn --fold 9:0 --check
+--variant v1.4 --arm full --model rnn --fold 1:0 --check
+--variant v1.4 --arm full --model rnn --fold 5:0 --check
+--variant v1.4 --arm full --model rnn --fold 9:0 --check
+--variant v1.4 --arm full --model ann --fold 1:0 --check
+--variant v1.4 --arm full --model ann --fold 2:0 --check
+--variant v1.4 --arm full --model ann --fold 3:0 --check
+--variant v1.4 --arm full --model ann --fold 4:0 --check
+--variant v1.4 --arm full --model ann --fold 5:0 --check
+--variant v1.4 --arm full --model ann --fold 6:0 --check
+--variant v1.4 --arm full --model ann --fold 7:0 --check
+--variant v1.4 --arm full --model ann --fold 8:0 --check
+--variant v1.4 --arm full --model ann --fold 9:0 --check
+--variant v1.4 --arm ftonly --model rsnn --fold 1:0
+--variant v1.4 --arm ftonly --model rsnn --fold 2:0
+--variant v1.4 --arm ftonly --model rsnn --fold 3:0
+--variant v1.4 --arm ftonly --model rsnn --fold 4:0
+--variant v1.4 --arm ftonly --model rsnn --fold 5:0
+--variant v1.4 --arm ftonly --model rsnn --fold 6:0
+--variant v1.4 --arm ftonly --model rsnn --fold 7:0
+--variant v1.4 --arm ftonly --model rsnn --fold 8:0
+--variant v1.4 --arm ftonly --model rsnn --fold 9:0
+--variant v1.4 --arm ftonly --model rnn --fold 1:0
+--variant v1.4 --arm ftonly --model rnn --fold 2:0
+--variant v1.4 --arm ftonly --model rnn --fold 3:0
+--variant v1.4 --arm ftonly --model rnn --fold 4:0
+--variant v1.4 --arm ftonly --model rnn --fold 5:0
+--variant v1.4 --arm ftonly --model rnn --fold 6:0
+--variant v1.4 --arm ftonly --model rnn --fold 7:0
+--variant v1.4 --arm ftonly --model rnn --fold 8:0
+--variant v1.4 --arm ftonly --model rnn --fold 9:0
+--variant v1.4 --arm ftonly --model ann --fold 1:0
+--variant v1.4 --arm ftonly --model ann --fold 2:0
+--variant v1.4 --arm ftonly --model ann --fold 3:0
+--variant v1.4 --arm ftonly --model ann --fold 4:0
+--variant v1.4 --arm ftonly --model ann --fold 5:0
+--variant v1.4 --arm ftonly --model ann --fold 6:0
+--variant v1.4 --arm ftonly --model ann --fold 7:0
+--variant v1.4 --arm ftonly --model ann --fold 8:0
+--variant v1.4 --arm ftonly --model ann --fold 9:0

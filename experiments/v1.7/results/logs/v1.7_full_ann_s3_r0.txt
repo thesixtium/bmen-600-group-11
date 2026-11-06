@@ -1,0 +1,13 @@
+.venv/lib/python3.12/site-packages/torch/nn/modules/conv.py:454: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at ../aten/src/ATen/native/Convolution.cpp:1031.)
+  return F.conv2d(input, weight, bias, self.stride,
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 50/500 | val_loss 1.1496 | elapsed 11s, phase ETA 1m43s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 100/500 | val_loss 1.1148 | elapsed 22s, phase ETA 1m29s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 150/500 | val_loss 1.0848 | elapsed 33s, phase ETA 1m17s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 200/500 | val_loss 1.0708 | elapsed 44s, phase ETA 1m06s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 250/500 | val_loss 1.0580 | elapsed 55s, phase ETA 55s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 300/500 | val_loss 1.0513 | elapsed 1m06s, phase ETA 44s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 350/500 | val_loss 1.0975 | elapsed 1m16s, phase ETA 33s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 400/500 | val_loss 1.0749 | elapsed 1m26s, phase ETA 22s
+[time]     [v1.7 v1.7 full ann s3_r0] pretrain epoch 450/500 | val_loss 1.0638 | elapsed 1m36s, phase ETA 11s
+[time]     [v1.7 v1.7 full ann s3_r0] finetune epoch 50/100 | val_loss 0.4092 | elapsed 1.4s, phase ETA 1.4s
+{"variant": "v1.7", "arm": "full", "model": "ann", "target": 3, "pre_target_s1": 0.6319444444444444, "ft_ft_val": 0.9310344827586207, "max_abs_diff_to_saved": null, "seconds": 110.09761231401353}

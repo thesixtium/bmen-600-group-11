@@ -1,0 +1,11 @@
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 50/500 | val_loss 1.5071 | elapsed 1m16s, phase ETA 11m23s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 100/500 | val_loss 1.5661 | elapsed 2m32s, phase ETA 10m06s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 150/500 | val_loss 1.6565 | elapsed 3m47s, phase ETA 8m50s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 200/500 | val_loss 1.7746 | elapsed 5m03s, phase ETA 7m34s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 250/500 | val_loss 1.6719 | elapsed 6m19s, phase ETA 6m19s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 300/500 | val_loss 1.7517 | elapsed 7m35s, phase ETA 5m03s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 350/500 | val_loss 1.7787 | elapsed 8m50s, phase ETA 3m47s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 400/500 | val_loss 1.7725 | elapsed 10m06s, phase ETA 2m32s
+[time]     [v1.6 v1.6 full rsnn s8_r0] pretrain epoch 450/500 | val_loss 1.7951 | elapsed 11m22s, phase ETA 1m16s
+[time]     [v1.6 v1.6 full rsnn s8_r0] finetune epoch 50/100 | val_loss 1.2731 | elapsed 12s, phase ETA 12s
+{"variant": "v1.6", "arm": "full", "model": "rsnn", "target": 8, "pre_target_s1": 0.3576388888888889, "ft_ft_val": 0.6206896551724138, "max_abs_diff_to_saved": null, "seconds": 782.788571586003}

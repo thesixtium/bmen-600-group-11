@@ -1,0 +1,11 @@
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 50/500 | val_loss 1.2582 | elapsed 1m27s, phase ETA 13m04s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 100/500 | val_loss 1.2050 | elapsed 2m54s, phase ETA 11m35s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 150/500 | val_loss 1.1858 | elapsed 4m20s, phase ETA 10m06s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 200/500 | val_loss 1.2112 | elapsed 5m46s, phase ETA 8m39s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 250/500 | val_loss 1.1832 | elapsed 7m11s, phase ETA 7m11s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 300/500 | val_loss 1.1672 | elapsed 8m37s, phase ETA 5m45s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 350/500 | val_loss 1.1702 | elapsed 10m03s, phase ETA 4m18s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 400/500 | val_loss 1.1726 | elapsed 11m29s, phase ETA 2m52s
+[time]     [v1.7 v1.7 full rsnn s3_r0] pretrain epoch 450/500 | val_loss 1.1870 | elapsed 12m55s, phase ETA 1m26s
+[time]     [v1.7 v1.7 full rsnn s3_r0] finetune epoch 50/100 | val_loss 0.7275 | elapsed 12s, phase ETA 12s
+{"variant": "v1.7", "arm": "full", "model": "rsnn", "target": 3, "pre_target_s1": 0.4965277777777778, "ft_ft_val": 0.7758620689655172, "max_abs_diff_to_saved": null, "seconds": 885.9805780130118}

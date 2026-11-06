@@ -1,0 +1,15 @@
+# Exact versions used for every run in experiments/ (v1 to v1.7). Python 3.12 (the pipeline needs 3.10 to 3.12).
+# Install with uv (from the repository root):
+#   uv venv --python 3.12 .venv
+#   uv pip install -r experiments/requirements.txt
+# torch 2.4.0 from PyPI is the CUDA build on Linux and the CPU build on Windows and macOS.
+torch==2.4.0
+snntorch==1.0.0
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+pandas==3.1.0
+matplotlib==3.11.2
+seaborn==0.13.2
+mne==1.13.2
+moabb==1.7.2

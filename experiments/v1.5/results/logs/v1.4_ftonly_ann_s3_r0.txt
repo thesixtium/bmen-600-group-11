@@ -1,0 +1,4 @@
+.venv/lib/python3.12/site-packages/torch/nn/modules/conv.py:454: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at ../aten/src/ATen/native/Convolution.cpp:1031.)
+  return F.conv2d(input, weight, bias, self.stride,
+[time]     [v1.5 v1.4 ftonly ann s3_r0] finetune epoch 50/100 | val_loss 0.8466 | elapsed 1.8s, phase ETA 1.8s
+{"variant": "v1.4", "arm": "ftonly", "model": "ann", "target": 3, "pre_target_s1": null, "ft_ft_val": 0.8275862068965517, "max_abs_diff_to_saved": null, "seconds": 3.6471136760083027}

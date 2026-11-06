@@ -1,0 +1,194 @@
+diff --git a/v1/code/src/benchmark.py b/v1.2/code/src/benchmark.py
+index db146a4..e6a774a 100644
+--- a/v1/code/src/benchmark.py
++++ b/v1.2/code/src/benchmark.py
+@@ -244,8 +244,8 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
+ 
+ 
+ def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
+-    """Elman RNN with ELU, same hidden size / init / input handling / training schedule / folds as the RSNN."""
+-    n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]  # identical number of recurrent nodes as the RSNN
++    """Elman RNN with ELU: the non-spiking twin of the one-window (v1) RSNN; same init / input handling / schedule / folds."""
++    n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rnn_hidden"]  # matched with the one-window readout (v1 size)
+     tracker = timer.track("rnn", pending_folds(run_dir, "rnn", folds))
+     for fold in tracker.folds:
+         if timer.out_of_time("rnn"):
+diff --git a/v1/code/src/benchmark_config.py b/v1.2/code/src/benchmark_config.py
+index 83231e9..7f1c5f0 100644
+--- a/v1/code/src/benchmark_config.py
++++ b/v1.2/code/src/benchmark_config.py
+@@ -85,6 +85,11 @@ class RSNNConfig:
+     # only; fixed afterwards, so no target or test information is used). The ANN has BatchNorm and the converted SNN
+     # divides by lambda_0; this gives the RSNN the equivalent scale handling. False = previous behaviour (raw uV).
+     normalize_input: bool = True
++    # Time-window readout: the n_steps simulation steps are split into this many equal windows and the readout sees
++    # one spike rate per hidden neuron per window (n_hidden * n_readout_windows inputs). 1 = one rate over the whole
++    # trial (v1). 4 windows of 64 steps = 0.5 s each at 128 Hz. n_steps must be divisible by it. The readout grows,
++    # so the matched hidden size shrinks (see models.choose_hidden_size).
++    n_readout_windows: int = 4
+ 
+ 
+ @dataclass(frozen=True)
+@@ -93,9 +98,10 @@ class RNNConfig:
+     linear readout on the time-averaged hidden activity), but the LIF neurons are replaced by the ELU of the EEGNet ANN
+     (Elman style: h_t = ELU(W_in x_t + b + W_rec h_{t-1}); no leak, no threshold, no reset).
+ 
+-    The hidden size is NOT set here: it is always the RSNN's hidden size (model_summary()["rsnn_hidden"]), so both
+-    models have exactly the same number of recurrent nodes and parameters. Init, input standardization, simulation steps,
+-    batch size and the pretrain/finetune schedule mirror the RSNN.
++    The hidden size is NOT set here: it is the hidden size matched to the converted SNN with ONE readout window
++    (model_summary()["rnn_hidden"], 17 neurons, 752 parameters), i.e. the v1 RSNN's size. In v1.2 the RSNN reads 4 time
++    windows and has 14 neurons, so the RNN is the non-spiking twin of the v1 RSNN, and the v1 RNN results are reused.
++    Init, input standardization, simulation steps, batch size and the pretrain/finetune schedule mirror the RSNN.
+ 
+     Stability note: ELU is unbounded for x > 0, so a recurrent loop over 256 steps can in principle diverge. The RSNN init
+     (recurrent std = gain / sqrt(n_hidden)) is kept on purpose. Add gradient clipping (e.g.
+diff --git a/v1/code/src/main.py b/v1.2/code/src/main.py
+index f49b16d..58a994f 100644
+--- a/v1/code/src/main.py
++++ b/v1.2/code/src/main.py
+@@ -63,7 +63,7 @@ try:
+     with timer.stage("benchmark: rsnn"):
+         run_rsnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+-    # Make and train the non-spiking RNN control (same topology and size as the RSNN, ELU instead of LIF)
++    # Make and train the non-spiking RNN control (topology and size of the one-window v1 RSNN, ELU instead of LIF)
+     with timer.stage("benchmark: rnn"):
+         run_rnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+diff --git a/v1/code/src/models.py b/v1.2/code/src/models.py
+index 427d568..784e6a9 100644
+--- a/v1/code/src/models.py
++++ b/v1.2/code/src/models.py
+@@ -68,7 +68,8 @@ class RecurrentLIFNet(nn.Module):
+       input_proj : Linear(n_inputs -> n_hidden), applied to the 22 channel values of one EEG sample per step
+       recurrent  : Linear(n_hidden -> n_hidden, no bias), dense H x H; entry [i, j] is the trainable weight of the
+                    directed connection from hidden neuron j to hidden neuron i (diagonal = self-connections included)
+-      readout    : Linear(n_hidden -> n_classes) on the time-averaged hidden spike rate
++      readout    : Linear(n_hidden * W -> n_classes) on the hidden spike rates of W equal time windows
++                   (W = cfg.n_readout_windows; W = 1 is one rate over the whole trial)
+ 
+     Input standardization: per-channel (x - ch_mean) / ch_std with FIXED buffers (not trained, not part of the
+     parameter count). They are set once by set_input_stats() from the pretraining subjects' session 1 and stay fixed
+@@ -79,6 +80,10 @@ class RecurrentLIFNet(nn.Module):
+       I_t   = input_proj(x_t) + recurrent(s_{t-1})
+       u_t   = beta * u_{t-1} + I_t - threshold * s_{t-1}.detach()
+       s_t   = Heaviside(u_t - threshold)     (backward: snntorch fast-sigmoid surrogate)
++    Readout: steps 1..T are split into W consecutive windows of T / W steps. For neuron i and window w the rate is
++      r_{i,w} = (sum of s_t[i] over the steps of window w) / (T / W)
++    and output = readout(dropout([r_{:,1}, ..., r_{:,W}])), so the readout sees WHEN each neuron fired, not only how
++    often. With W = 1 this is exactly the time-averaged spike rate.
+     u_0 = 0 and s_0 = 0 are re-created inside every forward() call, so no state leaks between trials, batches,
+     folds, subjects or sessions. Hidden-to-hidden edges form directed cycles, so the layer is truly recurrent.
+     """
+@@ -89,7 +94,7 @@ class RecurrentLIFNet(nn.Module):
+         self.n_hidden = n_hidden
+         self.input_proj = nn.Linear(n_inputs, n_hidden)
+         self.recurrent = nn.Linear(n_hidden, n_hidden, bias=False)
+-        self.readout = nn.Linear(n_hidden, n_classes)
++        self.readout = nn.Linear(n_hidden * cfg.n_readout_windows, n_classes)  # one input per neuron per window
+         self.dropout = nn.Dropout(0.25)  # on the readout input; probability is set by the training schedule
+         self.spike_fn = surrogate.fast_sigmoid(slope=cfg.surrogate_slope)
+         nn.init.normal_(self.recurrent.weight, mean=0.0, std=cfg.recurrent_init_gain / math.sqrt(n_hidden))
+@@ -117,15 +122,21 @@ class RecurrentLIFNet(nn.Module):
+         n_steps = min(self.cfg.n_steps, x.shape[0])
+         batch = x.shape[1]
+         input_current = self.input_proj(x)  # (T, B, H): feedforward part of I_t, identical to computing it per step
++        n_windows = self.cfg.n_readout_windows
++        if n_steps % n_windows:
++            raise ValueError(f"{n_steps} simulation steps cannot be split into {n_windows} equal readout windows")
++        steps_per_window = n_steps // n_windows
+         mem = x.new_zeros(batch, self.n_hidden)
+         spk = x.new_zeros(batch, self.n_hidden)
+-        spike_count = x.new_zeros(batch, self.n_hidden)
++        window_counts = [x.new_zeros(batch, self.n_hidden) for _ in range(n_windows)]  # spike count per window
+         for t in range(n_steps):
+             current = input_current[t] + self.recurrent(spk)  # external input + recurrent spikes of step t-1
+             mem = self.cfg.beta * mem + current - self.cfg.threshold * spk.detach()
+             spk = self.spike_fn(mem - self.cfg.threshold)
+-            spike_count = spike_count + spk
+-        return self.readout(self.dropout(spike_count / n_steps))
++            w = t // steps_per_window
++            window_counts[w] = window_counts[w] + spk
++        rates = torch.cat(window_counts, dim=1) / steps_per_window  # (B, H * W): window 1 neurons, window 2 neurons, ...
++        return self.readout(self.dropout(rates))
+ 
+ 
+ # ---------------------------------------------------------------- Fully recurrent ELU network (non-spiking control)
+@@ -134,9 +145,9 @@ class RecurrentLIFNet(nn.Module):
+ class RecurrentELUNet(nn.Module):
+     """(input standardization) -> input projection -> ONE dense all-to-all recurrent ELU layer -> linear readout.
+ 
+-    Non-spiking control for RecurrentLIFNet: identical weights (input_proj, recurrent H x H without bias, readout),
+-    identical init, identical input standardization buffers and identical time-averaged readout. Only the neuron model
+-    differs: the leaky integrate-and-fire neuron (beta, threshold, reset, spikes, surrogate gradient) is replaced by the
++    Non-spiking control for RecurrentLIFNet with ONE readout window (the v1 RSNN): identical weights (input_proj,
++    recurrent H x H without bias, readout), identical init, identical input standardization buffers and identical
++    time-averaged readout. The v1.2 RSNN's windowed readout is not copied here. Only the neuron model differs: the leaky integrate-and-fire neuron (beta, threshold, reset, spikes, surrogate gradient) is replaced by the
+     ELU activation of the EEGNet ANN.
+ 
+     Dynamics for t = 1..T (Elman style):
+@@ -215,33 +226,47 @@ def converted_snn_param_count(c: EEGNetConfig = EEGNetConfig()) -> int:
+     )
+ 
+ 
+-def rsnn_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
+-    """input_proj (W + b) + dense recurrent H x H (no bias) + readout (W + b). The fixed input standardization
+-    buffers are not trainable and not counted."""
+-    return (n_inputs * n_hidden + n_hidden) + n_hidden * n_hidden + (n_hidden * n_classes + n_classes)
++def rsnn_param_count(n_inputs: int, n_hidden: int, n_classes: int, n_windows: int = 1) -> int:
++    """input_proj (W + b) + dense recurrent H x H (no bias) + readout (W + b) on H * n_windows window rates.
++    The fixed input standardization buffers are not trainable and not counted."""
++    return (
++        (n_inputs * n_hidden + n_hidden)
++        + n_hidden * n_hidden
++        + (n_hidden * n_windows * n_classes + n_classes)
++    )
+ 
+ 
+ def rnn_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
+-    """Same layers as the RSNN (input_proj W + b, dense H x H recurrent, readout W + b), so the same count."""
+-    return rsnn_param_count(n_inputs, n_hidden, n_classes)
+-
+-
+-def choose_hidden_size(target_params: int, n_inputs: int, n_classes: int, max_hidden: int = 2000) -> int:
+-    """Integer hidden size whose RSNN parameter count is closest to target_params (smaller size wins ties)."""
+-    return min(range(1, max_hidden + 1), key=lambda h: abs(rsnn_param_count(n_inputs, h, n_classes) - target_params))
++    """Same layers as the RSNN with ONE readout window (input_proj W + b, dense H x H recurrent, readout W + b)."""
++    return rsnn_param_count(n_inputs, n_hidden, n_classes, n_windows=1)
++
++
++def choose_hidden_size(
++    target_params: int, n_inputs: int, n_classes: int, n_windows: int = 1, max_hidden: int = 2000
++) -> int:
++    """Integer hidden size whose RSNN parameter count (with n_windows readout windows) is closest to target_params
++    (smaller size wins ties)."""
++    return min(
++        range(1, max_hidden + 1),
++        key=lambda h: abs(rsnn_param_count(n_inputs, h, n_classes, n_windows) - target_params),
++    )
+ 
+ 
+ def model_summary(eegnet_cfg: EEGNetConfig, rsnn_cfg: RSNNConfig) -> dict:
+     snn_params = converted_snn_param_count(eegnet_cfg)
+-    hidden = rsnn_cfg.n_hidden or choose_hidden_size(snn_params, eegnet_cfg.n_channels, eegnet_cfg.n_classes)
+-    rsnn_params = rsnn_param_count(eegnet_cfg.n_channels, hidden, eegnet_cfg.n_classes)
++    n_ch, n_cls, n_win = eegnet_cfg.n_channels, eegnet_cfg.n_classes, rsnn_cfg.n_readout_windows
++    hidden = rsnn_cfg.n_hidden or choose_hidden_size(snn_params, n_ch, n_cls, n_win)
++    rsnn_params = rsnn_param_count(n_ch, hidden, n_cls, n_win)
++    # The RNN control keeps the one-window readout, so its matched hidden size is computed with n_windows = 1
++    rnn_hidden = rsnn_cfg.n_hidden or choose_hidden_size(snn_params, n_ch, n_cls)
+     return {
+         "ann_params": eegnet_param_count(eegnet_cfg),
+         "converted_snn_params": snn_params,
+         "rsnn_hidden": hidden,
++        "rsnn_readout_windows": n_win,
+         "rsnn_params": rsnn_params,
+-        "rnn_hidden": hidden,  # the RNN always uses the RSNN's hidden size
+-        "rnn_params": rnn_param_count(eegnet_cfg.n_channels, hidden, eegnet_cfg.n_classes),
++        "rnn_hidden": rnn_hidden,
++        "rnn_params": rnn_param_count(n_ch, rnn_hidden, n_cls),
+         "rsnn_minus_snn_params": rsnn_params - snn_params,
+         "rsnn_relative_difference": (rsnn_params - snn_params) / snn_params,
+     }
+\ No newline at end of file

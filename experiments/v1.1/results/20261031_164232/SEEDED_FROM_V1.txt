@@ -1,0 +1,3 @@
+ann, snn and rnn metrics, predictions and histories copied from v1 run 20261029_141407 on 2026-10-31T16:42:32-06:00
+source: experiments/v1/results/20261029_141407
+only the rsnn is trained in this run

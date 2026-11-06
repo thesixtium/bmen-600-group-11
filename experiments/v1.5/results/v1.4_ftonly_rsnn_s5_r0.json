@@ -1,0 +1,21 @@
+{
+ "variant": "v1.4",
+ "arm": "ftonly",
+ "model": "rsnn",
+ "target": 5,
+ "repeat": 0,
+ "fold_seed": 2526,
+ "n_pre_train": 1440,
+ "n_pre_val": 864,
+ "ft_ft_val": 0.2413793103448276,
+ "ft_ft_train": 0.24347826086956523,
+ "finetune_best_epoch": 75,
+ "finetune_best_val_loss": 1.384387180722993,
+ "max_loss": 1.4029317347899728,
+ "seconds": 25.55241300200578,
+ "environment": {
+  "python": "3.12.14",
+  "torch": "2.4.0+cu121",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+ }
+}

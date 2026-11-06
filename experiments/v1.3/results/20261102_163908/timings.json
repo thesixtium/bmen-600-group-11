@@ -1,0 +1,18 @@
+{
+ "total_s": 45.421421161998296,
+ "stages_s": {
+  "download_data": 9.683499840000877,
+  "preprocess_data": 18.91944767699897,
+  "data_statistics": 9.475251741001557,
+  "benchmark: ann": 0.0008533369982615113,
+  "benchmark: snn": 0.0007651780033484101,
+  "benchmark: rsnn": 0.0009353040004498325,
+  "benchmark: rnn": 0.0009116179935517721,
+  "collect_results": 0.190186633997655,
+  "plot_benchmarks": 0.7497618730048998,
+  "compare_models": 5.212945945000683,
+  "plot_comparison": 1.097860428999411
+ },
+ "per_model": {},
+ "per_model_subject_s": {}
+}

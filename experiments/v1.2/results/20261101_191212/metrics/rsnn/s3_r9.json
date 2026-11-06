@@ -1,0 +1,40 @@
+{
+ "model": "rsnn",
+ "subject": 3,
+ "repeat": 9,
+ "seed": 2335,
+ "n_test": 288,
+ "accuracy": 0.4513888888888889,
+ "kappa": 0.2685185185185185,
+ "macro_f1": 0.421128528769954,
+ "confusion": [
+  [
+   13,
+   35,
+   13,
+   11
+  ],
+  [
+   9,
+   49,
+   6,
+   8
+  ],
+  [
+   10,
+   14,
+   19,
+   29
+  ],
+  [
+   1,
+   8,
+   14,
+   49
+  ]
+ ],
+ "n_params": 746,
+ "n_hidden": 14,
+ "pretrain_best_epoch": 9,
+ "finetune_best_epoch": 93
+}

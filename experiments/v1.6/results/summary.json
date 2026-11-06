@@ -1,0 +1,214 @@
+{
+ "models": {
+  "ann": {
+   "pre_target_s1": {
+    "mean_new": 0.39969135802469136,
+    "mean_ref": 0.3533950617283951,
+    "mean_diff": 0.04629629629629629,
+    "median_diff": 0.0,
+    "better": 4,
+    "worse": 4,
+    "wilcoxon_p_unadjusted": 0.3828125,
+    "per_subject_new": [
+     0.6493,
+     0.25,
+     0.5625,
+     0.3785,
+     0.2465,
+     0.25,
+     0.3854,
+     0.25,
+     0.625
+    ],
+    "per_subject_ref": [
+     0.5486,
+     0.25,
+     0.5799,
+     0.3438,
+     0.2569,
+     0.2674,
+     0.2743,
+     0.3056,
+     0.3542
+    ]
+   },
+   "ft_ft_val": {
+    "mean_new": 0.6475095785440613,
+    "mean_ref": 0.6226053639846744,
+    "mean_diff": 0.02490421455938698,
+    "median_diff": 0.051724137931034475,
+    "better": 6,
+    "worse": 3,
+    "wilcoxon_p_unadjusted": 0.63671875,
+    "per_subject_new": [
+     0.6552,
+     0.4483,
+     0.8276,
+     0.5517,
+     0.6379,
+     0.3448,
+     0.7414,
+     0.7759,
+     0.8448
+    ],
+    "per_subject_ref": [
+     0.7069,
+     0.3966,
+     0.9655,
+     0.431,
+     0.5172,
+     0.4828,
+     0.6034,
+     0.7414,
+     0.7586
+    ]
+   },
+   "pretrain_best_epoch_median": 9.0,
+   "pretrain_best_val_loss_median": 1.2631346837238029,
+   "pre_target_s1_subjects_above_chance": 5,
+   "max_loss": 2.503427313433753,
+   "minutes_per_fold_median": 1.5191987062998427
+  },
+  "rsnn": {
+   "pre_target_s1": {
+    "mean_new": 0.3823302469135802,
+    "mean_ref": 0.34452160493827155,
+    "mean_diff": 0.03780864197530862,
+    "median_diff": 0.04166666666666663,
+    "better": 7,
+    "worse": 2,
+    "wilcoxon_p_unadjusted": 0.203125,
+    "per_subject_new": [
+     0.5625,
+     0.2743,
+     0.4896,
+     0.3333,
+     0.2847,
+     0.316,
+     0.2812,
+     0.3576,
+     0.5417
+    ],
+    "per_subject_ref": [
+     0.4167,
+     0.2535,
+     0.5486,
+     0.2917,
+     0.2292,
+     0.3715,
+     0.2569,
+     0.2778,
+     0.4549
+    ]
+   },
+   "ft_ft_val": {
+    "mean_new": 0.4904214559386973,
+    "mean_ref": 0.49425287356321834,
+    "mean_diff": -0.0038314176245210865,
+    "median_diff": 0.0,
+    "better": 3,
+    "worse": 4,
+    "wilcoxon_p_unadjusted": 0.734375,
+    "per_subject_new": [
+     0.5345,
+     0.3276,
+     0.6724,
+     0.431,
+     0.2759,
+     0.4483,
+     0.431,
+     0.6207,
+     0.6724
+    ],
+    "per_subject_ref": [
+     0.5517,
+     0.3103,
+     0.7069,
+     0.3966,
+     0.3276,
+     0.4483,
+     0.5172,
+     0.5172,
+     0.6724
+    ]
+   },
+   "pretrain_best_epoch_median": 127.0,
+   "pretrain_best_val_loss_median": 1.2289193824485496,
+   "pre_target_s1_subjects_above_chance": 6,
+   "max_loss": 2.0309125626528703,
+   "minutes_per_fold_median": 12.922638190033224
+  },
+  "rnn": {
+   "pre_target_s1": {
+    "mean_new": 0.3900462962962962,
+    "mean_ref": 0.353395061728395,
+    "mean_diff": 0.03665123456790122,
+    "median_diff": 0.013888888888888895,
+    "better": 7,
+    "worse": 2,
+    "wilcoxon_p_unadjusted": 0.05859375,
+    "per_subject_new": [
+     0.5417,
+     0.2708,
+     0.5104,
+     0.3438,
+     0.2812,
+     0.2569,
+     0.3056,
+     0.4444,
+     0.5556
+    ],
+    "per_subject_ref": [
+     0.4618,
+     0.2465,
+     0.4965,
+     0.3576,
+     0.2882,
+     0.2535,
+     0.2917,
+     0.3229,
+     0.4618
+    ]
+   },
+   "ft_ft_val": {
+    "mean_new": 0.4521072796934866,
+    "mean_ref": 0.48659003831417624,
+    "mean_diff": -0.03448275862068966,
+    "median_diff": -0.034482758620689724,
+    "better": 2,
+    "worse": 7,
+    "wilcoxon_p_unadjusted": 0.12890625,
+    "per_subject_new": [
+     0.6552,
+     0.2759,
+     0.6897,
+     0.3448,
+     0.2931,
+     0.3448,
+     0.3448,
+     0.4655,
+     0.6552
+    ],
+    "per_subject_ref": [
+     0.6897,
+     0.2414,
+     0.7069,
+     0.4828,
+     0.2241,
+     0.3966,
+     0.431,
+     0.4828,
+     0.7241
+    ]
+   },
+   "pretrain_best_epoch_median": 13.0,
+   "pretrain_best_val_loss_median": 1.3235606794004087,
+   "pre_target_s1_subjects_above_chance": 6,
+   "max_loss": 4.297836392014115,
+   "minutes_per_fold_median": 6.587188642316808
+  }
+ },
+ "rules": {
+  "screen_helps": false
+ }
+}
