@@ -1,0 +1,96 @@
+diff --git a/v1.1/code/src/benchmark.py b/v1.1-rnn/code/src/benchmark.py
+index cd2c169..fc589b9 100644
+--- a/v1.1/code/src/benchmark.py
++++ b/v1.1-rnn/code/src/benchmark.py
+@@ -43,7 +43,8 @@ from preprocess_data import ProcessedData
+ from timing import PipelineTimer
+ from training import TrainingOutcome, predict_logits, pretrain_then_finetune
+ 
+-MODELS: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
++# v1.1-rnn run: only the RNN (batch 16); the other models of v1.1 are in the v1 and v1.1 runs.
++MODELS: tuple[str, ...] = ('rnn',)
+ 
+ 
+ # ---------------------------------------------------------------- setup
+diff --git a/v1.1/code/src/benchmark_config.py b/v1.1-rnn/code/src/benchmark_config.py
+index a981620..83dfab4 100644
+--- a/v1.1/code/src/benchmark_config.py
++++ b/v1.1-rnn/code/src/benchmark_config.py
+@@ -106,7 +106,7 @@ class RNNConfig:
+ 
+     n_steps: int = N_SAMPLES  # one step per EEG sample, same as the RSNN
+     recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2), same as the RSNN
+-    batch_size: int = 64  # same as the RSNN
++    batch_size: int = 16  # v1.1-rnn: same as the v1.1 RSNN and the ANN (v1: 64); equals the main branch's RNN
+     normalize_input: bool = True  # same per-channel standardization (pretraining subjects only) as the RSNN
+ 
+ 
+diff --git a/v1.1/code/src/main.py b/v1.1-rnn/code/src/main.py
+index f49b16d..39977e3 100644
+--- a/v1.1/code/src/main.py
++++ b/v1.1-rnn/code/src/main.py
+@@ -52,20 +52,24 @@ try:
+     timer.bind(run_dir, device, MODELS, {m: len(pending_folds(run_dir, m, folds)) for m in MODELS})
+ 
+     # Make and train EEGNet ANN and benchmark
+-    with timer.stage("benchmark: ann"):
+-        run_ann_benchmark(processed, folds, run_dir, device, timer)
++    if "ann" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: ann"):
++            run_ann_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Convert EEGNet ANN to SNN and benchmark
+-    with timer.stage("benchmark: snn"):
+-        run_snn_benchmark(processed, folds, run_dir, device, timer)
++    if "snn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: snn"):
++            run_snn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Make and train RSNN model and benchmark
+-    with timer.stage("benchmark: rsnn"):
+-        run_rsnn_benchmark(processed, folds, run_dir, device, timer)
++    if "rsnn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: rsnn"):
++            run_rsnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Make and train the non-spiking RNN control (same topology and size as the RSNN, ELU instead of LIF)
+-    with timer.stage("benchmark: rnn"):
+-        run_rnn_benchmark(processed, folds, run_dir, device, timer)
++    if "rnn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: rnn"):
++            run_rnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Chained jobs: a job that ran out of time ends cleanly with folds still pending. The analysis only makes sense on
+     # the finished set, so it is skipped until every selected fold of every model has metrics; the final job runs it
+@@ -77,14 +81,25 @@ try:
+     else:
+         with timer.stage("collect_results"):
+             collect_results(run_dir)
+-        with timer.stage("plot_benchmarks"):
+-            plot_benchmarks(run_dir)
++        try:
++            with timer.stage("plot_benchmarks"):
++                plot_benchmarks(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[plots] plot_benchmarks skipped: {exc!r}")
+ 
+         # Comparative metrics between models (chance tests, paired Wilcoxon + Holm, bootstrap CIs, figures)
+-        with timer.stage("compare_models"):
+-            compare_models(run_dir)
+-        with timer.stage("plot_comparison"):
+-            plot_comparison(run_dir)
++        # compare_models writes its tables first and prints them after; with only one model there are no paired
++        # comparisons and the print step fails, so an error there must not block the COMPLETE marker
++        try:
++            with timer.stage("compare_models"):
++                compare_models(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[comparison] printing skipped: {exc!r}")
++        try:
++            with timer.stage("plot_comparison"):
++                plot_comparison(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[plots] plot_comparison skipped: {exc!r}")
+         (run_dir / "COMPLETE").write_text(datetime.now().isoformat() + "\n")
+         print(f"[chain] COMPLETE: all folds done and analysis written to {run_dir}")
+ finally:

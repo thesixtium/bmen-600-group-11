@@ -1,0 +1,40 @@
+{
+ "model": "rnn",
+ "subject": 5,
+ "repeat": 6,
+ "seed": 2532,
+ "n_test": 288,
+ "accuracy": 0.2986111111111111,
+ "kappa": 0.06481481481481477,
+ "macro_f1": 0.2635,
+ "confusion": [
+  [
+   34,
+   24,
+   9,
+   5
+  ],
+  [
+   23,
+   32,
+   13,
+   4
+  ],
+  [
+   24,
+   23,
+   19,
+   6
+  ],
+  [
+   34,
+   25,
+   12,
+   1
+  ]
+ ],
+ "n_params": 736,
+ "n_hidden": 12,
+ "pretrain_best_epoch": 405,
+ "finetune_best_epoch": 29
+}

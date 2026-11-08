@@ -1,0 +1,15 @@
+{
+ "total_s": 33.35771044199646,
+ "stages_s": {
+  "download_data": 8.076893132994883,
+  "preprocess_data": 15.785357885004487,
+  "data_statistics": 7.926834660989698,
+  "benchmark: fflif": 0.0009209870040649548,
+  "collect_results": 0.04220581600384321,
+  "plot_benchmarks": 0.38080617200466804,
+  "compare_models": 1.0705099269980565,
+  "plot_comparison": 0.0012178199976915494
+ },
+ "per_model": {},
+ "per_model_subject_s": {}
+}

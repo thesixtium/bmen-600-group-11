@@ -1,0 +1,125 @@
+diff --git a/v1.4/code/src/benchmark.py b/v1.6-full/code/src/benchmark.py
+index ac8654d..5049e9e 100644
+--- a/v1.4/code/src/benchmark.py
++++ b/v1.6-full/code/src/benchmark.py
+@@ -44,7 +44,8 @@ from preprocess_data import ProcessedData
+ from timing import PipelineTimer
+ from training import TrainingOutcome, predict_logits, pretrain_then_finetune
+ 
+-MODELS: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
++# v1.6 run: EEGNet, converted SNN and RNN; the RSNN is not trained in this run.
++MODELS: tuple[str, ...] = ('ann', 'snn', 'rnn')
+ 
+ 
+ # ---------------------------------------------------------------- setup
+diff --git a/v1.4/code/src/folds.py b/v1.6-full/code/src/folds.py
+index 7cc6b9d..a31af26 100644
+--- a/v1.4/code/src/folds.py
++++ b/v1.6-full/code/src/folds.py
+@@ -88,7 +88,37 @@ def _stack(processed: ProcessedData, subjects: list[int], session: str, field: s
+     return Split(X=(X * INPUT_SCALE).astype(np.float32), y=y)
+ 
+ 
++def _subject_session(processed: ProcessedData, subject: int, session: str, field: str) -> Split:
++    """v1.6: one subject's session, scaled to microvolts, then z-scored per channel with this subject's OWN session-1
++    mean and SD (over trials and time; labels not used). Session 2 of a subject is scaled with its session-1 statistics,
++    so no session-2 information enters. Same computation as build_variant_data in local-train-v1.5-v1.7/screen_common.py."""
++    s1 = (getattr(processed[subject][TRAIN_SESSION], field) * INPUT_SCALE).astype(np.float32)
++    mean = s1.mean(axis=(0, 2), keepdims=True)
++    std = s1.std(axis=(0, 2), keepdims=True).clip(min=1e-6)
++    X = (getattr(processed[subject][session], field) * INPUT_SCALE).astype(np.float32)
++    return Split(X=((X - mean) / std).astype(np.float32), y=processed[subject][session].y)
++
++
++def _stack_normalized(processed: ProcessedData, subjects: list[int], session: str, field: str) -> Split:
++    parts = [_subject_session(processed, s, session, field) for s in subjects]
++    return Split(X=np.concatenate([p.X for p in parts]), y=np.concatenate([p.y for p in parts]))
++
++
+ def build_fold_data(processed: ProcessedData, fold: Fold, field: str = "X") -> FoldData:
++    """v1.6: as v1.4, but every subject is z-scored per channel with its own session-1 statistics (see _subject_session).
++    Applies to both input kinds and to every split, including the target's session-2 test set."""
++    target_train = _subject_session(processed, fold.target, TRAIN_SESSION, field)
++    tr, va = np.array(fold.finetune_train_idx), np.array(fold.finetune_val_idx)
++    return FoldData(
++        pre_train=_stack_normalized(processed, list(fold.pretrain_subjects), TRAIN_SESSION, field),
++        pre_val=_stack_normalized(processed, list(fold.val_subjects), TRAIN_SESSION, field),
++        ft_train=Split(target_train.X[tr], target_train.y[tr]),
++        ft_val=Split(target_train.X[va], target_train.y[va]),
++        test=_subject_session(processed, fold.target, TEST_SESSION, field),
++    )
++
++
++def build_fold_data_v14(processed: ProcessedData, fold: Fold, field: str = "X") -> FoldData:
+     """Trials of one fold. field = "X" (22-channel 4-40 Hz input: ANN, SNN) or "X_bands" (44 mu + beta band inputs:
+     RSNN, RNN, v1.3). Both fields hold the same trials in the same order, so the split indices are identical."""
+     target_train = _stack(processed, [fold.target], TRAIN_SESSION, field)
+diff --git a/v1.4/code/src/main.py b/v1.6-full/code/src/main.py
+index cdf10f3..783451d 100644
+--- a/v1.4/code/src/main.py
++++ b/v1.6-full/code/src/main.py
+@@ -52,20 +52,24 @@ try:
+     timer.bind(run_dir, device, MODELS, {m: len(pending_folds(run_dir, m, folds)) for m in MODELS})
+ 
+     # Make and train EEGNet ANN and benchmark
+-    with timer.stage("benchmark: ann"):
+-        run_ann_benchmark(processed, folds, run_dir, device, timer)
++    if "ann" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: ann"):
++            run_ann_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Convert EEGNet ANN to SNN and benchmark
+-    with timer.stage("benchmark: snn"):
+-        run_snn_benchmark(processed, folds, run_dir, device, timer)
++    if "snn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: snn"):
++            run_snn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Make and train RSNN model and benchmark
+-    with timer.stage("benchmark: rsnn"):
+-        run_rsnn_benchmark(processed, folds, run_dir, device, timer)
++    if "rsnn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: rsnn"):
++            run_rsnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Make and train the non-spiking RNN control (same topology, size and 44 band inputs as the RSNN, ELU instead of LIF)
+-    with timer.stage("benchmark: rnn"):
+-        run_rnn_benchmark(processed, folds, run_dir, device, timer)
++    if "rnn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: rnn"):
++            run_rnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Chained jobs: a job that ran out of time ends cleanly with folds still pending. The analysis only makes sense on
+     # the finished set, so it is skipped until every selected fold of every model has metrics; the final job runs it
+@@ -77,14 +81,25 @@ try:
+     else:
+         with timer.stage("collect_results"):
+             collect_results(run_dir)
+-        with timer.stage("plot_benchmarks"):
+-            plot_benchmarks(run_dir)
++        try:
++            with timer.stage("plot_benchmarks"):
++                plot_benchmarks(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[plots] plot_benchmarks skipped: {exc!r}")
+ 
+         # Comparative metrics between models (chance tests, paired Wilcoxon + Holm, bootstrap CIs, figures)
+-        with timer.stage("compare_models"):
+-            compare_models(run_dir)
+-        with timer.stage("plot_comparison"):
+-            plot_comparison(run_dir)
++        # compare_models writes its tables first and prints them after; with only one model there are no paired
++        # comparisons and the print step fails, so an error there must not block the COMPLETE marker
++        try:
++            with timer.stage("compare_models"):
++                compare_models(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[comparison] printing skipped: {exc!r}")
++        try:
++            with timer.stage("plot_comparison"):
++                plot_comparison(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[plots] plot_comparison skipped: {exc!r}")
+         (run_dir / "COMPLETE").write_text(datetime.now().isoformat() + "\n")
+         print(f"[chain] COMPLETE: all folds done and analysis written to {run_dir}")
+ finally:

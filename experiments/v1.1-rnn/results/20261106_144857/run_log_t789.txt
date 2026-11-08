@@ -1,0 +1,452 @@
+[time] >>> download_data
+[time] <<< download_data: 17s (pipeline elapsed 17s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 23s (pipeline elapsed 40s)
+[time] >>> data_statistics
+PSD change after preprocessing (channel mean, dB):
+    2 Hz:  -28.6 dB
+    4 Hz:   -0.9 dB
+   10 Hz:   -0.8 dB
+   20 Hz:   -0.4 dB
+   40 Hz:   -0.3 dB
+   45 Hz:   -6.0 dB
+   50 Hz:  -50.7 dB
+   55 Hz:  -72.1 dB
+   60 Hz:  -60.8 dB
+Saved graphs to rssns_for_mi_EEG/results/data_statistics
+[time] <<< data_statistics: 16s (pipeline elapsed 56s)
+Run directory: rssns_for_mi_EEG/results/benchmark/20261106_144857
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393}
+[time] pending folds per model: {'rnn': 30} (device: cuda)
+[time] no timing history for this device/mode yet: ETAs for later models appear once they have run once.
+[time] >>> benchmark: rnn
+[time] [rnn] 30 folds to run over 3 subject(s)
+[time] [rnn] fold 1/30 start (subject 7, repeat 0)
+[time]     [rnn s7_r0] pretrain epoch 50/500 | val_loss 1.5226 | elapsed 2m58s, phase ETA 26m41s
+[time]     [rnn s7_r0] pretrain epoch 100/500 | val_loss 1.9531 | elapsed 6m17s, phase ETA 25m08s
+[time]     [rnn s7_r0] pretrain epoch 150/500 | val_loss 1.8435 | elapsed 9m39s, phase ETA 22m31s
+[time]     [rnn s7_r0] pretrain epoch 200/500 | val_loss 2.0284 | elapsed 13m05s, phase ETA 19m37s
+[time]     [rnn s7_r0] pretrain epoch 250/500 | val_loss 2.0496 | elapsed 16m25s, phase ETA 16m25s
+[time]     [rnn s7_r0] pretrain epoch 300/500 | val_loss 2.2618 | elapsed 19m41s, phase ETA 13m07s
+[time]     [rnn s7_r0] pretrain epoch 350/500 | val_loss 2.1645 | elapsed 22m56s, phase ETA 9m50s
+[time]     [rnn s7_r0] pretrain epoch 400/500 | val_loss 2.2916 | elapsed 26m16s, phase ETA 6m34s
+[time]     [rnn s7_r0] pretrain epoch 450/500 | val_loss 2.3295 | elapsed 29m30s, phase ETA 3m17s
+[time]     [rnn s7_r0] finetune epoch 50/100 | val_loss 1.1228 | elapsed 31s, phase ETA 31s
+[rnn] subject 7 repeat 0: acc=0.476 kappa=0.301
+[time] [rnn] fold 1/30 done in 33m49s (pretrain 32m48s, finetune 1m01s) | avg 33m49s | rnn elapsed 33m49s, ETA 16h20m51s | benchmark ETA 16h20m51s -> finish ~Sat 07 Nov 07:46
+[time] [rnn] fold 2/30 start (subject 7, repeat 1)
+[time]     [rnn s7_r1] pretrain epoch 50/500 | val_loss 1.2843 | elapsed 3m15s, phase ETA 29m18s
+[time]     [rnn s7_r1] pretrain epoch 100/500 | val_loss 1.3506 | elapsed 6m33s, phase ETA 26m13s
+[time]     [rnn s7_r1] pretrain epoch 150/500 | val_loss 1.2961 | elapsed 9m50s, phase ETA 22m57s
+[time]     [rnn s7_r1] pretrain epoch 200/500 | val_loss 1.3456 | elapsed 13m12s, phase ETA 19m48s
+[time]     [rnn s7_r1] pretrain epoch 250/500 | val_loss 1.3320 | elapsed 16m32s, phase ETA 16m32s
+[time]     [rnn s7_r1] pretrain epoch 300/500 | val_loss 1.3560 | elapsed 19m48s, phase ETA 13m12s
+[time]     [rnn s7_r1] pretrain epoch 350/500 | val_loss 1.3185 | elapsed 23m03s, phase ETA 9m53s
+[time]     [rnn s7_r1] pretrain epoch 400/500 | val_loss 1.3094 | elapsed 26m22s, phase ETA 6m35s
+[time]     [rnn s7_r1] pretrain epoch 450/500 | val_loss 1.2953 | elapsed 29m40s, phase ETA 3m18s
+[time]     [rnn s7_r1] finetune epoch 50/100 | val_loss 1.3634 | elapsed 30s, phase ETA 30s
+[rnn] subject 7 repeat 1: acc=0.365 kappa=0.153
+[time] [rnn] fold 2/30 done in 33m59s (pretrain 32m57s, finetune 1m01s) | avg 33m54s | rnn elapsed 1h07m48s, ETA 15h49m12s | benchmark ETA 15h49m12s -> finish ~Sat 07 Nov 07:48
+[time] [rnn] fold 3/30 start (subject 7, repeat 2)
+[time]     [rnn s7_r2] pretrain epoch 50/500 | val_loss 1.4174 | elapsed 3m19s, phase ETA 29m50s
+[time]     [rnn s7_r2] pretrain epoch 100/500 | val_loss 1.4681 | elapsed 6m35s, phase ETA 26m21s
+[time]     [rnn s7_r2] pretrain epoch 150/500 | val_loss 1.5623 | elapsed 9m51s, phase ETA 22m59s
+[time]     [rnn s7_r2] pretrain epoch 200/500 | val_loss 1.5954 | elapsed 13m04s, phase ETA 19m36s
+[time]     [rnn s7_r2] pretrain epoch 250/500 | val_loss 1.4060 | elapsed 16m30s, phase ETA 16m30s
+[time]     [rnn s7_r2] pretrain epoch 300/500 | val_loss 1.5997 | elapsed 19m46s, phase ETA 13m10s
+[time]     [rnn s7_r2] pretrain epoch 350/500 | val_loss 1.6779 | elapsed 23m01s, phase ETA 9m52s
+[time]     [rnn s7_r2] pretrain epoch 400/500 | val_loss 1.5997 | elapsed 26m20s, phase ETA 6m35s
+[time]     [rnn s7_r2] pretrain epoch 450/500 | val_loss 1.6032 | elapsed 29m36s, phase ETA 3m17s
+[time]     [rnn s7_r2] finetune epoch 50/100 | val_loss 1.3825 | elapsed 32s, phase ETA 32s
+[rnn] subject 7 repeat 2: acc=0.319 kappa=0.093
+[time] [rnn] fold 3/30 done in 34m00s (pretrain 32m57s, finetune 1m03s) | avg 33m56s | rnn elapsed 1h41m48s, ETA 15h16m10s | benchmark ETA 15h16m10s -> finish ~Sat 07 Nov 07:49
+[time] [rnn] fold 4/30 start (subject 7, repeat 3)
+[time]     [rnn s7_r3] pretrain epoch 50/500 | val_loss 1.3871 | elapsed 3m30s, phase ETA 31m34s
+[time]     [rnn s7_r3] pretrain epoch 100/500 | val_loss 1.3866 | elapsed 7m01s, phase ETA 28m04s
+[time]     [rnn s7_r3] pretrain epoch 150/500 | val_loss 1.3846 | elapsed 10m29s, phase ETA 24m27s
+[time]     [rnn s7_r3] pretrain epoch 200/500 | val_loss 1.3792 | elapsed 14m02s, phase ETA 21m03s
+[time]     [rnn s7_r3] pretrain epoch 250/500 | val_loss 1.3492 | elapsed 17m34s, phase ETA 17m34s
+[time]     [rnn s7_r3] pretrain epoch 300/500 | val_loss 1.3550 | elapsed 21m03s, phase ETA 14m02s
+[time]     [rnn s7_r3] pretrain epoch 350/500 | val_loss 1.4322 | elapsed 24m33s, phase ETA 10m31s
+[time]     [rnn s7_r3] pretrain epoch 400/500 | val_loss 1.4705 | elapsed 28m05s, phase ETA 7m01s
+[time]     [rnn s7_r3] pretrain epoch 450/500 | val_loss 1.5735 | elapsed 31m33s, phase ETA 3m30s
+[time]     [rnn s7_r3] finetune epoch 50/100 | val_loss 1.2782 | elapsed 32s, phase ETA 32s
+[rnn] subject 7 repeat 3: acc=0.420 kappa=0.227
+[time] [rnn] fold 4/30 done in 36m03s (pretrain 35m00s, finetune 1m03s) | avg 34m28s | rnn elapsed 2h17m50s, ETA 14h55m57s | benchmark ETA 14h55m57s -> finish ~Sat 07 Nov 08:05
+[time] [rnn] fold 5/30 start (subject 7, repeat 4)
+[time]     [rnn s7_r4] pretrain epoch 50/500 | val_loss 1.3227 | elapsed 3m25s, phase ETA 30m48s
+[time]     [rnn s7_r4] pretrain epoch 100/500 | val_loss 1.3032 | elapsed 6m51s, phase ETA 27m24s
+[time]     [rnn s7_r4] pretrain epoch 150/500 | val_loss 1.3702 | elapsed 10m21s, phase ETA 24m09s
+[time]     [rnn s7_r4] pretrain epoch 200/500 | val_loss 1.3175 | elapsed 13m51s, phase ETA 20m46s
+[time]     [rnn s7_r4] pretrain epoch 250/500 | val_loss 1.3194 | elapsed 17m17s, phase ETA 17m17s
+[time]     [rnn s7_r4] pretrain epoch 300/500 | val_loss 1.3323 | elapsed 20m46s, phase ETA 13m51s
+[time]     [rnn s7_r4] pretrain epoch 350/500 | val_loss 1.2765 | elapsed 24m16s, phase ETA 10m24s
+[time]     [rnn s7_r4] pretrain epoch 400/500 | val_loss 1.2950 | elapsed 27m44s, phase ETA 6m56s
+[time]     [rnn s7_r4] pretrain epoch 450/500 | val_loss 1.3332 | elapsed 31m15s, phase ETA 3m28s
+[time]     [rnn s7_r4] finetune epoch 50/100 | val_loss 1.3556 | elapsed 33s, phase ETA 33s
+[rnn] subject 7 repeat 4: acc=0.365 kappa=0.153
+[time] [rnn] fold 5/30 done in 35m49s (pretrain 34m43s, finetune 1m05s) | avg 34m44s | rnn elapsed 2h53m39s, ETA 14h28m17s | benchmark ETA 14h28m17s -> finish ~Sat 07 Nov 08:13
+[time] [rnn] fold 6/30 start (subject 7, repeat 5)
+[time]     [rnn s7_r5] pretrain epoch 50/500 | val_loss 1.3658 | elapsed 3m28s, phase ETA 31m10s
+[time]     [rnn s7_r5] pretrain epoch 100/500 | val_loss 1.3065 | elapsed 6m55s, phase ETA 27m41s
+[time]     [rnn s7_r5] pretrain epoch 150/500 | val_loss 1.4162 | elapsed 10m23s, phase ETA 24m15s
+[time]     [rnn s7_r5] pretrain epoch 200/500 | val_loss 1.2995 | elapsed 13m54s, phase ETA 20m51s
+[time]     [rnn s7_r5] pretrain epoch 250/500 | val_loss 1.4219 | elapsed 17m23s, phase ETA 17m23s
+[time]     [rnn s7_r5] pretrain epoch 300/500 | val_loss 1.3498 | elapsed 20m50s, phase ETA 13m53s
+[time]     [rnn s7_r5] pretrain epoch 350/500 | val_loss 1.2660 | elapsed 24m17s, phase ETA 10m24s
+[time]     [rnn s7_r5] pretrain epoch 400/500 | val_loss 1.3459 | elapsed 27m43s, phase ETA 6m56s
+[time]     [rnn s7_r5] pretrain epoch 450/500 | val_loss 1.4058 | elapsed 31m10s, phase ETA 3m28s
+[time]     [rnn s7_r5] finetune epoch 50/100 | val_loss 1.3048 | elapsed 31s, phase ETA 31s
+[rnn] subject 7 repeat 5: acc=0.378 kappa=0.171
+[time] [rnn] fold 6/30 done in 35m40s (pretrain 34m37s, finetune 1m03s) | avg 34m53s | rnn elapsed 3h29m19s, ETA 13h57m17s | benchmark ETA 13h57m17s -> finish ~Sat 07 Nov 08:18
+[time] [rnn] fold 7/30 start (subject 7, repeat 6)
+[time]     [rnn s7_r6] pretrain epoch 50/500 | val_loss 1.3544 | elapsed 3m26s, phase ETA 30m52s
+[time]     [rnn s7_r6] pretrain epoch 100/500 | val_loss 1.3543 | elapsed 6m54s, phase ETA 27m36s
+[time]     [rnn s7_r6] pretrain epoch 150/500 | val_loss 1.3517 | elapsed 10m22s, phase ETA 24m12s
+[time]     [rnn s7_r6] pretrain epoch 200/500 | val_loss 1.3539 | elapsed 13m50s, phase ETA 20m45s
+[time]     [rnn s7_r6] pretrain epoch 250/500 | val_loss 1.3952 | elapsed 17m18s, phase ETA 17m18s
+[time]     [rnn s7_r6] pretrain epoch 300/500 | val_loss 1.5070 | elapsed 20m47s, phase ETA 13m51s
+[time]     [rnn s7_r6] pretrain epoch 350/500 | val_loss 2.0455 | elapsed 24m17s, phase ETA 10m24s
+[time]     [rnn s7_r6] pretrain epoch 400/500 | val_loss 2.1397 | elapsed 27m45s, phase ETA 6m56s
+[time]     [rnn s7_r6] pretrain epoch 450/500 | val_loss 2.3662 | elapsed 31m12s, phase ETA 3m28s
+[time]     [rnn s7_r6] finetune epoch 50/100 | val_loss 1.2186 | elapsed 31s, phase ETA 31s
+[rnn] subject 7 repeat 6: acc=0.375 kappa=0.167
+[time] [rnn] fold 7/30 done in 35m42s (pretrain 34m39s, finetune 1m03s) | avg 35m00s | rnn elapsed 4h05m01s, ETA 13h25m03s | benchmark ETA 13h25m03s -> finish ~Sat 07 Nov 08:21
+[time] [rnn] fold 8/30 start (subject 7, repeat 7)
+[time]     [rnn s7_r7] pretrain epoch 50/500 | val_loss 1.2658 | elapsed 3m27s, phase ETA 30m59s
+[time]     [rnn s7_r7] pretrain epoch 100/500 | val_loss 1.2865 | elapsed 6m53s, phase ETA 27m34s
+[time]     [rnn s7_r7] pretrain epoch 150/500 | val_loss 1.1920 | elapsed 10m23s, phase ETA 24m14s
+[time]     [rnn s7_r7] pretrain epoch 200/500 | val_loss 1.2587 | elapsed 13m53s, phase ETA 20m49s
+[time]     [rnn s7_r7] pretrain epoch 250/500 | val_loss 1.2824 | elapsed 17m19s, phase ETA 17m19s
+[time]     [rnn s7_r7] pretrain epoch 300/500 | val_loss 1.2400 | elapsed 20m49s, phase ETA 13m53s
+[time]     [rnn s7_r7] pretrain epoch 350/500 | val_loss 1.2627 | elapsed 24m21s, phase ETA 10m26s
+[time]     [rnn s7_r7] pretrain epoch 400/500 | val_loss 1.2889 | elapsed 27m49s, phase ETA 6m57s
+[time]     [rnn s7_r7] pretrain epoch 450/500 | val_loss 1.2257 | elapsed 31m18s, phase ETA 3m29s
+[time]     [rnn s7_r7] finetune epoch 50/100 | val_loss 1.2719 | elapsed 32s, phase ETA 32s
+[rnn] subject 7 repeat 7: acc=0.434 kappa=0.245
+[time] [rnn] fold 8/30 done in 35m49s (pretrain 34m45s, finetune 1m03s) | avg 35m06s | rnn elapsed 4h40m50s, ETA 12h52m17s | benchmark ETA 12h52m17s -> finish ~Sat 07 Nov 08:24
+[time] [rnn] fold 9/30 start (subject 7, repeat 8)
+[time]     [rnn s7_r8] pretrain epoch 50/500 | val_loss 1.3350 | elapsed 3m26s, phase ETA 30m50s
+[time]     [rnn s7_r8] pretrain epoch 100/500 | val_loss 1.3323 | elapsed 6m52s, phase ETA 27m28s
+[time]     [rnn s7_r8] pretrain epoch 150/500 | val_loss 1.3534 | elapsed 10m19s, phase ETA 24m04s
+[time]     [rnn s7_r8] pretrain epoch 200/500 | val_loss 1.3998 | elapsed 13m47s, phase ETA 20m41s
+[time]     [rnn s7_r8] pretrain epoch 250/500 | val_loss 1.3412 | elapsed 17m17s, phase ETA 17m17s
+[time]     [rnn s7_r8] pretrain epoch 300/500 | val_loss 1.3582 | elapsed 20m48s, phase ETA 13m52s
+[time]     [rnn s7_r8] pretrain epoch 350/500 | val_loss 1.4510 | elapsed 24m16s, phase ETA 10m24s
+[time]     [rnn s7_r8] pretrain epoch 400/500 | val_loss 1.3924 | elapsed 27m44s, phase ETA 6m56s
+[time]     [rnn s7_r8] pretrain epoch 450/500 | val_loss 1.4518 | elapsed 31m11s, phase ETA 3m28s
+[time]     [rnn s7_r8] finetune epoch 50/100 | val_loss 1.0744 | elapsed 32s, phase ETA 32s
+[rnn] subject 7 repeat 8: acc=0.420 kappa=0.227
+[time] [rnn] fold 9/30 done in 35m42s (pretrain 34m39s, finetune 1m03s) | avg 35m10s | rnn elapsed 5h16m32s, ETA 12h18m34s | benchmark ETA 12h18m34s -> finish ~Sat 07 Nov 08:26
+[time] [rnn] fold 10/30 start (subject 7, repeat 9)
+[time]     [rnn s7_r9] pretrain epoch 50/500 | val_loss 1.3986 | elapsed 3m26s, phase ETA 30m58s
+[time]     [rnn s7_r9] pretrain epoch 100/500 | val_loss 1.6323 | elapsed 6m54s, phase ETA 27m35s
+[time]     [rnn s7_r9] pretrain epoch 150/500 | val_loss 1.4541 | elapsed 10m21s, phase ETA 24m08s
+[time]     [rnn s7_r9] pretrain epoch 200/500 | val_loss 1.4790 | elapsed 13m51s, phase ETA 20m46s
+[time]     [rnn s7_r9] pretrain epoch 250/500 | val_loss 1.5201 | elapsed 17m20s, phase ETA 17m20s
+[time]     [rnn s7_r9] pretrain epoch 300/500 | val_loss 1.6514 | elapsed 20m46s, phase ETA 13m51s
+[time]     [rnn s7_r9] pretrain epoch 350/500 | val_loss 1.9231 | elapsed 24m14s, phase ETA 10m23s
+[time]     [rnn s7_r9] pretrain epoch 400/500 | val_loss 1.6671 | elapsed 27m43s, phase ETA 6m56s
+[time]     [rnn s7_r9] pretrain epoch 450/500 | val_loss 1.6910 | elapsed 31m11s, phase ETA 3m28s
+[time]     [rnn s7_r9] finetune epoch 50/100 | val_loss 1.2520 | elapsed 32s, phase ETA 32s
+[rnn] subject 7 repeat 9: acc=0.427 kappa=0.236
+[time] [rnn] fold 10/30 done in 35m45s (pretrain 34m41s, finetune 1m04s) | avg 35m14s | rnn elapsed 5h52m17s, ETA 11h44m33s | benchmark ETA 11h44m33s -> finish ~Sat 07 Nov 08:28
+[time] [rnn] SUBJECT 7 finished: 10 folds in 5h52m17s (35m14s/fold) | subjects done 1/3
+[time] [rnn] fold 11/30 start (subject 8, repeat 0)
+[time]     [rnn s8_r0] pretrain epoch 50/500 | val_loss 1.7746 | elapsed 3m27s, phase ETA 30m59s
+[time]     [rnn s8_r0] pretrain epoch 100/500 | val_loss 2.7274 | elapsed 6m52s, phase ETA 27m29s
+[time]     [rnn s8_r0] pretrain epoch 150/500 | val_loss 2.2915 | elapsed 10m18s, phase ETA 24m02s
+[time]     [rnn s8_r0] pretrain epoch 200/500 | val_loss 2.6651 | elapsed 13m48s, phase ETA 20m42s
+[time]     [rnn s8_r0] pretrain epoch 250/500 | val_loss 1.9328 | elapsed 17m15s, phase ETA 17m15s
+[time]     [rnn s8_r0] pretrain epoch 300/500 | val_loss 2.9005 | elapsed 20m42s, phase ETA 13m48s
+[time]     [rnn s8_r0] pretrain epoch 350/500 | val_loss 2.9835 | elapsed 24m12s, phase ETA 10m22s
+[time]     [rnn s8_r0] pretrain epoch 400/500 | val_loss 3.1126 | elapsed 27m40s, phase ETA 6m55s
+[time]     [rnn s8_r0] pretrain epoch 450/500 | val_loss 3.2141 | elapsed 31m08s, phase ETA 3m28s
+[time]     [rnn s8_r0] finetune epoch 50/100 | val_loss 1.0998 | elapsed 32s, phase ETA 32s
+[rnn] subject 8 repeat 0: acc=0.455 kappa=0.273
+[time] [rnn] fold 11/30 done in 35m38s (pretrain 34m35s, finetune 1m03s) | avg 35m16s | rnn elapsed 6h27m55s, ETA 11h10m02s | benchmark ETA 11h10m02s -> finish ~Sat 07 Nov 08:29
+[time] [rnn] fold 12/30 start (subject 8, repeat 1)
+[time]     [rnn s8_r1] pretrain epoch 50/500 | val_loss 2.5694 | elapsed 3m28s, phase ETA 31m10s
+[time]     [rnn s8_r1] pretrain epoch 100/500 | val_loss 2.7986 | elapsed 6m54s, phase ETA 27m37s
+[time]     [rnn s8_r1] pretrain epoch 150/500 | val_loss 2.8678 | elapsed 10m21s, phase ETA 24m09s
+[time]     [rnn s8_r1] pretrain epoch 200/500 | val_loss 3.8990 | elapsed 13m48s, phase ETA 20m41s
+[time]     [rnn s8_r1] pretrain epoch 250/500 | val_loss 2.8745 | elapsed 17m16s, phase ETA 17m16s
+[time]     [rnn s8_r1] pretrain epoch 300/500 | val_loss 3.7342 | elapsed 20m45s, phase ETA 13m50s
+[time]     [rnn s8_r1] pretrain epoch 350/500 | val_loss 3.5910 | elapsed 24m13s, phase ETA 10m23s
+[time]     [rnn s8_r1] pretrain epoch 400/500 | val_loss 3.6025 | elapsed 27m43s, phase ETA 6m56s
+[time]     [rnn s8_r1] pretrain epoch 450/500 | val_loss 4.1147 | elapsed 31m11s, phase ETA 3m28s
+[time]     [rnn s8_r1] finetune epoch 50/100 | val_loss 1.0526 | elapsed 31s, phase ETA 31s
+[rnn] subject 8 repeat 1: acc=0.583 kappa=0.444
+[time] [rnn] fold 12/30 done in 35m41s (pretrain 34m38s, finetune 1m04s) | avg 35m18s | rnn elapsed 7h03m36s, ETA 10h35m24s | benchmark ETA 10h35m24s -> finish ~Sat 07 Nov 08:30
+[time] [rnn] fold 13/30 start (subject 8, repeat 2)
+[time]     [rnn s8_r2] pretrain epoch 50/500 | val_loss 1.3768 | elapsed 3m29s, phase ETA 31m23s
+[time]     [rnn s8_r2] pretrain epoch 100/500 | val_loss 1.4224 | elapsed 7m05s, phase ETA 28m20s
+[time]     [rnn s8_r2] pretrain epoch 150/500 | val_loss 1.4329 | elapsed 10m40s, phase ETA 24m54s
+[time]     [rnn s8_r2] pretrain epoch 200/500 | val_loss 1.4409 | elapsed 14m12s, phase ETA 21m18s
+[time]     [rnn s8_r2] pretrain epoch 250/500 | val_loss 1.4919 | elapsed 17m40s, phase ETA 17m40s
+[time]     [rnn s8_r2] pretrain epoch 300/500 | val_loss 1.5049 | elapsed 21m10s, phase ETA 14m07s
+[time]     [rnn s8_r2] pretrain epoch 350/500 | val_loss 1.4580 | elapsed 24m39s, phase ETA 10m34s
+[time]     [rnn s8_r2] pretrain epoch 400/500 | val_loss 1.5077 | elapsed 28m06s, phase ETA 7m01s
+[time]     [rnn s8_r2] pretrain epoch 450/500 | val_loss 1.5111 | elapsed 31m35s, phase ETA 3m31s
+[time]     [rnn s8_r2] finetune epoch 50/100 | val_loss 1.0919 | elapsed 33s, phase ETA 33s
+[rnn] subject 8 repeat 2: acc=0.444 kappa=0.259
+[time] [rnn] fold 13/30 done in 36m11s (pretrain 35m06s, finetune 1m06s) | avg 35m22s | rnn elapsed 7h39m48s, ETA 10h01m16s | benchmark ETA 10h01m16s -> finish ~Sat 07 Nov 08:32
+[time] [rnn] fold 14/30 start (subject 8, repeat 3)
+[time]     [rnn s8_r3] pretrain epoch 50/500 | val_loss 1.5751 | elapsed 3m26s, phase ETA 30m57s
+[time]     [rnn s8_r3] pretrain epoch 100/500 | val_loss 2.2620 | elapsed 6m56s, phase ETA 27m42s
+[time]     [rnn s8_r3] pretrain epoch 150/500 | val_loss 2.1973 | elapsed 10m25s, phase ETA 24m19s
+[time]     [rnn s8_r3] pretrain epoch 200/500 | val_loss 2.5565 | elapsed 13m57s, phase ETA 20m55s
+[time]     [rnn s8_r3] pretrain epoch 250/500 | val_loss 2.1996 | elapsed 17m24s, phase ETA 17m24s
+[time]     [rnn s8_r3] pretrain epoch 300/500 | val_loss 2.2347 | elapsed 20m50s, phase ETA 13m53s
+[time]     [rnn s8_r3] pretrain epoch 350/500 | val_loss 1.9267 | elapsed 24m16s, phase ETA 10m24s
+[time]     [rnn s8_r3] pretrain epoch 400/500 | val_loss 2.2054 | elapsed 27m41s, phase ETA 6m55s
+[time]     [rnn s8_r3] pretrain epoch 450/500 | val_loss 2.2045 | elapsed 31m10s, phase ETA 3m28s
+[time]     [rnn s8_r3] finetune epoch 50/100 | val_loss 1.0339 | elapsed 31s, phase ETA 31s
+[rnn] subject 8 repeat 3: acc=0.476 kappa=0.301
+[time] [rnn] fold 14/30 done in 35m40s (pretrain 34m36s, finetune 1m04s) | avg 35m23s | rnn elapsed 8h15m28s, ETA 9h26m15s | benchmark ETA 9h26m15s -> finish ~Sat 07 Nov 08:33
+[time] [rnn] fold 15/30 start (subject 8, repeat 4)
+[time]     [rnn s8_r4] pretrain epoch 50/500 | val_loss 1.3125 | elapsed 3m29s, phase ETA 31m24s
+[time]     [rnn s8_r4] pretrain epoch 100/500 | val_loss 1.2702 | elapsed 7m00s, phase ETA 27m58s
+[time]     [rnn s8_r4] pretrain epoch 150/500 | val_loss 1.3254 | elapsed 10m26s, phase ETA 24m22s
+[time]     [rnn s8_r4] pretrain epoch 200/500 | val_loss 1.3043 | elapsed 13m58s, phase ETA 20m58s
+[time]     [rnn s8_r4] pretrain epoch 250/500 | val_loss 1.2664 | elapsed 17m26s, phase ETA 17m26s
+[time]     [rnn s8_r4] pretrain epoch 300/500 | val_loss 1.2692 | elapsed 20m53s, phase ETA 13m55s
+[time]     [rnn s8_r4] pretrain epoch 350/500 | val_loss 1.2795 | elapsed 24m20s, phase ETA 10m26s
+[time]     [rnn s8_r4] pretrain epoch 400/500 | val_loss 1.2760 | elapsed 27m46s, phase ETA 6m56s
+[time]     [rnn s8_r4] pretrain epoch 450/500 | val_loss 1.2470 | elapsed 31m13s, phase ETA 3m28s
+[time]     [rnn s8_r4] finetune epoch 50/100 | val_loss 1.0892 | elapsed 32s, phase ETA 32s
+[rnn] subject 8 repeat 4: acc=0.556 kappa=0.407
+[time] [rnn] fold 15/30 done in 35m44s (pretrain 34m40s, finetune 1m03s) | avg 35m25s | rnn elapsed 8h51m11s, ETA 8h51m11s | benchmark ETA 8h51m11s -> finish ~Sat 07 Nov 08:33
+[time] [rnn] fold 16/30 start (subject 8, repeat 5)
+[time]     [rnn s8_r5] pretrain epoch 50/500 | val_loss 1.3762 | elapsed 3m29s, phase ETA 31m24s
+[time]     [rnn s8_r5] pretrain epoch 100/500 | val_loss 1.4536 | elapsed 6m56s, phase ETA 27m46s
+[time]     [rnn s8_r5] pretrain epoch 150/500 | val_loss 1.3942 | elapsed 10m25s, phase ETA 24m18s
+[time]     [rnn s8_r5] pretrain epoch 200/500 | val_loss 1.4687 | elapsed 13m52s, phase ETA 20m48s
+[time]     [rnn s8_r5] pretrain epoch 250/500 | val_loss 1.6007 | elapsed 17m18s, phase ETA 17m18s
+[time]     [rnn s8_r5] pretrain epoch 300/500 | val_loss 1.5675 | elapsed 20m44s, phase ETA 13m49s
+[time]     [rnn s8_r5] pretrain epoch 350/500 | val_loss 1.4839 | elapsed 24m10s, phase ETA 10m21s
+[time]     [rnn s8_r5] pretrain epoch 400/500 | val_loss 1.6025 | elapsed 27m36s, phase ETA 6m54s
+[time]     [rnn s8_r5] pretrain epoch 450/500 | val_loss 1.5752 | elapsed 31m03s, phase ETA 3m27s
+[time]     [rnn s8_r5] finetune epoch 50/100 | val_loss 1.0915 | elapsed 31s, phase ETA 31s
+[rnn] subject 8 repeat 5: acc=0.559 kappa=0.412
+[time] [rnn] fold 16/30 done in 35m34s (pretrain 34m31s, finetune 1m03s) | avg 35m25s | rnn elapsed 9h26m45s, ETA 8h15m54s | benchmark ETA 8h15m54s -> finish ~Sat 07 Nov 08:34
+[time] [rnn] fold 17/30 start (subject 8, repeat 6)
+[time]     [rnn s8_r6] pretrain epoch 50/500 | val_loss 1.4117 | elapsed 3m29s, phase ETA 31m20s
+[time]     [rnn s8_r6] pretrain epoch 100/500 | val_loss 1.3555 | elapsed 6m57s, phase ETA 27m46s
+[time]     [rnn s8_r6] pretrain epoch 150/500 | val_loss 1.3490 | elapsed 10m23s, phase ETA 24m14s
+[time]     [rnn s8_r6] pretrain epoch 200/500 | val_loss 1.3728 | elapsed 13m49s, phase ETA 20m44s
+[time]     [rnn s8_r6] pretrain epoch 250/500 | val_loss 1.3194 | elapsed 17m19s, phase ETA 17m19s
+[time]     [rnn s8_r6] pretrain epoch 300/500 | val_loss 1.3233 | elapsed 20m44s, phase ETA 13m50s
+[time]     [rnn s8_r6] pretrain epoch 350/500 | val_loss 1.3362 | elapsed 24m10s, phase ETA 10m22s
+[time]     [rnn s8_r6] pretrain epoch 400/500 | val_loss 1.3447 | elapsed 27m36s, phase ETA 6m54s
+[time]     [rnn s8_r6] pretrain epoch 450/500 | val_loss 1.4391 | elapsed 31m02s, phase ETA 3m27s
+[time]     [rnn s8_r6] finetune epoch 50/100 | val_loss 0.6862 | elapsed 31s, phase ETA 31s
+[rnn] subject 8 repeat 6: acc=0.632 kappa=0.509
+[time] [rnn] fold 17/30 done in 35m32s (pretrain 34m29s, finetune 1m03s) | avg 35m26s | rnn elapsed 10h02m17s, ETA 7h40m34s | benchmark ETA 7h40m34s -> finish ~Sat 07 Nov 08:34
+[time] [rnn] fold 18/30 start (subject 8, repeat 7)
+[time]     [rnn s8_r7] pretrain epoch 50/500 | val_loss 1.3479 | elapsed 3m29s, phase ETA 31m20s
+[time]     [rnn s8_r7] pretrain epoch 100/500 | val_loss 1.3779 | elapsed 6m55s, phase ETA 27m42s
+[time]     [rnn s8_r7] pretrain epoch 150/500 | val_loss 1.4026 | elapsed 10m25s, phase ETA 24m17s
+[time]     [rnn s8_r7] pretrain epoch 200/500 | val_loss 1.4464 | elapsed 13m54s, phase ETA 20m51s
+[time]     [rnn s8_r7] pretrain epoch 250/500 | val_loss 1.9699 | elapsed 17m22s, phase ETA 17m22s
+[time]     [rnn s8_r7] pretrain epoch 300/500 | val_loss 1.5632 | elapsed 20m49s, phase ETA 13m52s
+[time]     [rnn s8_r7] pretrain epoch 350/500 | val_loss 1.3413 | elapsed 24m16s, phase ETA 10m24s
+[time]     [rnn s8_r7] pretrain epoch 400/500 | val_loss 1.6044 | elapsed 27m45s, phase ETA 6m56s
+[time]     [rnn s8_r7] pretrain epoch 450/500 | val_loss 1.4806 | elapsed 31m15s, phase ETA 3m28s
+[time]     [rnn s8_r7] finetune epoch 50/100 | val_loss 0.8638 | elapsed 33s, phase ETA 33s
+[rnn] subject 8 repeat 7: acc=0.590 kappa=0.454
+[time] [rnn] fold 18/30 done in 35m48s (pretrain 34m44s, finetune 1m04s) | avg 35m27s | rnn elapsed 10h38m05s, ETA 7h05m23s | benchmark ETA 7h05m23s -> finish ~Sat 07 Nov 08:34
+[time] [rnn] fold 19/30 start (subject 8, repeat 8)
+[time]     [rnn s8_r8] pretrain epoch 50/500 | val_loss 1.3690 | elapsed 3m28s, phase ETA 31m10s
+[time]     [rnn s8_r8] pretrain epoch 100/500 | val_loss 1.3325 | elapsed 6m56s, phase ETA 27m42s
+[time]     [rnn s8_r8] pretrain epoch 150/500 | val_loss 1.3389 | elapsed 10m22s, phase ETA 24m11s
+[time]     [rnn s8_r8] pretrain epoch 200/500 | val_loss 1.3905 | elapsed 13m52s, phase ETA 20m47s
+[time]     [rnn s8_r8] pretrain epoch 250/500 | val_loss 1.3808 | elapsed 17m19s, phase ETA 17m19s
+[time]     [rnn s8_r8] pretrain epoch 300/500 | val_loss 1.4549 | elapsed 20m48s, phase ETA 13m52s
+[time]     [rnn s8_r8] pretrain epoch 350/500 | val_loss 1.4081 | elapsed 24m16s, phase ETA 10m24s
+[time]     [rnn s8_r8] pretrain epoch 400/500 | val_loss 1.4000 | elapsed 27m45s, phase ETA 6m56s
+[time]     [rnn s8_r8] pretrain epoch 450/500 | val_loss 1.4381 | elapsed 31m13s, phase ETA 3m28s
+[time]     [rnn s8_r8] finetune epoch 50/100 | val_loss 0.9222 | elapsed 33s, phase ETA 33s
+[rnn] subject 8 repeat 8: acc=0.590 kappa=0.454
+[time] [rnn] fold 19/30 done in 35m49s (pretrain 34m43s, finetune 1m05s) | avg 35m28s | rnn elapsed 11h13m54s, ETA 6h30m09s | benchmark ETA 6h30m09s -> finish ~Sat 07 Nov 08:35
+[time] [rnn] fold 20/30 start (subject 8, repeat 9)
+[time]     [rnn s8_r9] pretrain epoch 50/500 | val_loss 1.6806 | elapsed 3m30s, phase ETA 31m27s
+[time]     [rnn s8_r9] pretrain epoch 100/500 | val_loss 1.6663 | elapsed 7m00s, phase ETA 28m01s
+[time]     [rnn s8_r9] pretrain epoch 150/500 | val_loss 1.6919 | elapsed 10m27s, phase ETA 24m24s
+[time]     [rnn s8_r9] pretrain epoch 200/500 | val_loss 1.9326 | elapsed 13m53s, phase ETA 20m50s
+[time]     [rnn s8_r9] pretrain epoch 250/500 | val_loss 2.1003 | elapsed 17m21s, phase ETA 17m21s
+[time]     [rnn s8_r9] pretrain epoch 300/500 | val_loss 1.8364 | elapsed 20m51s, phase ETA 13m54s
+[time]     [rnn s8_r9] pretrain epoch 350/500 | val_loss 1.5407 | elapsed 24m19s, phase ETA 10m25s
+[time]     [rnn s8_r9] pretrain epoch 400/500 | val_loss 1.9924 | elapsed 27m47s, phase ETA 6m57s
+[time]     [rnn s8_r9] pretrain epoch 450/500 | val_loss 1.9617 | elapsed 31m13s, phase ETA 3m28s
+[time]     [rnn s8_r9] finetune epoch 50/100 | val_loss 1.1624 | elapsed 31s, phase ETA 31s
+[rnn] subject 8 repeat 9: acc=0.556 kappa=0.407
+[time] [rnn] fold 20/30 done in 35m46s (pretrain 34m43s, finetune 1m03s) | avg 35m29s | rnn elapsed 11h49m40s, ETA 5h54m50s | benchmark ETA 5h54m50s -> finish ~Sat 07 Nov 08:35
+[time] [rnn] SUBJECT 8 finished: 10 folds in 5h57m23s (35m44s/fold) | subjects done 2/3
+[time] [rnn] fold 21/30 start (subject 9, repeat 0)
+[time]     [rnn s9_r0] pretrain epoch 50/500 | val_loss 1.6566 | elapsed 3m26s, phase ETA 30m51s
+[time]     [rnn s9_r0] pretrain epoch 100/500 | val_loss 1.9534 | elapsed 6m53s, phase ETA 27m32s
+[time]     [rnn s9_r0] pretrain epoch 150/500 | val_loss 2.7546 | elapsed 10m22s, phase ETA 24m12s
+[time]     [rnn s9_r0] pretrain epoch 200/500 | val_loss 2.2585 | elapsed 13m51s, phase ETA 20m47s
+[time]     [rnn s9_r0] pretrain epoch 250/500 | val_loss 2.6042 | elapsed 17m21s, phase ETA 17m21s
+[time]     [rnn s9_r0] pretrain epoch 300/500 | val_loss 4.2136 | elapsed 20m47s, phase ETA 13m51s
+[time]     [rnn s9_r0] pretrain epoch 350/500 | val_loss 3.1463 | elapsed 24m13s, phase ETA 10m23s
+[time]     [rnn s9_r0] pretrain epoch 400/500 | val_loss 3.1053 | elapsed 27m41s, phase ETA 6m55s
+[time]     [rnn s9_r0] pretrain epoch 450/500 | val_loss 3.0461 | elapsed 31m09s, phase ETA 3m28s
+[time]     [rnn s9_r0] finetune epoch 50/100 | val_loss 1.1440 | elapsed 32s, phase ETA 32s
+[rnn] subject 9 repeat 0: acc=0.552 kappa=0.403
+[time] [rnn] fold 21/30 done in 35m41s (pretrain 34m37s, finetune 1m03s) | avg 35m30s | rnn elapsed 12h25m21s, ETA 5h19m26s | benchmark ETA 5h19m26s -> finish ~Sat 07 Nov 08:36
+[time] [rnn] fold 22/30 start (subject 9, repeat 1)
+[time]     [rnn s9_r1] pretrain epoch 50/500 | val_loss 1.3710 | elapsed 3m28s, phase ETA 31m08s
+[time]     [rnn s9_r1] pretrain epoch 100/500 | val_loss 1.5282 | elapsed 6m56s, phase ETA 27m42s
+[time]     [rnn s9_r1] pretrain epoch 150/500 | val_loss 1.4751 | elapsed 10m27s, phase ETA 24m23s
+[time]     [rnn s9_r1] pretrain epoch 200/500 | val_loss 1.4738 | elapsed 13m57s, phase ETA 20m55s
+[time]     [rnn s9_r1] pretrain epoch 250/500 | val_loss 1.5010 | elapsed 17m32s, phase ETA 17m32s
+[time]     [rnn s9_r1] pretrain epoch 300/500 | val_loss 1.5592 | elapsed 21m07s, phase ETA 14m05s
+[time]     [rnn s9_r1] pretrain epoch 350/500 | val_loss 1.5807 | elapsed 24m41s, phase ETA 10m35s
+[time]     [rnn s9_r1] pretrain epoch 400/500 | val_loss 1.6419 | elapsed 28m14s, phase ETA 7m03s
+[time]     [rnn s9_r1] pretrain epoch 450/500 | val_loss 1.5986 | elapsed 31m46s, phase ETA 3m32s
+[time]     [rnn s9_r1] finetune epoch 50/100 | val_loss 0.9128 | elapsed 33s, phase ETA 33s
+[rnn] subject 9 repeat 1: acc=0.562 kappa=0.417
+[time] [rnn] fold 22/30 done in 36m28s (pretrain 35m22s, finetune 1m05s) | avg 35m32s | rnn elapsed 13h01m48s, ETA 4h44m18s | benchmark ETA 4h44m18s -> finish ~Sat 07 Nov 08:37
+[time] [rnn] fold 23/30 start (subject 9, repeat 2)
+[time]     [rnn s9_r2] pretrain epoch 50/500 | val_loss 1.7523 | elapsed 3m35s, phase ETA 32m13s
+[time]     [rnn s9_r2] pretrain epoch 100/500 | val_loss 2.0720 | elapsed 7m08s, phase ETA 28m30s
+[time]     [rnn s9_r2] pretrain epoch 150/500 | val_loss 2.4647 | elapsed 10m43s, phase ETA 25m00s
+[time]     [rnn s9_r2] pretrain epoch 200/500 | val_loss 2.3551 | elapsed 14m16s, phase ETA 21m23s
+[time]     [rnn s9_r2] pretrain epoch 250/500 | val_loss 2.6868 | elapsed 17m50s, phase ETA 17m50s
+[time]     [rnn s9_r2] pretrain epoch 300/500 | val_loss 2.9546 | elapsed 21m23s, phase ETA 14m15s
+[time]     [rnn s9_r2] pretrain epoch 350/500 | val_loss 2.5745 | elapsed 24m56s, phase ETA 10m41s
+[time]     [rnn s9_r2] pretrain epoch 400/500 | val_loss 2.8662 | elapsed 28m30s, phase ETA 7m07s
+[time]     [rnn s9_r2] pretrain epoch 450/500 | val_loss 3.3041 | elapsed 32m07s, phase ETA 3m34s
+[time]     [rnn s9_r2] finetune epoch 50/100 | val_loss 0.9512 | elapsed 32s, phase ETA 32s
+[rnn] subject 9 repeat 2: acc=0.559 kappa=0.412
+[time] [rnn] fold 23/30 done in 36m44s (pretrain 35m40s, finetune 1m04s) | avg 35m35s | rnn elapsed 13h38m33s, ETA 4h09m07s | benchmark ETA 4h09m07s -> finish ~Sat 07 Nov 08:39
+[time] [rnn] fold 24/30 start (subject 9, repeat 3)
+[time]     [rnn s9_r3] pretrain epoch 50/500 | val_loss 1.3640 | elapsed 3m34s, phase ETA 32m03s
+[time]     [rnn s9_r3] pretrain epoch 100/500 | val_loss 1.8089 | elapsed 7m12s, phase ETA 28m48s
+[time]     [rnn s9_r3] pretrain epoch 150/500 | val_loss 1.4937 | elapsed 10m46s, phase ETA 25m06s
+[time]     [rnn s9_r3] pretrain epoch 200/500 | val_loss 1.5211 | elapsed 14m24s, phase ETA 21m36s
+[time]     [rnn s9_r3] pretrain epoch 250/500 | val_loss 1.6188 | elapsed 17m59s, phase ETA 17m59s
+[time]     [rnn s9_r3] pretrain epoch 300/500 | val_loss 1.5637 | elapsed 21m32s, phase ETA 14m22s
+[time]     [rnn s9_r3] pretrain epoch 350/500 | val_loss 1.5433 | elapsed 25m05s, phase ETA 10m45s
+[time]     [rnn s9_r3] pretrain epoch 400/500 | val_loss 1.7317 | elapsed 28m39s, phase ETA 7m10s
+[time]     [rnn s9_r3] pretrain epoch 450/500 | val_loss 1.5627 | elapsed 32m12s, phase ETA 3m35s
+[time]     [rnn s9_r3] finetune epoch 50/100 | val_loss 0.9056 | elapsed 32s, phase ETA 32s
+[rnn] subject 9 repeat 3: acc=0.615 kappa=0.486
+[time] [rnn] fold 24/30 done in 36m55s (pretrain 35m50s, finetune 1m04s) | avg 35m39s | rnn elapsed 14h15m28s, ETA 3h33m52s | benchmark ETA 3h33m52s -> finish ~Sat 07 Nov 08:40
+[time] [rnn] fold 25/30 start (subject 9, repeat 4)
+[time]     [rnn s9_r4] pretrain epoch 50/500 | val_loss 1.3415 | elapsed 3m35s, phase ETA 32m13s
+[time]     [rnn s9_r4] pretrain epoch 100/500 | val_loss 1.3540 | elapsed 7m11s, phase ETA 28m43s
+[time]     [rnn s9_r4] pretrain epoch 150/500 | val_loss 1.3410 | elapsed 10m47s, phase ETA 25m09s
+[time]     [rnn s9_r4] pretrain epoch 200/500 | val_loss 1.3352 | elapsed 14m18s, phase ETA 21m27s
+[time]     [rnn s9_r4] pretrain epoch 250/500 | val_loss 1.4382 | elapsed 17m53s, phase ETA 17m53s
+[time]     [rnn s9_r4] pretrain epoch 300/500 | val_loss 1.3250 | elapsed 21m26s, phase ETA 14m17s
+[time]     [rnn s9_r4] pretrain epoch 350/500 | val_loss 1.3513 | elapsed 24m58s, phase ETA 10m42s
+[time]     [rnn s9_r4] pretrain epoch 400/500 | val_loss 1.3060 | elapsed 28m33s, phase ETA 7m08s
+[time]     [rnn s9_r4] pretrain epoch 450/500 | val_loss 1.3206 | elapsed 32m05s, phase ETA 3m34s
+[time]     [rnn s9_r4] finetune epoch 50/100 | val_loss 0.7698 | elapsed 33s, phase ETA 33s
+[rnn] subject 9 repeat 4: acc=0.569 kappa=0.426
+[time] [rnn] fold 25/30 done in 36m50s (pretrain 35m43s, finetune 1m07s) | avg 35m42s | rnn elapsed 14h52m18s, ETA 2h58m28s | benchmark ETA 2h58m28s -> finish ~Sat 07 Nov 08:42
+[time] [rnn] fold 26/30 start (subject 9, repeat 5)
+[time]     [rnn s9_r5] pretrain epoch 50/500 | val_loss 1.8050 | elapsed 3m36s, phase ETA 32m23s
+[time]     [rnn s9_r5] pretrain epoch 100/500 | val_loss 1.7464 | elapsed 7m08s, phase ETA 28m34s
+[time]     [rnn s9_r5] pretrain epoch 150/500 | val_loss 1.8494 | elapsed 10m43s, phase ETA 25m01s
+[time]     [rnn s9_r5] pretrain epoch 200/500 | val_loss 1.4571 | elapsed 14m15s, phase ETA 21m23s
+[time]     [rnn s9_r5] pretrain epoch 250/500 | val_loss 2.2636 | elapsed 17m46s, phase ETA 17m46s
+[time]     [rnn s9_r5] pretrain epoch 300/500 | val_loss 2.1645 | elapsed 21m22s, phase ETA 14m15s
+[time]     [rnn s9_r5] pretrain epoch 350/500 | val_loss 2.3605 | elapsed 24m57s, phase ETA 10m41s
+[time]     [rnn s9_r5] pretrain epoch 400/500 | val_loss 2.2054 | elapsed 28m31s, phase ETA 7m08s
+[time]     [rnn s9_r5] pretrain epoch 450/500 | val_loss 1.3510 | elapsed 32m02s, phase ETA 3m34s
+[time]     [rnn s9_r5] finetune epoch 50/100 | val_loss 1.0852 | elapsed 33s, phase ETA 33s
+[rnn] subject 9 repeat 5: acc=0.531 kappa=0.375
+[time] [rnn] fold 26/30 done in 36m42s (pretrain 35m36s, finetune 1m06s) | avg 35m44s | rnn elapsed 15h28m59s, ETA 2h22m55s | benchmark ETA 2h22m55s -> finish ~Sat 07 Nov 08:43
+[time] [rnn] fold 27/30 start (subject 9, repeat 6)
+[time]     [rnn s9_r6] pretrain epoch 50/500 | val_loss 1.3973 | elapsed 3m31s, phase ETA 31m38s
+[time]     [rnn s9_r6] pretrain epoch 100/500 | val_loss 1.3720 | elapsed 7m05s, phase ETA 28m21s
+[time]     [rnn s9_r6] pretrain epoch 150/500 | val_loss 1.3999 | elapsed 10m39s, phase ETA 24m51s
+[time]     [rnn s9_r6] pretrain epoch 200/500 | val_loss 1.3801 | elapsed 14m13s, phase ETA 21m20s
+[time]     [rnn s9_r6] pretrain epoch 250/500 | val_loss 1.6262 | elapsed 17m49s, phase ETA 17m49s
+[time]     [rnn s9_r6] pretrain epoch 300/500 | val_loss 1.5574 | elapsed 21m20s, phase ETA 14m14s
+[time]     [rnn s9_r6] pretrain epoch 350/500 | val_loss 1.5252 | elapsed 24m53s, phase ETA 10m40s
+[time]     [rnn s9_r6] pretrain epoch 400/500 | val_loss 1.5938 | elapsed 28m28s, phase ETA 7m07s
+[time]     [rnn s9_r6] pretrain epoch 450/500 | val_loss 1.6677 | elapsed 32m02s, phase ETA 3m34s
+[time]     [rnn s9_r6] finetune epoch 50/100 | val_loss 0.6628 | elapsed 33s, phase ETA 33s
+[rnn] subject 9 repeat 6: acc=0.597 kappa=0.463
+[time] [rnn] fold 27/30 done in 36m41s (pretrain 35m35s, finetune 1m06s) | avg 35m46s | rnn elapsed 16h05m40s, ETA 1h47m18s | benchmark ETA 1h47m18s -> finish ~Sat 07 Nov 08:44
+[time] [rnn] fold 28/30 start (subject 9, repeat 7)
+[time]     [rnn s9_r7] pretrain epoch 50/500 | val_loss 1.3700 | elapsed 3m35s, phase ETA 32m14s
+[time]     [rnn s9_r7] pretrain epoch 100/500 | val_loss 1.3143 | elapsed 7m07s, phase ETA 28m29s
+[time]     [rnn s9_r7] pretrain epoch 150/500 | val_loss 1.3181 | elapsed 10m41s, phase ETA 24m55s
+[time]     [rnn s9_r7] pretrain epoch 200/500 | val_loss 1.3382 | elapsed 14m14s, phase ETA 21m20s
+[time]     [rnn s9_r7] pretrain epoch 250/500 | val_loss 1.2939 | elapsed 17m48s, phase ETA 17m48s
+[time]     [rnn s9_r7] pretrain epoch 300/500 | val_loss 1.3480 | elapsed 21m23s, phase ETA 14m15s
+[time]     [rnn s9_r7] pretrain epoch 350/500 | val_loss 1.3822 | elapsed 24m58s, phase ETA 10m42s
+[time]     [rnn s9_r7] pretrain epoch 400/500 | val_loss 1.3721 | elapsed 28m34s, phase ETA 7m09s
+[time]     [rnn s9_r7] pretrain epoch 450/500 | val_loss 1.3827 | elapsed 32m10s, phase ETA 3m34s
+[time]     [rnn s9_r7] finetune epoch 50/100 | val_loss 0.9794 | elapsed 32s, phase ETA 32s
+[rnn] subject 9 repeat 7: acc=0.590 kappa=0.454
+[time] [rnn] fold 28/30 done in 36m46s (pretrain 35m41s, finetune 1m05s) | avg 35m48s | rnn elapsed 16h42m27s, ETA 1h11m36s | benchmark ETA 1h11m36s -> finish ~Sat 07 Nov 08:45
+[time] [rnn] fold 29/30 start (subject 9, repeat 8)
+[time]     [rnn s9_r8] pretrain epoch 50/500 | val_loss 1.3370 | elapsed 3m32s, phase ETA 31m52s
+[time]     [rnn s9_r8] pretrain epoch 100/500 | val_loss 1.3393 | elapsed 7m07s, phase ETA 28m26s
+[time]     [rnn s9_r8] pretrain epoch 150/500 | val_loss 1.3308 | elapsed 10m43s, phase ETA 25m00s
+[time]     [rnn s9_r8] pretrain epoch 200/500 | val_loss 1.2764 | elapsed 14m16s, phase ETA 21m24s
+[time]     [rnn s9_r8] pretrain epoch 250/500 | val_loss 1.3582 | elapsed 17m52s, phase ETA 17m52s
+[time]     [rnn s9_r8] pretrain epoch 300/500 | val_loss 1.3617 | elapsed 21m25s, phase ETA 14m17s
+[time]     [rnn s9_r8] pretrain epoch 350/500 | val_loss 1.3178 | elapsed 25m00s, phase ETA 10m43s
+[time]     [rnn s9_r8] pretrain epoch 400/500 | val_loss 1.2912 | elapsed 28m33s, phase ETA 7m08s
+[time]     [rnn s9_r8] pretrain epoch 450/500 | val_loss 1.3441 | elapsed 32m08s, phase ETA 3m34s
+[time]     [rnn s9_r8] finetune epoch 50/100 | val_loss 1.3596 | elapsed 32s, phase ETA 32s
+[rnn] subject 9 repeat 8: acc=0.549 kappa=0.398
+[time] [rnn] fold 29/30 done in 36m45s (pretrain 35m40s, finetune 1m04s) | avg 35m50s | rnn elapsed 17h19m11s, ETA 35m50s | benchmark ETA 35m50s -> finish ~Sat 07 Nov 08:46
+[time] [rnn] fold 30/30 start (subject 9, repeat 9)
+[time]     [rnn s9_r9] pretrain epoch 50/500 | val_loss 1.8717 | elapsed 3m32s, phase ETA 31m48s
+[time]     [rnn s9_r9] pretrain epoch 100/500 | val_loss 2.0093 | elapsed 7m04s, phase ETA 28m17s
+[time]     [rnn s9_r9] pretrain epoch 150/500 | val_loss 2.1532 | elapsed 10m38s, phase ETA 24m49s
+[time]     [rnn s9_r9] pretrain epoch 200/500 | val_loss 2.3971 | elapsed 14m11s, phase ETA 21m17s
+[time]     [rnn s9_r9] pretrain epoch 250/500 | val_loss 2.6846 | elapsed 17m48s, phase ETA 17m48s
+[time]     [rnn s9_r9] pretrain epoch 300/500 | val_loss 2.4538 | elapsed 21m25s, phase ETA 14m17s
+[time]     [rnn s9_r9] pretrain epoch 350/500 | val_loss 2.2382 | elapsed 24m51s, phase ETA 10m39s
+[time]     [rnn s9_r9] pretrain epoch 400/500 | val_loss 2.2409 | elapsed 28m16s, phase ETA 7m04s
+[time]     [rnn s9_r9] pretrain epoch 450/500 | val_loss 2.4345 | elapsed 32m34s, phase ETA 3m37s
+[time]     [rnn s9_r9] finetune epoch 50/100 | val_loss 0.9472 | elapsed 29s, phase ETA 29s
+[rnn] subject 9 repeat 9: acc=0.545 kappa=0.394
+[time] [rnn] fold 30/30 done in 37m11s (pretrain 36m14s, finetune 56s) | avg 35m53s | rnn elapsed 17h56m22s, ETA 0.0s | benchmark ETA 0.0s -> finish ~Sat 07 Nov 08:47
+[time] [rnn] SUBJECT 9 finished: 10 folds in 6h06m42s (36m40s/fold) | subjects done 3/3
+[time] [rnn] ALL 30 folds finished in 17h56m22s
+[time] <<< benchmark: rnn: 17h56m22s (pipeline elapsed 17h57m18s)
+[time] >>> collect_results
+Saved tables to rssns_for_mi_EEG/results/benchmark/20261106_144857
+[time] <<< collect_results: 0.2s (pipeline elapsed 17h57m19s)
+[time] >>> plot_benchmarks
+Saved benchmark figures to rssns_for_mi_EEG/results/benchmark/20261106_144857/figures
+[time] <<< plot_benchmarks: 1.1s (pipeline elapsed 17h57m20s)
+[time] >>> compare_models
+
+Mean +/- SD across subjects:
+model   metric  mean_across_subjects  sd_across_subjects  n_subjects
+  rnn accuracy                 0.437               0.125           9
+  rnn    kappa                 0.249               0.167           9
+  rnn macro_f1                 0.406               0.132           9
+
+Paired comparisons (difference = first - second, Holm across the 5 comparisons of each metric):
+[time] <<< compare_models: 2.1s (pipeline elapsed 17h57m22s)
+[comparison] printing skipped: KeyError("None of [Index(['metric', 'comparison', 'n_subjects', 'median_diff', 'ci_low', 'ci_high', 'p_raw', 'p_holm', 'significant'], dtype='str')] are in the [columns]")
+[time] >>> plot_comparison
+[time] <<< plot_comparison: 0.0s (pipeline elapsed 17h57m22s)
+[plots] plot_comparison skipped: EmptyDataError('No columns to parse from file')
+[chain] COMPLETE: all folds done and analysis written to rssns_for_mi_EEG/results/benchmark/20261106_144857
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 17h57m22s
+[time]   stage download_data                       17s  ( 0.0%)
+[time]   stage preprocess_data                     23s  ( 0.0%)
+[time]   stage data_statistics                     16s  ( 0.0%)
+[time]   stage benchmark: rnn                17h56m22s  (99.9%)
+[time]   stage collect_results                    0.2s  ( 0.0%)
+[time]   stage plot_benchmarks                    1.1s  ( 0.0%)
+[time]   stage compare_models                     2.1s  ( 0.0%)
+[time]   stage plot_comparison                    0.0s  ( 0.0%)
+[time]   rnn: 30 folds, total 17h56m22s, mean 35m53s (min 33m49s, max 37m11s)
+[time]     per subject: S7 5h52m17s, S8 5h57m23s, S9 6h06m42s

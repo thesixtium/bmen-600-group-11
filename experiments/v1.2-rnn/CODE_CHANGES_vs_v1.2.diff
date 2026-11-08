@@ -1,0 +1,152 @@
+diff --git a/v1.2/code/src/benchmark.py b/v1.2-rnn/code/src/benchmark.py
+index e6a774a..2267e43 100644
+--- a/v1.2/code/src/benchmark.py
++++ b/v1.2-rnn/code/src/benchmark.py
+@@ -43,7 +43,8 @@ from preprocess_data import ProcessedData
+ from timing import PipelineTimer
+ from training import TrainingOutcome, predict_logits, pretrain_then_finetune
+ 
+-MODELS: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
++# v1.2-rnn run: only the RNN (4 readout windows); the other models are in the v1 and v1.2 runs.
++MODELS: tuple[str, ...] = ('rnn',)
+ 
+ 
+ # ---------------------------------------------------------------- setup
+@@ -245,7 +246,7 @@ def run_rsnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Pat
+ 
+ def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
+     """Elman RNN with ELU: the non-spiking twin of the one-window (v1) RSNN; same init / input handling / schedule / folds."""
+-    n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rnn_hidden"]  # matched with the one-window readout (v1 size)
++    n_hidden = model_summary(EEGNET_CFG, RSNN_CFG)["rsnn_hidden"]  # v1.2-rnn: the RSNN's size (4-window readout, 14)
+     tracker = timer.track("rnn", pending_folds(run_dir, "rnn", folds))
+     for fold in tracker.folds:
+         if timer.out_of_time("rnn"):
+diff --git a/v1.2/code/src/benchmark_config.py b/v1.2-rnn/code/src/benchmark_config.py
+index 7f1c5f0..b70969e 100644
+--- a/v1.2/code/src/benchmark_config.py
++++ b/v1.2-rnn/code/src/benchmark_config.py
+@@ -112,6 +112,9 @@ class RNNConfig:
+     n_steps: int = N_SAMPLES  # one step per EEG sample, same as the RSNN
+     recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2), same as the RSNN
+     batch_size: int = 64  # same as the RSNN
++    # v1.2-rnn: the same time-window readout as the v1.2 RSNN (4 windows of 64 steps), so the RNN is the RSNN's
++    # non-spiking twin again; its hidden size is then the RSNN's (14 neurons, same parameter count)
++    n_readout_windows: int = 4
+     normalize_input: bool = True  # same per-channel standardization (pretraining subjects only) as the RSNN
+ 
+ 
+diff --git a/v1.2/code/src/main.py b/v1.2-rnn/code/src/main.py
+index 58a994f..df5446b 100644
+--- a/v1.2/code/src/main.py
++++ b/v1.2-rnn/code/src/main.py
+@@ -52,20 +52,24 @@ try:
+     timer.bind(run_dir, device, MODELS, {m: len(pending_folds(run_dir, m, folds)) for m in MODELS})
+ 
+     # Make and train EEGNet ANN and benchmark
+-    with timer.stage("benchmark: ann"):
+-        run_ann_benchmark(processed, folds, run_dir, device, timer)
++    if "ann" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: ann"):
++            run_ann_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Convert EEGNet ANN to SNN and benchmark
+-    with timer.stage("benchmark: snn"):
+-        run_snn_benchmark(processed, folds, run_dir, device, timer)
++    if "snn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: snn"):
++            run_snn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Make and train RSNN model and benchmark
+-    with timer.stage("benchmark: rsnn"):
+-        run_rsnn_benchmark(processed, folds, run_dir, device, timer)
++    if "rsnn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: rsnn"):
++            run_rsnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Make and train the non-spiking RNN control (topology and size of the one-window v1 RSNN, ELU instead of LIF)
+-    with timer.stage("benchmark: rnn"):
+-        run_rnn_benchmark(processed, folds, run_dir, device, timer)
++    if "rnn" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: rnn"):
++            run_rnn_benchmark(processed, folds, run_dir, device, timer)
+ 
+     # Chained jobs: a job that ran out of time ends cleanly with folds still pending. The analysis only makes sense on
+     # the finished set, so it is skipped until every selected fold of every model has metrics; the final job runs it
+@@ -77,14 +81,25 @@ try:
+     else:
+         with timer.stage("collect_results"):
+             collect_results(run_dir)
+-        with timer.stage("plot_benchmarks"):
+-            plot_benchmarks(run_dir)
++        try:
++            with timer.stage("plot_benchmarks"):
++                plot_benchmarks(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[plots] plot_benchmarks skipped: {exc!r}")
+ 
+         # Comparative metrics between models (chance tests, paired Wilcoxon + Holm, bootstrap CIs, figures)
+-        with timer.stage("compare_models"):
+-            compare_models(run_dir)
+-        with timer.stage("plot_comparison"):
+-            plot_comparison(run_dir)
++        # compare_models writes its tables first and prints them after; with only one model there are no paired
++        # comparisons and the print step fails, so an error there must not block the COMPLETE marker
++        try:
++            with timer.stage("compare_models"):
++                compare_models(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[comparison] printing skipped: {exc!r}")
++        try:
++            with timer.stage("plot_comparison"):
++                plot_comparison(run_dir)
++        except Exception as exc:  # noqa: BLE001
++            print(f"[plots] plot_comparison skipped: {exc!r}")
+         (run_dir / "COMPLETE").write_text(datetime.now().isoformat() + "\n")
+         print(f"[chain] COMPLETE: all folds done and analysis written to {run_dir}")
+ finally:
+diff --git a/v1.2/code/src/models.py b/v1.2-rnn/code/src/models.py
+index 784e6a9..bcf037f 100644
+--- a/v1.2/code/src/models.py
++++ b/v1.2-rnn/code/src/models.py
+@@ -145,7 +145,8 @@ class RecurrentLIFNet(nn.Module):
+ class RecurrentELUNet(nn.Module):
+     """(input standardization) -> input projection -> ONE dense all-to-all recurrent ELU layer -> linear readout.
+ 
+-    Non-spiking control for RecurrentLIFNet with ONE readout window (the v1 RSNN): identical weights (input_proj,
++    v1.2-rnn: this copy gives the RNN the same windowed readout as the v1.2 RSNN (RNNConfig.n_readout_windows).
++    Original v1.2 text: Non-spiking control for RecurrentLIFNet with ONE readout window (the v1 RSNN): identical weights (input_proj,
+     recurrent H x H without bias, readout), identical init, identical input standardization buffers and identical
+     time-averaged readout. The v1.2 RSNN's windowed readout is not copied here. Only the neuron model differs: the leaky integrate-and-fire neuron (beta, threshold, reset, spikes, surrogate gradient) is replaced by the
+     ELU activation of the EEGNet ANN.
+@@ -163,7 +164,7 @@ class RecurrentELUNet(nn.Module):
+         self.n_hidden = n_hidden
+         self.input_proj = nn.Linear(n_inputs, n_hidden)
+         self.recurrent = nn.Linear(n_hidden, n_hidden, bias=False)
+-        self.readout = nn.Linear(n_hidden, n_classes)
++        self.readout = nn.Linear(n_hidden * cfg.n_readout_windows, n_classes)  # v1.2-rnn: one input per neuron per window
+         self.dropout = nn.Dropout(0.25)  # on the readout input; probability is set by the training schedule
+         self.act = nn.ELU()
+         nn.init.normal_(self.recurrent.weight, mean=0.0, std=cfg.recurrent_init_gain / math.sqrt(n_hidden))
+@@ -186,12 +187,19 @@ class RecurrentELUNet(nn.Module):
+         x = x.permute(2, 0, 1)  # (T, B, C): one EEG sample (22 values) per step
+         n_steps = min(self.cfg.n_steps, x.shape[0])
+         input_current = self.input_proj(x)  # (T, B, H)
++        # v1.2-rnn: steps 1..T are split into W equal windows; the readout sees the mean activity of every neuron in
++        # every window (as the v1.2 RSNN's window spike rates)
++        n_windows = self.cfg.n_readout_windows
++        if n_steps % n_windows:
++            raise ValueError(f"{n_steps} simulation steps cannot be split into {n_windows} equal readout windows")
++        steps_per_window = n_steps // n_windows
+         h = x.new_zeros(x.shape[1], self.n_hidden)
+-        h_sum = x.new_zeros(x.shape[1], self.n_hidden)
++        window_sums = [x.new_zeros(x.shape[1], self.n_hidden) for _ in range(n_windows)]
+         for t in range(n_steps):
+             h = self.act(input_current[t] + self.recurrent(h))
+-            h_sum = h_sum + h
+-        return self.readout(self.dropout(h_sum / n_steps))
++            w = t // steps_per_window
++            window_sums[w] = window_sums[w] + h
++        return self.readout(self.dropout(torch.cat(window_sums, dim=1) / steps_per_window))
+ 
+ 
+ # ---------------------------------------------------------------- Parameter counts (analytic)

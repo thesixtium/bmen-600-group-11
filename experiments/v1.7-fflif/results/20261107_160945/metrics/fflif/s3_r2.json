@@ -1,0 +1,40 @@
+{
+ "model": "fflif",
+ "subject": 3,
+ "repeat": 2,
+ "seed": 2328,
+ "n_test": 288,
+ "accuracy": 0.6354166666666666,
+ "kappa": 0.5138888888888888,
+ "macro_f1": 0.5891108629760646,
+ "confusion": [
+  [
+   46,
+   6,
+   1,
+   19
+  ],
+  [
+   5,
+   63,
+   0,
+   4
+  ],
+  [
+   1,
+   15,
+   8,
+   48
+  ],
+  [
+   0,
+   3,
+   3,
+   66
+  ]
+ ],
+ "n_params": 739,
+ "n_hidden": 15,
+ "pretrain_best_epoch": 493,
+ "finetune_best_epoch": 95
+}

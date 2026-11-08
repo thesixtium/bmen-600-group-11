@@ -1,0 +1,106 @@
+import os
+import warnings
+from datetime import datetime
+
+warnings.filterwarnings("ignore", message="Montage name 'standard_1005'")
+
+from benchmark import (
+    MODELS,
+    collect_results,
+    pending_folds,
+    prepare_run_dir,
+    run_ann_benchmark,
+    run_rnn_benchmark,
+    run_rsnn_benchmark,
+    run_snn_benchmark,
+    select_device,
+)
+from benchmark_plots import plot_benchmarks
+from comparison import compare_models
+from comparison_plots import plot_comparison
+from data_statistics import data_statistics
+from download_data import download_data
+from folds import filter_folds, generate_folds
+from preprocess_data import preprocess_data
+from timing import PipelineTimer
+
+
+def _env_int_list(name: str) -> list[int] | None:
+    """Optional comma-separated integers, e.g. BENCH_TARGETS=1,2,3 to shard folds over several jobs."""
+    value = os.environ.get(name)
+    return [int(v) for v in value.split(",")] if value else None
+
+
+timer = PipelineTimer()
+
+try:
+    with timer.stage("download_data"):
+        data = download_data(redo=False)
+
+    with timer.stage("preprocess_data"):
+        processed = preprocess_data(data)
+
+    with timer.stage("data_statistics"):
+        data_statistics(data, processed)
+
+    # Folds shared by all three models. The full set is always saved; BENCH_TARGETS / BENCH_REPEATS only select
+    # which folds this process runs. Set BENCH_RUN_ID to resume or to share one run directory between jobs.
+    all_folds = generate_folds(processed)
+    run_dir = prepare_run_dir(all_folds)
+    folds = filter_folds(all_folds, targets=_env_int_list("BENCH_TARGETS"), repeats=_env_int_list("BENCH_REPEATS"))
+    device = select_device()
+    timer.bind(run_dir, device, MODELS, {m: len(pending_folds(run_dir, m, folds)) for m in MODELS})
+
+    # Make and train EEGNet ANN and benchmark
+    if "ann" in MODELS:  # this run trains only the models in MODELS
+        with timer.stage("benchmark: ann"):
+            run_ann_benchmark(processed, folds, run_dir, device, timer)
+
+    # Convert EEGNet ANN to SNN and benchmark
+    if "snn" in MODELS:  # this run trains only the models in MODELS
+        with timer.stage("benchmark: snn"):
+            run_snn_benchmark(processed, folds, run_dir, device, timer)
+
+    # Make and train RSNN model and benchmark
+    if "rsnn" in MODELS:  # this run trains only the models in MODELS
+        with timer.stage("benchmark: rsnn"):
+            run_rsnn_benchmark(processed, folds, run_dir, device, timer)
+
+    # Make and train the non-spiking RNN control (same topology, size and 44 band inputs as the RSNN, ELU instead of LIF)
+    if "rnn" in MODELS:  # this run trains only the models in MODELS
+        with timer.stage("benchmark: rnn"):
+            run_rnn_benchmark(processed, folds, run_dir, device, timer)
+
+    # Chained jobs: a job that ran out of time ends cleanly with folds still pending. The analysis only makes sense on
+    # the finished set, so it is skipped until every selected fold of every model has metrics; the final job runs it
+    # and writes the COMPLETE marker, which makes any further queued job with the same BENCH_RUN_ID exit immediately.
+    remaining = {m: len(pending_folds(run_dir, m, folds)) for m in MODELS}
+    if any(remaining.values()):
+        print(f"[chain] INCOMPLETE: folds still pending per model: {remaining}. Analysis skipped; "
+              f"rerun/resubmit with BENCH_RUN_ID={run_dir.name} to continue.")
+    else:
+        with timer.stage("collect_results"):
+            collect_results(run_dir)
+        try:
+            with timer.stage("plot_benchmarks"):
+                plot_benchmarks(run_dir)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[plots] plot_benchmarks skipped: {exc!r}")
+
+        # Comparative metrics between models (chance tests, paired Wilcoxon + Holm, bootstrap CIs, figures)
+        # compare_models writes its tables first and prints them after; with only one model there are no paired
+        # comparisons and the print step fails, so an error there must not block the COMPLETE marker
+        try:
+            with timer.stage("compare_models"):
+                compare_models(run_dir)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[comparison] printing skipped: {exc!r}")
+        try:
+            with timer.stage("plot_comparison"):
+                plot_comparison(run_dir)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[plots] plot_comparison skipped: {exc!r}")
+        (run_dir / "COMPLETE").write_text(datetime.now().isoformat() + "\n")
+        print(f"[chain] COMPLETE: all folds done and analysis written to {run_dir}")
+finally:
+    timer.finish()  # also runs after a crash / Ctrl-C, so partial timings are still saved

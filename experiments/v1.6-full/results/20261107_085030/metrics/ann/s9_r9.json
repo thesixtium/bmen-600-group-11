@@ -1,0 +1,39 @@
+{
+ "model": "ann",
+ "subject": 9,
+ "repeat": 9,
+ "seed": 2935,
+ "n_test": 288,
+ "accuracy": 0.7395833333333334,
+ "kappa": 0.6527777777777778,
+ "macro_f1": 0.731089837424679,
+ "confusion": [
+  [
+   64,
+   6,
+   2,
+   0
+  ],
+  [
+   5,
+   50,
+   3,
+   14
+  ],
+  [
+   2,
+   20,
+   33,
+   17
+  ],
+  [
+   0,
+   5,
+   1,
+   66
+  ]
+ ],
+ "n_params": 796,
+ "pretrain_best_epoch": 7,
+ "finetune_best_epoch": 96
+}

@@ -1,0 +1,57 @@
+[time] >>> download_data
+[time] <<< download_data: 22s (pipeline elapsed 22s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 30s (pipeline elapsed 52s)
+[time] >>> data_statistics
+PSD change after preprocessing (channel mean, dB):
+    2 Hz:  -28.6 dB
+    4 Hz:   -0.9 dB
+   10 Hz:   -0.8 dB
+   20 Hz:   -0.4 dB
+   40 Hz:   -0.3 dB
+   45 Hz:   -6.0 dB
+   50 Hz:  -50.7 dB
+   55 Hz:  -72.1 dB
+   60 Hz:  -60.8 dB
+Saved graphs to rssns_for_mi_EEG/results/data_statistics
+[time] <<< data_statistics: 17s (pipeline elapsed 1m09s)
+Run directory: rssns_for_mi_EEG/results/benchmark/20261106_144857
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393}
+[time] pending folds per model: {'rnn': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rnn 35m53s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rnn
+[time] [rnn] nothing to run (all folds already done)
+[time] <<< benchmark: rnn: 0.0s (pipeline elapsed 1m09s)
+[time] >>> collect_results
+Saved tables to rssns_for_mi_EEG/results/benchmark/20261106_144857
+[time] <<< collect_results: 0.1s (pipeline elapsed 1m09s)
+[time] >>> plot_benchmarks
+Saved benchmark figures to rssns_for_mi_EEG/results/benchmark/20261106_144857/figures
+[time] <<< plot_benchmarks: 0.8s (pipeline elapsed 1m10s)
+[time] >>> compare_models
+
+Mean +/- SD across subjects:
+model   metric  mean_across_subjects  sd_across_subjects  n_subjects
+  rnn accuracy                 0.437               0.125           9
+  rnn    kappa                 0.249               0.167           9
+  rnn macro_f1                 0.406               0.132           9
+
+Paired comparisons (difference = first - second, Holm across the 5 comparisons of each metric):
+[time] <<< compare_models: 4.3s (pipeline elapsed 1m14s)
+[comparison] printing skipped: KeyError("None of [Index(['metric', 'comparison', 'n_subjects', 'median_diff', 'ci_low', 'ci_high', 'p_raw', 'p_holm', 'significant'], dtype='str')] are in the [columns]")
+[time] >>> plot_comparison
+[time] <<< plot_comparison: 0.0s (pipeline elapsed 1m14s)
+[plots] plot_comparison skipped: EmptyDataError('No columns to parse from file')
+[chain] COMPLETE: all folds done and analysis written to rssns_for_mi_EEG/results/benchmark/20261106_144857
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 1m14s
+[time]   stage download_data                       22s  (30.3%)
+[time]   stage preprocess_data                     30s  (39.9%)
+[time]   stage data_statistics                     17s  (22.5%)
+[time]   stage benchmark: rnn                     0.0s  ( 0.0%)
+[time]   stage collect_results                    0.1s  ( 0.1%)
+[time]   stage plot_benchmarks                    0.8s  ( 1.1%)
+[time]   stage compare_models                     4.3s  ( 5.8%)
+[time]   stage plot_comparison                    0.0s  ( 0.0%)

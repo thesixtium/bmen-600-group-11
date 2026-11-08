@@ -1,0 +1,102 @@
+[time] >>> download_data
+[time] <<< download_data: 22s (pipeline elapsed 22s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 43s (pipeline elapsed 1m05s)
+[time] >>> data_statistics
+PSD change after preprocessing (channel mean, dB):
+    2 Hz:  -28.6 dB
+    4 Hz:   -0.9 dB
+   10 Hz:   -0.8 dB
+   20 Hz:   -0.4 dB
+   40 Hz:   -0.3 dB
+   45 Hz:   -6.0 dB
+   50 Hz:  -50.7 dB
+   55 Hz:  -72.1 dB
+   60 Hz:  -60.8 dB
+Saved graphs to rssns_for_mi_EEG/results/data_statistics
+[time] <<< data_statistics: 21s (pipeline elapsed 1m27s)
+Run directory: rssns_for_mi_EEG/results/benchmark/20261106_144835
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 12, 'rsnn_params': 736, 'rnn_hidden': 12, 'rnn_params': 736, 'recurrent_inputs': 44, 'rsnn_minus_snn_params': -40, 'rsnn_relative_difference': -0.05154639175257732}
+[time] pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): ann 3m22s, snn 0.4s, rsnn 22m03s, rnn 11m57s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: ann
+[time] [ann] nothing to run (all folds already done)
+[time] <<< benchmark: ann: 0.0s (pipeline elapsed 1m27s)
+[time] >>> benchmark: snn
+[time] [snn] nothing to run (all folds already done)
+[time] <<< benchmark: snn: 0.0s (pipeline elapsed 1m27s)
+[time] >>> benchmark: rsnn
+[time] [rsnn] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn: 0.0s (pipeline elapsed 1m27s)
+[time] >>> benchmark: rnn
+[time] [rnn] nothing to run (all folds already done)
+[time] <<< benchmark: rnn: 0.0s (pipeline elapsed 1m27s)
+[time] >>> collect_results
+Saved tables to rssns_for_mi_EEG/results/benchmark/20261106_144835
+[time] <<< collect_results: 0.4s (pipeline elapsed 1m27s)
+[time] >>> plot_benchmarks
+Saved benchmark figures to rssns_for_mi_EEG/results/benchmark/20261106_144835/figures
+[time] <<< plot_benchmarks: 1.8s (pipeline elapsed 1m29s)
+[time] >>> compare_models
+
+Mean +/- SD across subjects:
+model   metric  mean_across_subjects  sd_across_subjects  n_subjects
+  ann accuracy                 0.654               0.161           9
+  ann    kappa                 0.538               0.215           9
+  ann macro_f1                 0.645               0.168           9
+  rnn accuracy                 0.477               0.135           9
+  rnn    kappa                 0.303               0.180           9
+  rnn macro_f1                 0.454               0.134           9
+ rsnn accuracy                 0.470               0.138           9
+ rsnn    kappa                 0.294               0.184           9
+ rsnn macro_f1                 0.443               0.138           9
+  snn accuracy                 0.647               0.159           9
+  snn    kappa                 0.529               0.212           9
+  snn macro_f1                 0.636               0.166           9
+
+Paired comparisons (difference = first - second, Holm across the 5 comparisons of each metric):
+  metric comparison  n_subjects  median_diff  ci_low  ci_high  p_raw  p_holm  significant
+accuracy   rsnn-snn           9      -0.1618 -0.2340  -0.1295 0.0039  0.0195         True
+accuracy   rsnn-ann           9      -0.1635 -0.2365  -0.1392 0.0039  0.0195         True
+accuracy    ann-snn           9       0.0035  0.0017   0.0153 0.0039  0.0195         True
+accuracy   rnn-rsnn           9       0.0094 -0.0042   0.0319 0.3594  0.3594        False
+accuracy    rnn-ann           9      -0.1608 -0.2372  -0.1299 0.0039  0.0195         True
+   kappa   rsnn-snn           9      -0.2157 -0.3120  -0.1727 0.0039  0.0195         True
+   kappa   rsnn-ann           9      -0.2181 -0.3153  -0.1856 0.0039  0.0195         True
+   kappa    ann-snn           9       0.0046  0.0023   0.0204 0.0039  0.0195         True
+   kappa   rnn-rsnn           9       0.0125 -0.0056   0.0426 0.3594  0.3594        False
+   kappa    rnn-ann           9      -0.2144 -0.3162  -0.1731 0.0039  0.0195         True
+macro_f1   rsnn-snn           9      -0.1785 -0.2545  -0.1387 0.0039  0.0195         True
+macro_f1   rsnn-ann           9      -0.1788 -0.2621  -0.1464 0.0039  0.0195         True
+macro_f1    ann-snn           9       0.0069  0.0027   0.0159 0.0039  0.0195         True
+macro_f1   rnn-rsnn           9       0.0138 -0.0146   0.0331 0.2500  0.2500        False
+macro_f1    rnn-ann           9      -0.1805 -0.2484  -0.1418 0.0039  0.0195         True
+
+Subjects above chance (out of 9):
+metric  accuracy  kappa  macro_f1
+model                            
+ann            9      9         9
+rnn            9      9         9
+rsnn           8      9         9
+snn            9      9         9
+Saved comparison tables to rssns_for_mi_EEG/results/benchmark/20261106_144835/comparison
+[time] <<< compare_models: 22s (pipeline elapsed 1m51s)
+[time] >>> plot_comparison
+Saved comparison figures to rssns_for_mi_EEG/results/benchmark/20261106_144835/comparison/figures
+[time] <<< plot_comparison: 3.0s (pipeline elapsed 1m54s)
+[chain] COMPLETE: all folds done and analysis written to rssns_for_mi_EEG/results/benchmark/20261106_144835
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 1m54s
+[time]   stage download_data                       22s  (19.4%)
+[time]   stage preprocess_data                     43s  (37.9%)
+[time]   stage data_statistics                     21s  (18.8%)
+[time]   stage benchmark: ann                     0.0s  ( 0.0%)
+[time]   stage benchmark: snn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn                    0.0s  ( 0.0%)
+[time]   stage benchmark: rnn                     0.0s  ( 0.0%)
+[time]   stage collect_results                    0.4s  ( 0.4%)
+[time]   stage plot_benchmarks                    1.8s  ( 1.6%)
+[time]   stage compare_models                      22s  (19.2%)
+[time]   stage plot_comparison                    3.0s  ( 2.7%)

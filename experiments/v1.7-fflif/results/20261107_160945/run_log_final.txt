@@ -1,0 +1,57 @@
+[time] >>> download_data
+[time] <<< download_data: 8.1s (pipeline elapsed 8.1s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 16s (pipeline elapsed 24s)
+[time] >>> data_statistics
+PSD change after preprocessing (channel mean, dB):
+    2 Hz:  -28.6 dB
+    4 Hz:   -0.9 dB
+   10 Hz:   -0.8 dB
+   20 Hz:   -0.4 dB
+   40 Hz:   -0.3 dB
+   45 Hz:   -6.0 dB
+   50 Hz:  -50.7 dB
+   55 Hz:  -72.1 dB
+   60 Hz:  -60.8 dB
+Saved graphs to rssns_for_mi_EEG/results/data_statistics
+[time] <<< data_statistics: 7.9s (pipeline elapsed 32s)
+Run directory: rssns_for_mi_EEG/results/benchmark/20261107_160945
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 12, 'rsnn_params': 736, 'rnn_hidden': 12, 'rnn_params': 736, 'recurrent_inputs': 44, 'rsnn_minus_snn_params': -40, 'rsnn_relative_difference': -0.05154639175257732}
+[time] pending folds per model: {'fflif': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): fflif 14m57s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: fflif
+[time] [fflif] nothing to run (all folds already done)
+[time] <<< benchmark: fflif: 0.0s (pipeline elapsed 32s)
+[time] >>> collect_results
+Saved tables to rssns_for_mi_EEG/results/benchmark/20261107_160945
+[time] <<< collect_results: 0.0s (pipeline elapsed 32s)
+[time] >>> plot_benchmarks
+Saved benchmark figures to rssns_for_mi_EEG/results/benchmark/20261107_160945/figures
+[time] <<< plot_benchmarks: 0.4s (pipeline elapsed 32s)
+[time] >>> compare_models
+
+Mean +/- SD across subjects:
+model   metric  mean_across_subjects  sd_across_subjects  n_subjects
+fflif accuracy                 0.479               0.151           9
+fflif    kappa                 0.306               0.201           9
+fflif macro_f1                 0.452               0.141           9
+
+Paired comparisons (difference = first - second, Holm across the 5 comparisons of each metric):
+[time] <<< compare_models: 1.1s (pipeline elapsed 33s)
+[comparison] printing skipped: KeyError("None of [Index(['metric', 'comparison', 'n_subjects', 'median_diff', 'ci_low', 'ci_high', 'p_raw', 'p_holm', 'significant'], dtype='str')] are in the [columns]")
+[time] >>> plot_comparison
+[time] <<< plot_comparison: 0.0s (pipeline elapsed 33s)
+[plots] plot_comparison skipped: EmptyDataError('No columns to parse from file')
+[chain] COMPLETE: all folds done and analysis written to rssns_for_mi_EEG/results/benchmark/20261107_160945
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 33s
+[time]   stage download_data                      8.1s  (24.2%)
+[time]   stage preprocess_data                     16s  (47.3%)
+[time]   stage data_statistics                    7.9s  (23.8%)
+[time]   stage benchmark: fflif                   0.0s  ( 0.0%)
+[time]   stage collect_results                    0.0s  ( 0.1%)
+[time]   stage plot_benchmarks                    0.4s  ( 1.1%)
+[time]   stage compare_models                     1.1s  ( 3.2%)
+[time]   stage plot_comparison                    0.0s  ( 0.0%)

@@ -1,0 +1,202 @@
+diff --git a/v1.7-full/code/src/benchmark.py b/v1.7-fflif/code/src/benchmark.py
+index 882e738..385c667 100644
+--- a/v1.7-full/code/src/benchmark.py
++++ b/v1.7-fflif/code/src/benchmark.py
+@@ -39,13 +39,23 @@ from benchmark_config import (
+     SNN_CFG,
+ )
+ from folds import Fold, build_fold_data, save_folds
+-from models import EEGNet, RecurrentELUNet, RecurrentLIFNet, count_parameters, model_summary
++from models import (
++    EEGNet,
++    FeedforwardLIFNet,
++    RecurrentELUNet,
++    RecurrentLIFNet,
++    choose_fflif_hidden_size,
++    count_parameters,
++    fflif_param_count,
++    model_summary,
++)
+ from preprocess_data import ProcessedData
+ from timing import PipelineTimer
+ from training import TrainingOutcome, predict_logits, pretrain_then_finetune
+ 
+-# v1.7 run: all four models.
+-MODELS: tuple[str, ...] = ('ann', 'snn', 'rsnn', 'rnn')
++# v1.7-fflif run: only the recurrence-free control (FF-LIF); ANN, SNN, RSNN and RNN of v1.7 are in the
++# v1.7 run, built from the same fold seeds, so every fold here pairs with the same fold there.
++MODELS: tuple[str, ...] = ('fflif',)
+ 
+ 
+ # ---------------------------------------------------------------- setup
+@@ -75,6 +85,7 @@ def prepare_run_dir(folds: list[Fold], run_id: str | None = None) -> Path:
+         "rnn": asdict(RNN_CFG),
+         "rnn_train": asdict(RNN_TRAIN),
+         "parameter_counts": summary,
++        "fflif": fflif_size(),  # FF-LIF uses RSNN_CFG / RSNN_TRAIN
+     }
+     (run_dir / "config.json").write_text(json.dumps(config, indent=1))
+     save_folds(folds, FOLD_CFG, run_dir / "folds.json")
+@@ -274,6 +285,45 @@ def run_rnn_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path
+             )
+ 
+ 
++# ---------------------------------------------------------------- Model 5: FF-LIF (recurrence-free control of the RSNN)
++
++
++def fflif_size() -> dict:
++    """Hidden size and parameter count of FF-LIF, widened to the converted SNN's budget (the RSNN's budget)."""
++    target = model_summary(EEGNET_CFG, RSNN_CFG)["converted_snn_params"]
++    hidden = choose_fflif_hidden_size(target, N_RECURRENT_INPUTS, N_CLASSES)
++    return {"fflif_hidden": hidden, "fflif_params": fflif_param_count(N_RECURRENT_INPUTS, hidden, N_CLASSES),
++            "converted_snn_params": target}
++
++
++def run_fflif_benchmark(processed: ProcessedData, folds: list[Fold], run_dir: Path, device: torch.device, timer: PipelineTimer) -> None:
++    """The RSNN without its recurrent matrix: same inputs, neuron settings, training schedule (RSNN_TRAIN) and folds."""
++    n_hidden = fflif_size()["fflif_hidden"]
++    tracker = timer.track("fflif", pending_folds(run_dir, "fflif", folds))
++    for fold in tracker.folds:
++        if timer.out_of_time("fflif"):
++            break
++        with tracker.fold(fold) as t:
++            data = build_fold_data(processed, fold, field="X_bands")  # 44 mu + beta band inputs, as the v1.7 RSNN
++            torch.manual_seed(fold.seed)
++            model = FeedforwardLIFNet(N_RECURRENT_INPUTS, n_hidden, N_CLASSES, RSNN_CFG)
++            if RSNN_CFG.normalize_input:
++                # per-input standardization from the PRETRAINING data only (no target / test data), as the RSNN
++                model.set_input_stats(data.pre_train.X)
++            outcome = pretrain_then_finetune(model, data, RSNN_TRAIN, fold.seed, device, tag=f"[fflif {_stem(fold)}]")
++            t["pretrain_s"], t["finetune_s"] = outcome.pretrain_seconds, outcome.finetune_seconds
++            torch.save(
++                {"pretrained": outcome.pretrained_state, "finetuned": outcome.finetuned_state},
++                run_dir / "checkpoints" / "fflif" / f"{_stem(fold)}.pt",
++            )
++            _save_history(run_dir, "fflif", fold, outcome)
++            logits = predict_logits(model, data.test.X, device)
++            _save_result(
++                run_dir, "fflif", fold, data.test.y, logits.argmax(1), logits,
++                {"n_params": count_parameters(model), "n_hidden": n_hidden, **_best_epochs(outcome)},
++            )
++
++
+ # ---------------------------------------------------------------- aggregation
+ 
+ 
+diff --git a/v1.7-full/code/src/benchmark_plots.py b/v1.7-fflif/code/src/benchmark_plots.py
+index e0353e4..8a4cecc 100644
+--- a/v1.7-full/code/src/benchmark_plots.py
++++ b/v1.7-fflif/code/src/benchmark_plots.py
+@@ -20,9 +20,9 @@ from matplotlib.figure import Figure
+ 
+ from data_statistics import CLASSES
+ 
+-MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")
+-MODEL_LABELS: dict[str, str] = {"ann": "EEGNet ANN", "snn": "Converted SNN", "rsnn": "RSNN", "rnn": "RNN (ELU)"}
+-MODEL_COLORS: dict[str, str] = {"ann": "tab:blue", "snn": "tab:orange", "rsnn": "tab:green", "rnn": "tab:red"}
++MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn", "fflif")
++MODEL_LABELS: dict[str, str] = {"ann": "EEGNet ANN", "snn": "Converted SNN", "rsnn": "RSNN", "rnn": "RNN (ELU)", "fflif": "FF-LIF (no recurrence)"}
++MODEL_COLORS: dict[str, str] = {"ann": "tab:blue", "snn": "tab:orange", "rsnn": "tab:green", "rnn": "tab:red", "fflif": "tab:purple"}
+ CHANCE_ACCURACY: float = 0.25
+ METRICS: tuple[tuple[str, str, tuple[float, float]], ...] = (
+     ("accuracy", "Accuracy", (0.0, 1.0)),
+diff --git a/v1.7-full/code/src/comparison.py b/v1.7-fflif/code/src/comparison.py
+index a20738a..02f5a14 100644
+--- a/v1.7-full/code/src/comparison.py
++++ b/v1.7-fflif/code/src/comparison.py
+@@ -32,7 +32,7 @@ from scipy import stats
+ 
+ from benchmark_config import COMPARISON_CFG, N_CLASSES, ComparisonConfig
+ 
+-MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn")  # new models are appended: keeps existing RNG seeds
++MODEL_ORDER: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn", "fflif")  # new models are appended: keeps existing RNG seeds
+ METRIC_NAMES: tuple[str, ...] = ("accuracy", "kappa", "macro_f1")
+ PRIMARY_METRIC: str = "accuracy"
+ # (model a, model b, label): the paired difference is always a - b
+diff --git a/v1.7-full/code/src/main.py b/v1.7-fflif/code/src/main.py
+index 783451d..563fb91 100644
+--- a/v1.7-full/code/src/main.py
++++ b/v1.7-fflif/code/src/main.py
+@@ -10,6 +10,7 @@ from benchmark import (
+     pending_folds,
+     prepare_run_dir,
+     run_ann_benchmark,
++    run_fflif_benchmark,
+     run_rnn_benchmark,
+     run_rsnn_benchmark,
+     run_snn_benchmark,
+@@ -71,6 +72,11 @@ try:
+         with timer.stage("benchmark: rnn"):
+             run_rnn_benchmark(processed, folds, run_dir, device, timer)
+ 
++    # Recurrence-free control: the RSNN without its recurrent matrix, widened to the same parameter budget
++    if "fflif" in MODELS:  # this run trains only the models in MODELS
++        with timer.stage("benchmark: fflif"):
++            run_fflif_benchmark(processed, folds, run_dir, device, timer)
++
+     # Chained jobs: a job that ran out of time ends cleanly with folds still pending. The analysis only makes sense on
+     # the finished set, so it is skipped until every selected fold of every model has metrics; the final job runs it
+     # and writes the COMPLETE marker, which makes any further queued job with the same BENCH_RUN_ID exit immediately.
+diff --git a/v1.7-full/code/src/models.py b/v1.7-fflif/code/src/models.py
+index f25a3ca..7904ec0 100644
+--- a/v1.7-full/code/src/models.py
++++ b/v1.7-fflif/code/src/models.py
+@@ -144,6 +144,58 @@ class RecurrentLIFNet(nn.Module):
+         return self.readout(self.dropout(spike_count / n_steps))
+ 
+ 
++# ---------------------------------------------------------------- Recurrence-free control of the RSNN (FF-LIF)
++
++
++class FeedforwardLIFNet(RecurrentLIFNet):
++    """The RSNN with its recurrent weight matrix removed (FF-LIF): input projection -> ONE LIF layer with no
++    connections between hidden neurons -> linear readout.
++
++    Everything else is the RSNN's: the fixed input standardization, the LIF dynamics (beta, threshold, reset by
++    subtraction, fast-sigmoid surrogate), dropout, the readout on the time-averaged spike rate, and the training
++    (RSNN_CFG, RSNN_TRAIN, same folds and seeds). Dynamics for t = 1..T:
++      I_t = input_proj(x_t)                                  (the RSNN adds recurrent(s_{t-1}) here)
++      u_t = beta * u_{t-1} + I_t - threshold * s_{t-1}.detach()
++      s_t = Heaviside(u_t - threshold)
++    Each neuron keeps its own leaky membrane (memory of its own past input) and its own reset, but no neuron receives
++    another neuron's spikes, so there are no cycles between neurons. RSNN vs FF-LIF therefore isolates trained
++    inter-neuron recurrence. Removing the H x H matrix removes H^2 parameters, so the layer is widened to the
++    converted SNN's parameter budget (choose_fflif_hidden_size), the same budget the RSNN is matched to.
++    """
++
++    def __init__(self, n_inputs: int, n_hidden: int, n_classes: int, cfg: RSNNConfig = RSNNConfig()) -> None:
++        super().__init__(n_inputs, n_hidden, n_classes, cfg)
++        del self.recurrent  # no H x H weights: not in the module, the state_dict, the optimizer or the count
++
++    def forward(self, x: torch.Tensor) -> torch.Tensor:
++        x = (x - self.ch_mean) / self.ch_std  # (B, C, T) standardized per input
++        x = x.permute(2, 0, 1)  # (T, B, C): one input sample per simulation step
++        n_steps = min(self.cfg.n_steps, x.shape[0])
++        batch = x.shape[1]
++        input_current = self.input_proj(x)  # (T, B, H): the whole input current, no recurrent term
++        mem = x.new_zeros(batch, self.n_hidden)
++        spk = x.new_zeros(batch, self.n_hidden)
++        spike_count = x.new_zeros(batch, self.n_hidden)
++        for t in range(n_steps):
++            mem = self.cfg.beta * mem + input_current[t] - self.cfg.threshold * spk.detach()
++            spk = self.spike_fn(mem - self.cfg.threshold)
++            spike_count = spike_count + spk
++        return self.readout(self.dropout(spike_count / n_steps))
++
++
++def fflif_param_count(n_inputs: int, n_hidden: int, n_classes: int) -> int:
++    """input_proj (W + b) + readout (W + b): the RSNN's count without the H x H recurrent matrix."""
++    return (n_inputs * n_hidden + n_hidden) + (n_hidden * n_classes + n_classes)
++
++
++def choose_fflif_hidden_size(target_params: int, n_inputs: int, n_classes: int, max_hidden: int = 2000) -> int:
++    """Largest hidden size whose FF-LIF parameter count does not exceed target_params (the converted SNN), the rule
++    the RSNN uses since v1.3, so FF-LIF never has more parameters than the converted SNN."""
++    fits = [h for h in range(1, max_hidden + 1) if fflif_param_count(n_inputs, h, n_classes) <= target_params]
++    assert fits, "no hidden size fits under the parameter budget"
++    return max(fits)
++
++
+ # ---------------------------------------------------------------- Fully recurrent ELU network (non-spiking control)
+ 
+ 

@@ -1,4 +1,5 @@
-"""Accuracy, Cohen's kappa, macro-F1, macro specificity and macro precision for every model of the full runs v1 to v1.4.
+"""Accuracy, Cohen's kappa, macro-F1, macro specificity and macro precision for every model of the full runs
+(v1 to v1.4, v1.6-full, v1.7-full, and the control runs v1.1-rnn, v1.2-rnn, v1.0-fflif, v1.7-fflif).
 
 Session 2 (test), 90 folds per model. Per fold the metrics come from the 4 x 4 confusion matrix saved in
 metrics/<model>/s<S>_r<R>.json (rows = true class, columns = predicted class); kappa and macro-F1 are read from the
@@ -23,10 +24,20 @@ RUNS = {
     "v1.2": "v1.2/results/20261101_191212",
     "v1.3": "v1.3/results/20261102_163908",
     "v1.4": "v1.4/results/20261103_175004",
+    "v1.6": "v1.6-full/results/20261107_085030",
+    "v1.7": "v1.7-full/results/20261106_144835",
+    "v1.1-rnn": "v1.1-rnn/results/20261106_144857",
+    "v1.2-rnn": "v1.2-rnn/results/20261107_093450",
+    "v1.0-fflif": "v1.0-fflif/results/20261107_160943",
+    "v1.7-fflif": "v1.7-fflif/results/20261107_160945",
 }
 # (version, model) pairs that the version trained; the rest were copied from v1
 TRAINED = [("v1", "ann"), ("v1", "snn"), ("v1", "rsnn"), ("v1", "rnn"), ("v1.1", "rsnn"), ("v1.2", "rsnn"),
-           ("v1.3", "rsnn"), ("v1.3", "rnn"), ("v1.4", "rsnn"), ("v1.4", "rnn")]
+           ("v1.3", "rsnn"), ("v1.3", "rnn"), ("v1.4", "rsnn"), ("v1.4", "rnn"),
+           ("v1.6", "ann"), ("v1.6", "snn"), ("v1.6", "rnn"),                      # v1.6-full: no RSNN
+           ("v1.7", "ann"), ("v1.7", "snn"), ("v1.7", "rsnn"), ("v1.7", "rnn"),
+           ("v1.1-rnn", "rnn"), ("v1.2-rnn", "rnn"),                               # RNN with the v1.1 / v1.2 change
+           ("v1.0-fflif", "fflif"), ("v1.7-fflif", "fflif")]                        # recurrence-free control
 METRICS = ("accuracy", "kappa", "macro_f1", "specificity", "precision")
 
 
