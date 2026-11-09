@@ -1,0 +1,8 @@
+run,comparison,gap_pretrained,first_higher_pretrained,p_pretrained,gap_finetuned,gain_difference,first_gains_more,p_gain_difference,share_of_final_gap_from_finetuning
+v1,EEGNet - RSNN,0.096,9,0.0039,0.233,0.137,9,0.0039,0.59
+v1,EEGNet - RNN,0.054,8,0.0078,0.185,0.131,9,0.0039,0.71
+v1.6,EEGNet - RNN,0.039,7,0.0195,0.187,0.148,9,0.0039,0.79
+v1.7,EEGNet - RSNN,0.045,8,0.0195,0.183,0.138,9,0.0039,0.75
+v1.7,EEGNet - RNN,0.038,8,0.0273,0.177,0.138,9,0.0039,0.78
+v1,RSNN - FF-LIF,-0.01,4,0.5469,-0.016,-0.006,2,0.3125,0.35
+v1.7,RSNN - FF-LIF,-0.009,5,1.0,-0.009,0.0,4,0.8203,-0.03

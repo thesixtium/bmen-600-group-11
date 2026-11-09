@@ -62,6 +62,7 @@ Session-2 accuracies are means over 9 subjects (each the mean of 10 repeats). Co
 | `summary/` | `compute_metrics.py` and its output `metrics_by_version.csv`: accuracy, Cohen's kappa, macro-F1, macro specificity, macro precision and subjects above chance for every model that a full or control run trained (the rows labelled `v1.6` and `v1.7` are the `-full` runs) |
 | `summary/build_tables.py`, `table31.csv`, `table32.csv`, `table33.csv` | Table 31: every version × model, session 2 and session 1. Table 32: all metrics per model and run (the same values as `metrics_by_version.csv`). Table 33: RSNN against FF-LIF for v1 and v1.7, with an exact Wilcoxon test |
 | `summary/score_saved.py`, `summary/session1_scores/` | Session-1 scores (target's 20 % fine-tuning validation split, 9 development folds) of the saved fine-tuned checkpoints of every full and control run; no training, session 2 never reaches a model |
+| `summary/score_pretrain_s2.py`, `summary/pretrain_s2_scores/`, `summary/summarize_pretrain_s2.py`, `summary/session2_by_phase*.csv` | Session-2 accuracy of the saved weights after pretraining only and after fine-tuning, 90 folds of every full and control run (section 3.1) |
 
 ## 3. Use the results for analysis
 
@@ -75,8 +76,24 @@ Session-2 accuracies are means over 9 subjects (each the mean of 10 repeats). Co
 | All versions in one table | `summary/metrics_by_version.csv` (rerun: `python experiments/summary/compute_metrics.py` from the repository root) |
 | Version × model table, both sessions; RSNN against FF-LIF | `summary/table31.csv`, `summary/table33.csv` (rerun: `python experiments/summary/build_tables.py`) |
 | Session-1 score of a run's saved checkpoints | `summary/session1_scores/<run>.json` (rerun: `python experiments/summary/score_saved.py <run>`; downloads the dataset to `rssns_for_mi_EEG/data/` on first use) |
+| Session-2 accuracy after pretraining only and after fine-tuning | `summary/session2_by_phase.csv`, `_gap.csv`, `_per_subject.csv`; per fold in `summary/pretrain_s2_scores/<run>.json` (rerun: `python experiments/summary/score_pretrain_s2.py <run>`, then `python experiments/summary/summarize_pretrain_s2.py`) |
 
 In v1.1 to v1.4, the models that did not change (see each README) were copied from v1, so these run folders hold all four models on the same 90 folds. The control runs (`-rnn`, `-fflif`) and `v1.6-full` hold only the models they trained; `summary/build_tables.py` pairs them with the other runs by subject. All runs use the same 90 folds and seeds.
+
+### 3.1 Session 2 after pretraining and after fine-tuning
+
+Every checkpoint file holds two weight sets: `"pretrained"` (best pretraining-validation epoch, before the target subject is seen) and `"finetuned"` (after fine-tuning on the target's session 1, the weights the benchmark scored). `summary/score_pretrain_s2.py` imports a run's own code, rebuilds its 90 folds (seeds checked against `folds.json`) and scores both weight sets on the target's 288 session-2 trials, with no training. Check: the fine-tuned weights reproduce the run's saved session-2 predictions in all 90 folds of every run and model (0 differing predictions). `summary/summarize_pretrain_s2.py` averages the 10 repeats per subject and runs an exact two-sided Wilcoxon test on the 9 subject gains (not corrected). The SNN has no row: it exists only as a conversion of the fine-tuned EEGNet. v1.1 to v1.4 reuse the v1 EEGNet, so EEGNet appears for v1, v1.6 and v1.7.
+
+v1.7 (session 2, mean of 9 subjects, preliminary):
+
+| Run | Model | After pretraining | After fine-tuning | Gain | Subjects with a gain |
+|---|---|---|---|---|---|
+| v1.7 | EEGNet | 0.432 | 0.654 | +0.222 | 9 of 9 |
+| v1.7 | RSNN | 0.386 | 0.470 | +0.084 | 8 of 9 |
+| v1.7 | RNN | 0.393 | 0.477 | +0.084 | 8 of 9 |
+| v1.7-fflif | FF-LIF | 0.395 | 0.479 | +0.084 | 8 of 9 |
+
+Over all runs, fine-tuning adds +0.202 to +0.223 to EEGNet and +0.054 to +0.117 to the RSNN, the RNN and FF-LIF. The EEGNet − RSNN gap is 0.096 after pretraining and 0.233 after fine-tuning in v1, 0.045 and 0.183 in v1.7: fine-tuning adds 59 % and 75 % of the final gap. All values are preliminary until the pipeline validation checklist passes. [DEVIATION: pretrained-only session-2 accuracy is an extra descriptive analysis, not in the plan]
 
 ## 4. Environment
 
