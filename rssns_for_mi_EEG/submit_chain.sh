@@ -9,6 +9,7 @@
 #   BENCH_PATIENCE=100 ./submit_chain.sh 3                 # optional pretraining early stopping (changes the protocol)
 #   WORKERS_PER_JOB=4 ./submit_chain.sh 4                  # 4 workers per GPU
 #   BENCH_RUN_ID=<existing id> ./submit_chain.sh 2         # continue an existing run with 2 more jobs per GPU
+#   BENCH_RUN_ID=<id> AFTER_G1=<jobid> AFTER_G2=<jobid> ./submit_chain.sh 6   # chains of GPU 1 / 2 start after those running jobs
 #
 # Safety: the run id is fixed here and exported to every job; finished folds are skipped on resume (a fold counts as done
 # when its metrics file exists), so continuing with a different N_GPUS / WORKERS_PER_JOB is also correct: it only
@@ -27,7 +28,8 @@ export BENCH_RUN_ID="${BENCH_RUN_ID:-$(date +%Y%m%d_%H%M%S)}"
 echo "Run ID: $BENCH_RUN_ID   ($N_GPUS GPUs x $N chained jobs, $WORKERS_PER_JOB workers per GPU, $((N_GPUS * WORKERS_PER_JOB)) shards)"
 
 for g in $(seq 0 $(( N_GPUS - 1 ))); do
-    prev=""
+    after_var="AFTER_G$g"          # optional: AFTER_G1=<jobid> makes the chain of GPU 1 start after that (running) job
+    prev="${!after_var:-}"
     for i in $(seq 1 "$N"); do
         opts="--parsable --export=ALL,BENCH_JOB_INDEX=$g,BENCH_N_JOBS=$N_GPUS,WORKERS_PER_JOB=$WORKERS_PER_JOB"
         if [ -z "$prev" ]; then

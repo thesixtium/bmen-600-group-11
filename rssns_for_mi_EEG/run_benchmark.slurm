@@ -43,7 +43,9 @@ JOB_START=$(date +%s)
 TIME_LIMIT_S=86400                       # keep in sync with --time=24:00:00 above
 DEADLINE_MARGIN_MIN="${DEADLINE_MARGIN_MIN:-30}"   # stop starting new folds this long before the limit
 PROJECT_DIR="${PROJECT_DIR:-/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG}"
-PY_MODULE="${PY_MODULE:-}"      # empty = use python3 if it is 3.10-3.12, else auto-detect a module
+# python/3.12.5 is what the auto-detection found on every earlier run. The auto-detection ('module avail') once hung for the
+# whole 24 h of a job on node fg6, so it is skipped by default. Set PY_MODULE="" to use the old auto-detection.
+PY_MODULE="${PY_MODULE-python/3.12.5}"
 BENCH_JOB_INDEX="${BENCH_JOB_INDEX:-0}"
 BENCH_N_JOBS="${BENCH_N_JOBS:-1}"
 WORKERS_PER_JOB="${WORKERS_PER_JOB:-3}"
@@ -89,6 +91,12 @@ fi
 export BENCH_DEADLINE_EPOCH=$(( JOB_START + TIME_LIMIT_S - DEADLINE_MARGIN_MIN * 60 ))
 echo "Deadline  : $(date -d @"$BENCH_DEADLINE_EPOCH") (no new folds after this; margin ${DEADLINE_MARGIN_MIN} min)"
 
+# ----------------------------- setup watchdog --------------------------------
+# Setup (python module, venv, pip, GPU check) normally takes ~3 minutes. If it has not finished after 40 minutes something
+# is hung (a stuck module command cost one job its whole 24 h): cancel this job so the next chained job starts instead.
+SETUP_OK="/tmp/setup_ok_${SLURM_JOB_ID}"
+( sleep 2400; if [ ! -f "$SETUP_OK" ]; then echo "WATCHDOG: setup not finished after 40 min, cancelling job $SLURM_JOB_ID"; scancel "$SLURM_JOB_ID"; fi ) &
+
 # ----------------------------- python selection ------------------------------
 if ! type module >/dev/null 2>&1; then
     for f in /etc/profile.d/modules.sh /etc/profile.d/lmod.sh /usr/share/lmod/lmod/init/bash; do
@@ -132,7 +140,7 @@ EOF
 VENV_DIR="/tmp/venv_${SLURM_JOB_ID}"
 MPS_DIR=""
 cleanup() {
-    rm -rf "$VENV_DIR"
+    rm -rf "$VENV_DIR" "$SETUP_OK"
     if [ -n "$MPS_DIR" ]; then echo quit | nvidia-cuda-mps-control 2>/dev/null; rm -rf "$MPS_DIR"; fi
 }
 python3 -m venv "$VENV_DIR" || { echo "ERROR: venv creation failed"; exit 1; }
@@ -171,6 +179,7 @@ if [ "${USE_MPS:-0}" = "1" ] && command -v nvidia-cuda-mps-control >/dev/null 2>
 fi
 
 # ----------------------------- run -------------------------------------------
+touch "$SETUP_OK"   # tells the watchdog that setup finished
 cd "$PROJECT_DIR" || exit 1
 PIDS=()
 for w in $(seq 0 $(( WORKERS_PER_JOB - 1 ))); do
