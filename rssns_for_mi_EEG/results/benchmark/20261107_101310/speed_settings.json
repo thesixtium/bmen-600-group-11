@@ -1,0 +1,5 @@
+{
+ "BENCH_PATIENCE (pretrain early stopping, None = off)": null,
+ "BENCH_EVAL_BATCH": 288,
+ "n_shards": 12
+}

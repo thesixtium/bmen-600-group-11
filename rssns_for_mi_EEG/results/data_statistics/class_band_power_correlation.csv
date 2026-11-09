@@ -1,0 +1,221 @@
+measure,channel,band,class,value
+one_vs_rest_pearson_r,Fz,mu,left hand,-0.08358606493860642
+one_vs_rest_pearson_r,Fz,beta,left hand,-0.06679061864120314
+one_vs_rest_pearson_r,FC3,mu,left hand,-0.10160056526065295
+one_vs_rest_pearson_r,FC3,beta,left hand,-0.08677913765396716
+one_vs_rest_pearson_r,FC1,mu,left hand,-0.09565762884647547
+one_vs_rest_pearson_r,FC1,beta,left hand,-0.09059481534964911
+one_vs_rest_pearson_r,FCz,mu,left hand,-0.08910602939402305
+one_vs_rest_pearson_r,FCz,beta,left hand,-0.08837854725788091
+one_vs_rest_pearson_r,FC2,mu,left hand,-0.09206925107296902
+one_vs_rest_pearson_r,FC2,beta,left hand,-0.10048453835710963
+one_vs_rest_pearson_r,FC4,mu,left hand,-0.09227568821353821
+one_vs_rest_pearson_r,FC4,beta,left hand,-0.09215207594450973
+one_vs_rest_pearson_r,C5,mu,left hand,-0.12492813366418554
+one_vs_rest_pearson_r,C5,beta,left hand,-0.06971619452220189
+one_vs_rest_pearson_r,C3,mu,left hand,-0.14819681280817598
+one_vs_rest_pearson_r,C3,beta,left hand,-0.12539918567253963
+one_vs_rest_pearson_r,C1,mu,left hand,-0.11878681113203048
+one_vs_rest_pearson_r,C1,beta,left hand,-0.11004949472842322
+one_vs_rest_pearson_r,Cz,mu,left hand,-0.09791955216728031
+one_vs_rest_pearson_r,Cz,beta,left hand,-0.10519178929587918
+one_vs_rest_pearson_r,C2,mu,left hand,-0.12638995119526236
+one_vs_rest_pearson_r,C2,beta,left hand,-0.12225918418048622
+one_vs_rest_pearson_r,C4,mu,left hand,-0.19288802898702911
+one_vs_rest_pearson_r,C4,beta,left hand,-0.15527844821753747
+one_vs_rest_pearson_r,C6,mu,left hand,-0.16955054421216925
+one_vs_rest_pearson_r,C6,beta,left hand,-0.08865565246638045
+one_vs_rest_pearson_r,CP3,mu,left hand,-0.16101460806137854
+one_vs_rest_pearson_r,CP3,beta,left hand,-0.12712305340808297
+one_vs_rest_pearson_r,CP1,mu,left hand,-0.1379142074368668
+one_vs_rest_pearson_r,CP1,beta,left hand,-0.11051160208200818
+one_vs_rest_pearson_r,CPz,mu,left hand,-0.11949861461047033
+one_vs_rest_pearson_r,CPz,beta,left hand,-0.1028247015854931
+one_vs_rest_pearson_r,CP2,mu,left hand,-0.16943853574407536
+one_vs_rest_pearson_r,CP2,beta,left hand,-0.11585322856387525
+one_vs_rest_pearson_r,CP4,mu,left hand,-0.2370230528327945
+one_vs_rest_pearson_r,CP4,beta,left hand,-0.14661575389770864
+one_vs_rest_pearson_r,P1,mu,left hand,-0.15306760569859076
+one_vs_rest_pearson_r,P1,beta,left hand,-0.10127741340110641
+one_vs_rest_pearson_r,Pz,mu,left hand,-0.14457587384428913
+one_vs_rest_pearson_r,Pz,beta,left hand,-0.09253155900423123
+one_vs_rest_pearson_r,P2,mu,left hand,-0.1737264284946716
+one_vs_rest_pearson_r,P2,beta,left hand,-0.08865279300171128
+one_vs_rest_pearson_r,POz,mu,left hand,-0.1527535512780478
+one_vs_rest_pearson_r,POz,beta,left hand,-0.07578116143995679
+one_vs_rest_pearson_r,Fz,mu,right hand,-0.11888314716368215
+one_vs_rest_pearson_r,Fz,beta,right hand,-0.03140269199387506
+one_vs_rest_pearson_r,FC3,mu,right hand,-0.1390633505057962
+one_vs_rest_pearson_r,FC3,beta,right hand,-0.0650720867143754
+one_vs_rest_pearson_r,FC1,mu,right hand,-0.12609063192370154
+one_vs_rest_pearson_r,FC1,beta,right hand,-0.058685774509434026
+one_vs_rest_pearson_r,FCz,mu,right hand,-0.1073880795467453
+one_vs_rest_pearson_r,FCz,beta,right hand,-0.04253594770199781
+one_vs_rest_pearson_r,FC2,mu,right hand,-0.09553146354404281
+one_vs_rest_pearson_r,FC2,beta,right hand,-0.029240386096452336
+one_vs_rest_pearson_r,FC4,mu,right hand,-0.08660184410910111
+one_vs_rest_pearson_r,FC4,beta,right hand,-0.021690017993134563
+one_vs_rest_pearson_r,C5,mu,right hand,-0.13151387453026786
+one_vs_rest_pearson_r,C5,beta,right hand,-0.05013216737422156
+one_vs_rest_pearson_r,C3,mu,right hand,-0.16050987173845666
+one_vs_rest_pearson_r,C3,beta,right hand,-0.10873113312528472
+one_vs_rest_pearson_r,C1,mu,right hand,-0.11722473154573325
+one_vs_rest_pearson_r,C1,beta,right hand,-0.07450849461259432
+one_vs_rest_pearson_r,Cz,mu,right hand,-0.09156530479601671
+one_vs_rest_pearson_r,Cz,beta,right hand,-0.0507099655785142
+one_vs_rest_pearson_r,C2,mu,right hand,-0.08075893284755728
+one_vs_rest_pearson_r,C2,beta,right hand,-0.035112777810040983
+one_vs_rest_pearson_r,C4,mu,right hand,-0.05387745333101017
+one_vs_rest_pearson_r,C4,beta,right hand,-0.016459860665907454
+one_vs_rest_pearson_r,C6,mu,right hand,-0.039272204258297236
+one_vs_rest_pearson_r,C6,beta,right hand,0.007868196428652318
+one_vs_rest_pearson_r,CP3,mu,right hand,-0.18553538907056308
+one_vs_rest_pearson_r,CP3,beta,right hand,-0.10254723820560528
+one_vs_rest_pearson_r,CP1,mu,right hand,-0.119107444336614
+one_vs_rest_pearson_r,CP1,beta,right hand,-0.07652473379636508
+one_vs_rest_pearson_r,CPz,mu,right hand,-0.07492708493921806
+one_vs_rest_pearson_r,CPz,beta,right hand,-0.057601522309433516
+one_vs_rest_pearson_r,CP2,mu,right hand,-0.06753136682440505
+one_vs_rest_pearson_r,CP2,beta,right hand,-0.043787731929907224
+one_vs_rest_pearson_r,CP4,mu,right hand,-0.0477661706888444
+one_vs_rest_pearson_r,CP4,beta,right hand,-0.01646907786292831
+one_vs_rest_pearson_r,P1,mu,right hand,-0.12479574168766529
+one_vs_rest_pearson_r,P1,beta,right hand,-0.06046977204221416
+one_vs_rest_pearson_r,Pz,mu,right hand,-0.08264463446415077
+one_vs_rest_pearson_r,Pz,beta,right hand,-0.05128845790822151
+one_vs_rest_pearson_r,P2,mu,right hand,-0.07492047022666512
+one_vs_rest_pearson_r,P2,beta,right hand,-0.045629307504649566
+one_vs_rest_pearson_r,POz,mu,right hand,-0.06569076954065825
+one_vs_rest_pearson_r,POz,beta,right hand,-0.024335086205941533
+one_vs_rest_pearson_r,Fz,mu,feet,0.05571247498920167
+one_vs_rest_pearson_r,Fz,beta,feet,0.02716770918137591
+one_vs_rest_pearson_r,FC3,mu,feet,0.07212010734068157
+one_vs_rest_pearson_r,FC3,beta,feet,0.057197571549193596
+one_vs_rest_pearson_r,FC1,mu,feet,0.05332499272137682
+one_vs_rest_pearson_r,FC1,beta,feet,0.03714313542087438
+one_vs_rest_pearson_r,FCz,mu,feet,0.04179156567336961
+one_vs_rest_pearson_r,FCz,beta,feet,0.032946324372233333
+one_vs_rest_pearson_r,FC2,mu,feet,0.03862804632449612
+one_vs_rest_pearson_r,FC2,beta,feet,0.029116624640938837
+one_vs_rest_pearson_r,FC4,mu,feet,0.04192427714078545
+one_vs_rest_pearson_r,FC4,beta,feet,0.03934178705078753
+one_vs_rest_pearson_r,C5,mu,feet,0.09061293181996809
+one_vs_rest_pearson_r,C5,beta,feet,0.0461132828711641
+one_vs_rest_pearson_r,C3,mu,feet,0.08900157165798303
+one_vs_rest_pearson_r,C3,beta,feet,0.07541064271594096
+one_vs_rest_pearson_r,C1,mu,feet,0.042550977227304436
+one_vs_rest_pearson_r,C1,beta,feet,0.03267433219904078
+one_vs_rest_pearson_r,Cz,mu,feet,0.005850274900769376
+one_vs_rest_pearson_r,Cz,beta,feet,0.01826404307654496
+one_vs_rest_pearson_r,C2,mu,feet,0.023792123649582282
+one_vs_rest_pearson_r,C2,beta,feet,0.019166494607010122
+one_vs_rest_pearson_r,C4,mu,feet,0.05917777411818431
+one_vs_rest_pearson_r,C4,beta,feet,0.03901943182816929
+one_vs_rest_pearson_r,C6,mu,feet,0.055635952659420174
+one_vs_rest_pearson_r,C6,beta,feet,0.01073715133001221
+one_vs_rest_pearson_r,CP3,mu,feet,0.10033929555283622
+one_vs_rest_pearson_r,CP3,beta,feet,0.06668023269590402
+one_vs_rest_pearson_r,CP1,mu,feet,0.03995578582472263
+one_vs_rest_pearson_r,CP1,beta,feet,0.02682387254293264
+one_vs_rest_pearson_r,CPz,mu,feet,-0.014215151483272152
+one_vs_rest_pearson_r,CPz,beta,feet,0.002423136155861339
+one_vs_rest_pearson_r,CP2,mu,feet,0.02128737545872151
+one_vs_rest_pearson_r,CP2,beta,feet,0.009418033609595568
+one_vs_rest_pearson_r,CP4,mu,feet,0.06263830979896637
+one_vs_rest_pearson_r,CP4,beta,feet,0.013626936571151922
+one_vs_rest_pearson_r,P1,mu,feet,0.04752021959336022
+one_vs_rest_pearson_r,P1,beta,feet,0.026363295949814507
+one_vs_rest_pearson_r,Pz,mu,feet,0.011767731395565828
+one_vs_rest_pearson_r,Pz,beta,feet,0.007459551377713181
+one_vs_rest_pearson_r,P2,mu,feet,0.037687834147907565
+one_vs_rest_pearson_r,P2,beta,feet,0.008882494479854602
+one_vs_rest_pearson_r,POz,mu,feet,0.028637290457307972
+one_vs_rest_pearson_r,POz,beta,feet,0.004986794777374481
+one_vs_rest_pearson_r,Fz,mu,tongue,0.14675673711308712
+one_vs_rest_pearson_r,Fz,beta,tongue,0.07102560145370251
+one_vs_rest_pearson_r,FC3,mu,tongue,0.1685438084257676
+one_vs_rest_pearson_r,FC3,beta,tongue,0.09465365281914924
+one_vs_rest_pearson_r,FC1,mu,tongue,0.16842326804879962
+one_vs_rest_pearson_r,FC1,beta,tongue,0.11213745443820862
+one_vs_rest_pearson_r,FCz,mu,tongue,0.15470254326739824
+one_vs_rest_pearson_r,FCz,beta,tongue,0.09796817058764518
+one_vs_rest_pearson_r,FC2,mu,tongue,0.14897266829251538
+one_vs_rest_pearson_r,FC2,beta,tongue,0.10060829981262272
+one_vs_rest_pearson_r,FC4,mu,tongue,0.1369532551818535
+one_vs_rest_pearson_r,FC4,beta,tongue,0.07450030688685629
+one_vs_rest_pearson_r,C5,mu,tongue,0.16582907637448485
+one_vs_rest_pearson_r,C5,beta,tongue,0.07373507902525953
+one_vs_rest_pearson_r,C3,mu,tongue,0.2197051128886496
+one_vs_rest_pearson_r,C3,beta,tongue,0.15871967608188395
+one_vs_rest_pearson_r,C1,mu,tongue,0.1934605654504594
+one_vs_rest_pearson_r,C1,beta,tongue,0.15188365714197674
+one_vs_rest_pearson_r,Cz,mu,tongue,0.18363458206252772
+one_vs_rest_pearson_r,Cz,beta,tongue,0.13763771179784856
+one_vs_rest_pearson_r,C2,mu,tongue,0.18335676039323742
+one_vs_rest_pearson_r,C2,beta,tongue,0.13820546738351672
+one_vs_rest_pearson_r,C4,mu,tongue,0.18758770819985413
+one_vs_rest_pearson_r,C4,beta,tongue,0.13271887705527538
+one_vs_rest_pearson_r,C6,mu,tongue,0.15318679581104647
+one_vs_rest_pearson_r,C6,beta,tongue,0.0700503047077162
+one_vs_rest_pearson_r,CP3,mu,tongue,0.24621070157910502
+one_vs_rest_pearson_r,CP3,beta,tongue,0.16299005891778473
+one_vs_rest_pearson_r,CP1,mu,tongue,0.21706586594875846
+one_vs_rest_pearson_r,CP1,beta,tongue,0.16021246333544079
+one_vs_rest_pearson_r,CPz,mu,tongue,0.20864085103296096
+one_vs_rest_pearson_r,CPz,beta,tongue,0.15800308773906546
+one_vs_rest_pearson_r,CP2,mu,tongue,0.21568252710975905
+one_vs_rest_pearson_r,CP2,beta,tongue,0.15022292688418717
+one_vs_rest_pearson_r,CP4,mu,tongue,0.22215091372267257
+one_vs_rest_pearson_r,CP4,beta,tongue,0.1494578951894846
+one_vs_rest_pearson_r,P1,mu,tongue,0.23034312779289626
+one_vs_rest_pearson_r,P1,beta,tongue,0.13538388949350624
+one_vs_rest_pearson_r,Pz,mu,tongue,0.2154527769128749
+one_vs_rest_pearson_r,Pz,beta,tongue,0.13636046553473993
+one_vs_rest_pearson_r,P2,mu,tongue,0.21095906457342867
+one_vs_rest_pearson_r,P2,beta,tongue,0.1253996060265062
+one_vs_rest_pearson_r,POz,mu,tongue,0.18980703036139776
+one_vs_rest_pearson_r,POz,beta,tongue,0.09512945286852396
+eta_squared,Fz,mu,all,0.03432093951672342
+eta_squared,Fz,beta,all,0.008422377215220614
+eta_squared,FC3,mu,all,0.04745221166750642
+eta_squared,FC3,beta,all,0.01799690353834694
+eta_squared,FC1,mu,all,0.042194386113315864
+eta_squared,FC1,beta,all,0.01920439642108794
+eta_squared,FCz,mu,all,0.033863621968454494
+eta_squared,FCz,beta,all,0.01522747290018826
+eta_squared,FC2,mu,all,0.030965992035782562
+eta_squared,FC2,beta,all,0.016441462837184187
+eta_squared,FC4,mu,all,0.02739639086779683
+eta_squared,FC4,beta,all,0.01204540043700783
+eta_squared,C5,mu,all,0.051459692819253604
+eta_squared,C5,beta,all,0.011202659040233775
+eta_squared,C3,mu,all,0.07793799797925213
+eta_squared,C3,beta,all,0.04381958676631048
+eta_squared,C1,mu,all,0.05031714017422189
+eta_squared,C1,beta,all,0.031348998263168316
+eta_squared,Cz,mu,all,0.03879624688854143
+eta_squared,Cz,beta,all,0.02468589609201924
+eta_squared,C2,mu,all,0.04251164379560764
+eta_squared,C2,beta,all,0.02673624075917409
+eta_squared,C4,mu,all,0.05909979669089473
+eta_squared,C4,beta,all,0.032639354910745544
+eta_squared,C6,mu,all,0.04263843503184354
+eta_squared,C6,beta,all,0.00970804862820523
+eta_squared,CP3,mu,all,0.09827757630812926
+eta_squared,CP3,beta,all,0.043266164632345706
+eta_squared,CP1,mu,all,0.06144072516772048
+eta_squared,CP1,beta,all,0.033342301967659686
+eta_squared,CPz,mu,all,0.047720296652070844
+eta_squared,CPz,beta,all,0.029146276464313937
+eta_squared,CP2,mu,all,0.060181505815980745
+eta_squared,CP2,beta,all,0.028496222366221676
+eta_squared,CP4,mu,all,0.08380209071905709
+eta_squared,CP4,beta,all,0.033218074238575486
+eta_squared,P1,mu,all,0.07073984763696707
+eta_squared,P1,beta,all,0.024703146527837533
+eta_squared,Pz,mu,all,0.055718023113915
+eta_squared,Pz,beta,all,0.0223818125954735
+eta_squared,P2,mu,all,0.061288536438716394
+eta_squared,P2,beta,all,0.019308983482609305
+eta_squared,POz,mu,all,0.04837179585768588
+eta_squared,POz,beta,all,0.011557096331291825
