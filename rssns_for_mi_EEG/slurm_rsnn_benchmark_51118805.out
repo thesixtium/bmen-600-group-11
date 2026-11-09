@@ -348,3 +348,6 @@ GPU: Tesla V100-PCIE-16GB
 Starting worker 0 -> shard 6 of 12 (log: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261107_101310/logs/shard6.txt)
 Starting worker 1 -> shard 7 of 12 (log: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261107_101310/logs/shard7.txt)
 Starting worker 2 -> shard 8 of 12 (log: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261107_101310/logs/shard8.txt)
+-----------------------------------------------------------------------
+Finished  : Sun Nov  8 23:18:40 MST 2026
+Exit code : 0

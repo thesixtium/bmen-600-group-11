@@ -10,3 +10,4 @@ BENCH_QUICK=0 BENCH_TARGETS=all BENCH_REPEATS=all BENCH_PATIENCE=off BENCH_FINAL
 -----------------------------------------------------------------------
 Deadline  : Mon Nov  9 09:36:04 MST 2026 (no new folds after this; margin 30 min)
 python3 is Python 3.6.8, not 3.10-3.12: searching for a module...
+slurmstepd: error: *** JOB 51118766 ON fg6 CANCELLED AT 2026-11-09T10:03:10 DUE TO TIME LIMIT ***
