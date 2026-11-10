@@ -600,3 +600,76 @@ Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 
 [time]     [rsnn_wide s8_r7] pretrain epoch 350/500 | val_loss 9.3757 | elapsed 3h52m08s, phase ETA 1h39m29s
 [time]     [rsnn_wide s8_r7] pretrain epoch 400/500 | val_loss 8.4943 | elapsed 4h25m21s, phase ETA 1h06m20s
 [time]     [rsnn_wide s8_r7] pretrain epoch 450/500 | val_loss 8.0301 | elapsed 4h58m33s, phase ETA 33m10s
+[time]     [rsnn_wide s8_r7] finetune epoch 50/100 | val_loss 1.9267 | elapsed 5m03s, phase ETA 5m03s
+[rsnn_wide] subject 8 repeat 7: acc=0.420 kappa=0.227
+[time] [rsnn_wide] fold 3/4 done in 5h39m50s (pretrain 5h31m45s, finetune 8m04s) | avg 5h41m55s | rsnn_wide elapsed 17h05m44s, ETA 5h41m55s | benchmark ETA 5h41m55s (excl. unknown: rnn_wide)
+[time] [rsnn_wide] SUBJECT 8 finished: 1 folds in 5h39m50s (5h39m50s/fold) | subjects done 3/4
+[time] deadline close (next rsnn_wide fold needs ~7h08m54s, 6h20m44s left): starting no more folds in this job.
+[time] <<< benchmark: rsnn_wide: 17h05m44s (pipeline elapsed 17h06m36s)
+[time] >>> benchmark: rnn_wide
+[time] [rnn_wide] 8 folds to run over 8 subject(s)
+[time] <<< benchmark: rnn_wide: 0.0s (pipeline elapsed 17h06m36s)
+[chain] INCOMPLETE: folds still pending per model (whole run): {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 48, 'rnn_wide': 90}. Analysis skipped; rerun/resubmit with BENCH_RUN_ID=20261107_101310 to continue.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 17h06m36s
+[time]   stage download_data                       21s  ( 0.0%)
+[time]   stage preprocess_data                     30s  ( 0.0%)
+[time]   stage benchmark: ann                     0.0s  ( 0.0%)
+[time]   stage benchmark: snn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn                    0.0s  ( 0.0%)
+[time]   stage benchmark: rnn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn_wide          17h05m44s  (99.9%)
+[time]   stage benchmark: rnn_wide                0.0s  ( 0.0%)
+[time]   rsnn_wide: 3 folds, total 17h05m44s, mean 5h41m55s (min 5h39m50s, max 5h43m07s)
+[time]     per subject: S6 5h43m07s, S7 5h42m48s, S8 5h39m50s
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 31s (pipeline elapsed 52s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261107_101310
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[shard] shard 5 of 12: 8 folds (whole run: 90); finalize=False
+[time] pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 1, 'rnn_wide': 8} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h29m52s, ann 1m39s, snn 0.8s, rnn 38m10s, rsnn_wide 5h41m55s
+[time] initial benchmark estimate: 5h41m55s (+ unknown: rnn_wide)
+[time] >>> benchmark: ann
+[time] [ann] nothing to run (all folds already done)
+[time] <<< benchmark: ann: 0.0s (pipeline elapsed 52s)
+[time] >>> benchmark: snn
+[time] [snn] nothing to run (all folds already done)
+[time] <<< benchmark: snn: 0.0s (pipeline elapsed 52s)
+[time] >>> benchmark: rsnn
+[time] [rsnn] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn: 0.0s (pipeline elapsed 52s)
+[time] >>> benchmark: rnn
+[time] [rnn] nothing to run (all folds already done)
+[time] <<< benchmark: rnn: 0.0s (pipeline elapsed 52s)
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] 1 folds to run over 1 subject(s); prior estimate 5h41m55s (5h41m55s/fold)
+[time] [rsnn_wide] fold 1/1 start (subject 9, repeat 9)
+[time]     [rsnn_wide s9_r9] pretrain epoch 50/500 | val_loss 1.9273 | elapsed 33m10s, phase ETA 4h58m30s
+[time]     [rsnn_wide s9_r9] pretrain epoch 100/500 | val_loss 2.3402 | elapsed 1h06m19s, phase ETA 4h25m18s
+[time]     [rsnn_wide s9_r9] pretrain epoch 150/500 | val_loss 2.0847 | elapsed 1h39m26s, phase ETA 3h52m02s
+[time]     [rsnn_wide s9_r9] pretrain epoch 200/500 | val_loss 1.8100 | elapsed 2h12m34s, phase ETA 3h18m51s
+[time]     [rsnn_wide s9_r9] pretrain epoch 250/500 | val_loss 2.6977 | elapsed 2h45m43s, phase ETA 2h45m43s
+[time]     [rsnn_wide s9_r9] pretrain epoch 300/500 | val_loss 2.7384 | elapsed 3h18m51s, phase ETA 2h12m34s
+[time]     [rsnn_wide s9_r9] pretrain epoch 350/500 | val_loss 3.4563 | elapsed 3h51m58s, phase ETA 1h39m25s
+[time]     [rsnn_wide s9_r9] pretrain epoch 400/500 | val_loss 3.7672 | elapsed 4h25m07s, phase ETA 1h06m17s
+[time]     [rsnn_wide s9_r9] pretrain epoch 450/500 | val_loss 2.8604 | elapsed 4h58m16s, phase ETA 33m08s
+[time]     [rsnn_wide s9_r9] finetune epoch 50/100 | val_loss 1.9911 | elapsed 5m20s, phase ETA 5m20s
+[rsnn_wide] subject 9 repeat 9: acc=0.469 kappa=0.292
+[time] [rsnn_wide] fold 1/1 done in 5h42m09s (pretrain 5h31m26s, finetune 10m42s) | avg 5h42m09s | rsnn_wide elapsed 5h42m09s, ETA 0.0s | benchmark ETA 0.0s (excl. unknown: rnn_wide)
+[time] [rsnn_wide] SUBJECT 9 finished: 1 folds in 5h42m09s (5h42m09s/fold) | subjects done 1/1
+[time] [rsnn_wide] ALL 1 folds finished in 5h42m09s
+[time] <<< benchmark: rsnn_wide: 5h42m09s (pipeline elapsed 5h43m01s)
+[time] >>> benchmark: rnn_wide
+[time] [rnn_wide] 8 folds to run over 8 subject(s)
+[time] [rnn_wide] fold 1/8 start (subject 1, repeat 5)
+[time]     [rnn_wide s1_r5] pretrain epoch 50/500 | val_loss nan | elapsed 31m41s, phase ETA 4h45m06s
+[time]     [rnn_wide s1_r5] pretrain epoch 100/500 | val_loss nan | elapsed 1h03m22s, phase ETA 4h13m26s
+[time]     [rnn_wide s1_r5] pretrain epoch 150/500 | val_loss nan | elapsed 1h35m02s, phase ETA 3h41m45s
+[time]     [rnn_wide s1_r5] pretrain epoch 200/500 | val_loss nan | elapsed 2h06m43s, phase ETA 3h10m05s
+[time]     [rnn_wide s1_r5] pretrain epoch 250/500 | val_loss nan | elapsed 2h38m24s, phase ETA 2h38m24s
+[time]     [rnn_wide s1_r5] pretrain epoch 300/500 | val_loss nan | elapsed 3h10m05s, phase ETA 2h06m43s
+[time]     [rnn_wide s1_r5] pretrain epoch 350/500 | val_loss nan | elapsed 3h41m45s, phase ETA 1h35m02s
