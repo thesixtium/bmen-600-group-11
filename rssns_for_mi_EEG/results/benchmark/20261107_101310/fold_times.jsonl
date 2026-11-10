@@ -388,3 +388,12 @@
 {"model": "rsnn_wide", "subject": 2, "repeat": 9, "seconds": 20399.37106234103, "pretrain_s": 19761.322186893958, "finetune_s": 637.014331680024}
 {"model": "rsnn_wide", "subject": 3, "repeat": 0, "seconds": 20410.661801930983, "pretrain_s": 19772.208543820016, "finetune_s": 637.414806087967}
 {"model": "rsnn_wide", "subject": 3, "repeat": 1, "seconds": 20331.557680858998, "pretrain_s": 19695.797641042038, "finetune_s": 634.6681611299864}
+{"model": "rsnn_wide", "subject": 4, "repeat": 4, "seconds": 20312.683134081948, "pretrain_s": 19676.191176025954, "finetune_s": 635.4480629180325}
+{"model": "rsnn_wide", "subject": 4, "repeat": 5, "seconds": 20326.87228112598, "pretrain_s": 19725.18924648402, "finetune_s": 600.8081284870277}
+{"model": "rsnn_wide", "subject": 7, "repeat": 4, "seconds": 20426.641543707985, "pretrain_s": 19783.560072113003, "finetune_s": 642.1536873640143}
+{"model": "rsnn_wide", "subject": 7, "repeat": 3, "seconds": 20555.479498358036, "pretrain_s": 19913.264663525042, "finetune_s": 641.3319274960086}
+{"model": "rsnn_wide", "subject": 7, "repeat": 5, "seconds": 20567.84956409398, "pretrain_s": 19922.31112604402, "finetune_s": 644.6306341649615}
+{"model": "rsnn_wide", "subject": 4, "repeat": 0, "seconds": 20380.62180842203, "pretrain_s": 19740.604580114014, "finetune_s": 638.9810489009833}
+{"model": "rsnn_wide", "subject": 4, "repeat": 1, "seconds": 20315.6648041, "pretrain_s": 19720.73946463695, "finetune_s": 594.0833462510491}
+{"model": "rsnn_wide", "subject": 4, "repeat": 2, "seconds": 20245.635528406012, "pretrain_s": 19822.620451477997, "finetune_s": 422.16526284400607}
+{"model": "rsnn_wide", "subject": 4, "repeat": 3, "seconds": 17128.84005955403, "pretrain_s": 16856.45746548701, "finetune_s": 271.51275948499097}

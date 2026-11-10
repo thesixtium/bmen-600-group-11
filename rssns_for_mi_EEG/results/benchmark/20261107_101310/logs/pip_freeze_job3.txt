@@ -3,8 +3,8 @@ annotated-types==0.8.0
 anyio==4.16.0
 array-api-compat==1.16.0
 array-api-extra==0.11.5
-boto3==1.43.126
-botocore==1.43.126
+boto3==1.43.127
+botocore==1.43.127
 bracex==3.2.2
 certifi==2026.10.23
 charset-normalizer==3.5.2
@@ -16,7 +16,7 @@ decorator==5.3.1
 docstring-inheritance==3.0.0
 edfio==0.4.18
 EDFlib-Python==1.0.8
-filelock==4.2.9
+filelock==4.2.10
 fonttools==4.68.0
 fsspec==2026.9.0
 h11==0.16.0
@@ -86,7 +86,7 @@ threadpoolctl==3.8.0
 torch==2.4.0
 tqdm==4.70.1
 triton==3.0.0
-typer==0.28.0
+typer==0.29.0
 typing-inspection==0.4.5
 typing_extensions==4.16.0
 urllib3==2.8.0
