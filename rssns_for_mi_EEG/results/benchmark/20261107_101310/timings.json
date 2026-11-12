@@ -1,29 +1,15 @@
 {
- "total_s": 61595.634442529,
+ "total_s": 51.92387227807194,
  "stages_s": {
-  "download_data": 20.902438923018053,
-  "preprocess_data": 29.999908175028395,
-  "benchmark: ann": 0.00043970701517537236,
-  "benchmark: snn": 0.00018536398420110345,
-  "benchmark: rsnn": 0.0008000729721970856,
-  "benchmark: rnn": 0.0007874569855630398,
-  "benchmark: rsnn_wide": 61544.45768342499,
-  "benchmark: rnn_wide": 0.0014367629773914814
+  "download_data": 21.570209412951954,
+  "preprocess_data": 30.137962608016096,
+  "benchmark: ann": 0.0008084919536486268,
+  "benchmark: snn": 0.00018945697229355574,
+  "benchmark: rsnn": 0.0008183089084923267,
+  "benchmark: rnn": 0.0007936839247122407,
+  "benchmark: rsnn_wide": 0.0007943769451230764,
+  "benchmark: rnn_wide": 0.0007913470035418868
  },
- "per_model": {
-  "rsnn_wide": {
-   "n_folds": 3,
-   "total_s": 61544.454162055976,
-   "mean_s": 20514.81805401866,
-   "min_s": 20389.654508326028,
-   "max_s": 20586.950089635968
-  }
- },
- "per_model_subject_s": {
-  "rsnn_wide": {
-   "6": 20586.950089635968,
-   "7": 20567.84956409398,
-   "8": 20389.654508326028
-  }
- }
+ "per_model": {},
+ "per_model_subject_s": {}
 }
