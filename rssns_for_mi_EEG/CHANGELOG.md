@@ -78,3 +78,31 @@ training.py, benchmark_config.py, ann_to_snn.py, folds.py (fold generation, seed
 ## Unchanged
 Models, preprocessing, folds/splits/seeds, epochs, lr, optimizer, early stopping, loss, conversion, metrics, evaluation, all
 Task 1 safeguards, all other Task 2A behaviour, timing.py, training.py, all plotting/analysis modules.
+
+# Task 2C CHANGELOG: SLURM execution and submission chains
+(Static edits only; nothing was run, submitted or tested. Append to CHANGELOG.md.)
+
+## ARC settings (taken unchanged from the supplied run_benchmark.slurm)
+Partition gpu-v100, 1 node, 1 task, 8 CPUs, 64G, 1 GPU, 24:00:00, mail settings, PROJECT_DIR, PY_MODULE python/3.12.5,
+per-job /tmp venv with the same pip pins, GPU check, 40 min setup watchdog, optional MPS, 30 min deadline margin
+(BENCH_DEADLINE_EPOCH). No account line existed and none was added.
+
+## run_benchmark.slurm
+- One shared SLURM file for all chains (resource lines unchanged). New `CHAIN_NAME` (default `all`); `BENCH_MODELS` reaches
+  src/main.py through the environment (Task 2B interface).
+- Log names carry the chain: `logs/<chain>_job<g>_<jobid>.txt`, `logs/<chain>_shard<k>.txt`,
+  `logs/pip_freeze_<chain>_job<g>.txt`, so two chains on one run id never append to the same log. Header prints chain/models.
+- `BENCH_FINALIZE` handling removed (main.py no longer runs analysis). COMPLETE (written by main.py when every fold of every
+  model is trained) still ends a job at once.
+
+## submit_chain.sh
+- Exports `BENCH_MODELS` and `CHAIN_NAME` (via `--export=ALL`; BENCH_MODELS contains commas) and sets
+  `--job-name=bench_<chain>`, so the slurm .out files and `scancel --name` are per chain. `quick_` run-id prefix when
+  BENCH_QUICK=1. Without BENCH_MODELS it still runs all models. Dependencies stay within one GPU-chain of one model chain.
+
+## New: submit_chain_ann_snn.sh, submit_chain_rsnn.sh, submit_chain_rnn.sh, submit_chain_rsnn_wide.sh, submit_chain_rnn_wide.sh
+One-line wrappers that set BENCH_MODELS / CHAIN_NAME and call submit_chain.sh. ANN and SNN share one chain; within each worker
+main.py runs ann before snn on the same folds, and the SNN only uses ANN checkpoints tagged with the same run id.
+
+## Unchanged
+All Python files (Tasks 1, 2A, 2B), resources, time limit, margin, scientific settings.

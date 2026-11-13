@@ -13,28 +13,33 @@
 
 # -----------------------------------------------------------------------------
 # Benchmark of EEGNet ANN / converted SNN / RSNN / RNN (+ neuron-matched pair) on BNCI2014_001
-# (9 subjects x 10 seeded repeats = 90 folds shared by all models).
+# (9 subjects x 10 seeded repeats = 90 folds shared by all models). TRAINING ONLY: no plots / analysis are run here.
+#
+# MODEL CHAINS. Each model family has its own submission script, which sets BENCH_MODELS (passed to src/main.py) and
+# CHAIN_NAME (used in the job name and log names) and then calls submit_chain.sh:
+#     ./submit_chain_ann_snn.sh 4      ANN then SNN (the SNN converts the ANN checkpoints of the same run)
+#     ./submit_chain_rsnn.sh 4         ./submit_chain_rnn.sh 4
+#     ./submit_chain_rsnn_wide.sh 4    ./submit_chain_rnn_wide.sh 4
+# Chains that should belong to ONE experiment must use the same BENCH_RUN_ID (see submit_chain.sh).
 #
 # PARALLEL LAYOUT. The 90 folds are split into N_SHARDS = BENCH_N_JOBS x WORKERS_PER_JOB shards (fold i belongs to shard
 # i % N_SHARDS). One SLURM job owns ONE GPU and runs WORKERS_PER_JOB worker processes on it (shard = BENCH_JOB_INDEX *
 # WORKERS_PER_JOB + worker). Several processes on one GPU help because the small recurrent models are launch-bound (the GPU
-# is almost idle). ARC allows 4 GPUs per user, so submit 4 chains with:
-#
-#     cd ~/bmen-600-group-11/rssns_for_mi_EEG
-#     ./submit_chain.sh 4            # 4 GPUs x 4 chained 24 h jobs, WORKERS_PER_JOB=3 -> 12 shards
+# is almost idle). ARC allows 4 GPUs per user.
 #
 # Do not call sbatch on this file directly for the full run (BENCH_JOB_INDEX / BENCH_N_JOBS would be unset: one job, one
-# shard set, the other GPUs unused). Per-worker logs: results/benchmark/<run id>/logs/shard<k>.txt
-# Setup log of every job:                           results/benchmark/<run id>/logs/job<g>_<jobid>.txt
+# shard set, the other GPUs unused). Per-worker logs: results/benchmark/<run id>/logs/<chain>_shard<k>.txt
+# Setup log of every job:                           results/benchmark/<run id>/logs/<chain>_job<g>_<jobid>.txt
 #
 # Optional overrides (environment passed through by submit_chain.sh):
+#   BENCH_MODELS=ann,snn       models run by src/main.py (default: all six); set by the submit_chain_<model>.sh scripts
+#   CHAIN_NAME=ann_snn         label of the chain in log file names (default: all)
 #   WORKERS_PER_JOB=4          workers per GPU (default 3; 8 CPUs / worker count threads each)
 #   BENCH_PATIENCE=100         pretraining early stopping (changes the protocol! see how_to_run / the answer notes)
 #   BENCH_EVAL_BATCH=288       validation batch size (no effect on results, only speed)
 #   USE_MPS=1                  start CUDA MPS so the workers really share the GPU concurrently (optional, if available)
 #   BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0 WORKERS_PER_JOB=1 sbatch run_benchmark.slurm   fast smoke test (one
-#                              worker, one fold; the analysis then runs on that single fold, some plots may be degenerate)
-#   BENCH_FINALIZE=1 BENCH_RUN_ID=<id>   skip training, only rerun the analysis of a finished run
+#                              worker, one fold)
 #   PY_MODULE=python/3.11.x    force a python module
 # -----------------------------------------------------------------------------
 
@@ -49,6 +54,7 @@ PY_MODULE="${PY_MODULE-python/3.12.5}"
 BENCH_JOB_INDEX="${BENCH_JOB_INDEX:-0}"
 BENCH_N_JOBS="${BENCH_N_JOBS:-1}"
 WORKERS_PER_JOB="${WORKERS_PER_JOB:-3}"
+CHAIN_NAME="${CHAIN_NAME:-all}"
 N_SHARDS=$(( BENCH_N_JOBS * WORKERS_PER_JOB ))
 THREADS=$(( ${SLURM_CPUS_PER_TASK:-8} / WORKERS_PER_JOB ))
 [ "$THREADS" -lt 1 ] && THREADS=1
@@ -65,7 +71,7 @@ PREFIX=""
 export BENCH_RUN_ID="${BENCH_RUN_ID:-${PREFIX}$(date +%Y%m%d_%H%M%S)}"
 RUN_DIR="$PROJECT_DIR/results/benchmark/$BENCH_RUN_ID"
 mkdir -p "$RUN_DIR/logs"
-LOG="$RUN_DIR/logs/job${BENCH_JOB_INDEX}_${SLURM_JOB_ID}.txt"
+LOG="$RUN_DIR/logs/${CHAIN_NAME}_job${BENCH_JOB_INDEX}_${SLURM_JOB_ID}.txt"
 
 # From here on, stdout and stderr go to the terminal/slurm .out AND to this job's setup log.
 exec > >(tee -a "$LOG") 2>&1
@@ -75,14 +81,16 @@ echo "Node      : $SLURMD_NODENAME"
 echo "Started   : $(date)"
 echo "Project   : $PROJECT_DIR"
 echo "Run ID    : $BENCH_RUN_ID"
+echo "Chain     : $CHAIN_NAME (BENCH_MODELS=${BENCH_MODELS:-all})"
 echo "Log file  : $LOG"
 echo "Git commit: $(git -C "$PROJECT_DIR" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 echo "Layout    : job index $BENCH_JOB_INDEX of $BENCH_N_JOBS, $WORKERS_PER_JOB workers per GPU, $N_SHARDS shards, $THREADS threads/worker"
-echo "BENCH_QUICK=${BENCH_QUICK:-0} BENCH_TARGETS=${BENCH_TARGETS:-all} BENCH_REPEATS=${BENCH_REPEATS:-all} BENCH_PATIENCE=${BENCH_PATIENCE:-off} BENCH_FINALIZE=${BENCH_FINALIZE:-0}"
+echo "BENCH_QUICK=${BENCH_QUICK:-0} BENCH_TARGETS=${BENCH_TARGETS:-all} BENCH_REPEATS=${BENCH_REPEATS:-all} BENCH_PATIENCE=${BENCH_PATIENCE:-off}"
 echo "-----------------------------------------------------------------------"
 
 # ----------------------------- already finished? -----------------------------
-if [ -f "$RUN_DIR/COMPLETE" ] && [ "${BENCH_FINALIZE:-0}" != "1" ]; then
+# COMPLETE is written by src/main.py once every fold of every model of the run is trained.
+if [ -f "$RUN_DIR/COMPLETE" ]; then
     echo "Run $BENCH_RUN_ID is already COMPLETE ($(cat "$RUN_DIR/COMPLETE")). Nothing to do."
     exit 0
 fi
@@ -150,7 +158,7 @@ trap cleanup EXIT
 python -m pip install --upgrade pip wheel "setuptools==69.5.1" || exit 1
 pip install torch==2.4.0 || exit 1
 pip install snntorch moabb mne numpy scipy pandas scikit-learn matplotlib || exit 1
-pip freeze > "$RUN_DIR/logs/pip_freeze_job${BENCH_JOB_INDEX}.txt"
+pip freeze > "$RUN_DIR/logs/pip_freeze_${CHAIN_NAME}_job${BENCH_JOB_INDEX}.txt"
 
 echo "-----------------------------------------------------------------------"
 nvidia-smi
@@ -184,8 +192,9 @@ cd "$PROJECT_DIR" || exit 1
 PIDS=()
 for w in $(seq 0 $(( WORKERS_PER_JOB - 1 ))); do
     SHARD=$(( BENCH_JOB_INDEX * WORKERS_PER_JOB + w ))
-    echo "Starting worker $w -> shard $SHARD of $N_SHARDS (log: $RUN_DIR/logs/shard${SHARD}.txt)"
-    BENCH_SHARD=$SHARD BENCH_N_SHARDS=$N_SHARDS python -u src/main.py >> "$RUN_DIR/logs/shard${SHARD}.txt" 2>&1 &
+    SHARD_LOG="$RUN_DIR/logs/${CHAIN_NAME}_shard${SHARD}.txt"
+    echo "Starting worker $w -> shard $SHARD of $N_SHARDS (log: $SHARD_LOG)"
+    BENCH_SHARD=$SHARD BENCH_N_SHARDS=$N_SHARDS python -u src/main.py >> "$SHARD_LOG" 2>&1 &
     PIDS+=($!)
     sleep 20   # stagger the start (data loading) so the workers do not read/download the dataset at the same moment
 done
