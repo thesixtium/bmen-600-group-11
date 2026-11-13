@@ -714,3 +714,42 @@ Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 
 [time]     [rnn_wide s4_r8] pretrain epoch 100/500 | val_loss 8249755179812195926016.0000 | elapsed 1h03m19s, phase ETA 4h13m15s
 [time]     [rnn_wide s4_r8] pretrain epoch 150/500 | val_loss 7374564325825811841024.0000 | elapsed 1h34m58s, phase ETA 3h41m36s
 [time]     [rnn_wide s4_r8] pretrain epoch 200/500 | val_loss 6776689791294172561408.0000 | elapsed 2h06m38s, phase ETA 3h09m56s
+[time]     [rnn_wide s4_r8] pretrain epoch 250/500 | val_loss 6362916404729936347136.0000 | elapsed 2h38m17s, phase ETA 2h38m17s
+[time]     [rnn_wide s4_r8] pretrain epoch 300/500 | val_loss 6062699781569970700288.0000 | elapsed 3h09m56s, phase ETA 2h06m38s
+[time]     [rnn_wide s4_r8] pretrain epoch 350/500 | val_loss 5832577183010400501760.0000 | elapsed 3h41m36s, phase ETA 1h34m58s
+[time]     [rnn_wide s4_r8] pretrain epoch 400/500 | val_loss 5673932381736730099712.0000 | elapsed 4h13m15s, phase ETA 1h03m19s
+[time]     [rnn_wide s4_r8] pretrain epoch 450/500 | val_loss 5559513596003782492160.0000 | elapsed 4h44m54s, phase ETA 31m39s
+[time]     [rnn_wide s4_r8] finetune epoch 50/100 | val_loss 4196254110841757499392.0000 | elapsed 5m05s, phase ETA 5m05s
+[rnn_wide] subject 4 repeat 8: acc=0.236 kappa=-0.019
+[time] [rnn_wide] fold 3/7 done in 5h26m45s (pretrain 5h16m34s, finetune 10m10s) | avg 5h26m43s | rnn_wide elapsed 16h20m10s, ETA 21h46m54s | benchmark ETA 21h46m54s -> finish ~Fri 13 Nov 12:11
+[time] [rnn_wide] SUBJECT 4 finished: 1 folds in 5h26m45s (5h26m45s/fold) | subjects done 3/7
+[time] [rnn_wide] fold 4/7 start (subject 6, repeat 0)
+[time]     [rnn_wide s6_r0] pretrain epoch 50/500 | val_loss nan | elapsed 31m39s, phase ETA 4h44m54s
+[time]     [rnn_wide s6_r0] pretrain epoch 100/500 | val_loss nan | elapsed 1h03m19s, phase ETA 4h13m15s
+[time]     [rnn_wide s6_r0] pretrain epoch 150/500 | val_loss nan | elapsed 1h34m58s, phase ETA 3h41m36s
+[time]     [rnn_wide s6_r0] pretrain epoch 200/500 | val_loss nan | elapsed 2h06m38s, phase ETA 3h09m56s
+[time]     [rnn_wide s6_r0] pretrain epoch 250/500 | val_loss nan | elapsed 2h38m17s, phase ETA 2h38m17s
+[time]     [rnn_wide s6_r0] pretrain epoch 300/500 | val_loss nan | elapsed 3h09m57s, phase ETA 2h06m38s
+[time]     [rnn_wide s6_r0] pretrain epoch 350/500 | val_loss nan | elapsed 3h41m36s, phase ETA 1h34m58s
+[time]     [rnn_wide s6_r0] pretrain epoch 400/500 | val_loss nan | elapsed 4h13m15s, phase ETA 1h03m19s
+[time]     [rnn_wide s6_r0] pretrain epoch 450/500 | val_loss nan | elapsed 4h44m55s, phase ETA 31m39s
+[time]     [rnn_wide s6_r0] finetune epoch 50/100 | val_loss 195149537287728830884370972672.0000 | elapsed 5m05s, phase ETA 5m05s
+[rnn_wide] subject 6 repeat 0: acc=0.247 kappa=-0.005
+[time] [rnn_wide] fold 4/7 done in 5h26m22s (pretrain 5h16m34s, finetune 9m47s) | avg 5h26m38s | rnn_wide elapsed 21h46m32s, ETA 16h19m54s | benchmark ETA 16h19m54s -> finish ~Fri 13 Nov 12:10
+[time] [rnn_wide] SUBJECT 6 finished: 1 folds in 5h26m22s (5h26m22s/fold) | subjects done 4/7
+[time] deadline close (next rnn_wide fold needs ~6h48m29s, 1h40m04s left): starting no more folds in this job.
+[time] <<< benchmark: rnn_wide: 21h46m32s (pipeline elapsed 21h47m24s)
+[chain] INCOMPLETE: folds still pending per model (whole run): {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 15}. Analysis skipped; rerun/resubmit with BENCH_RUN_ID=20261107_101310 to continue.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 21h47m24s
+[time]   stage download_data                       21s  ( 0.0%)
+[time]   stage preprocess_data                     31s  ( 0.0%)
+[time]   stage benchmark: ann                     0.0s  ( 0.0%)
+[time]   stage benchmark: snn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn                    0.0s  ( 0.0%)
+[time]   stage benchmark: rnn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time]   stage benchmark: rnn_wide           21h46m32s  (99.9%)
+[time]   rnn_wide: 4 folds, total 21h46m32s, mean 5h26m38s (min 5h26m22s, max 5h26m47s)
+[time]     per subject: S2 5h26m47s, S3 5h26m38s, S4 5h26m45s, S6 5h26m22s

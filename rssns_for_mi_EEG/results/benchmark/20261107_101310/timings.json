@@ -1,14 +1,14 @@
 {
- "total_s": 51.92387227807194,
+ "total_s": 57.29337996605318,
  "stages_s": {
-  "download_data": 21.570209412951954,
-  "preprocess_data": 30.137962608016096,
-  "benchmark: ann": 0.0008084919536486268,
-  "benchmark: snn": 0.00018945697229355574,
-  "benchmark: rsnn": 0.0008183089084923267,
-  "benchmark: rnn": 0.0007936839247122407,
-  "benchmark: rsnn_wide": 0.0007943769451230764,
-  "benchmark: rnn_wide": 0.0007913470035418868
+  "download_data": 23.386219572043046,
+  "preprocess_data": 33.41989085904788,
+  "benchmark: ann": 0.000967459985986352,
+  "benchmark: snn": 0.0003359400434419513,
+  "benchmark: rsnn": 0.0019748969934880733,
+  "benchmark: rnn": 0.0019483179785311222,
+  "benchmark: rsnn_wide": 0.001949450932443142,
+  "benchmark: rnn_wide": 0.0019324299646541476
  },
  "per_model": {},
  "per_model_subject_s": {}

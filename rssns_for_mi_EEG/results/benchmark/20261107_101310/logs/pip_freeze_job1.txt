@@ -3,8 +3,8 @@ annotated-types==0.8.0
 anyio==4.16.0
 array-api-compat==1.16.0
 array-api-extra==0.11.5
-boto3==1.44.1
-botocore==1.44.1
+boto3==1.44.2
+botocore==1.44.2
 bracex==3.2.2
 certifi==2026.10.23
 charset-normalizer==3.5.2

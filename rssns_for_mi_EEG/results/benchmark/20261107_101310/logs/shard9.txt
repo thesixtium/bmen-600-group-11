@@ -712,3 +712,32 @@ Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 
 [time]     [rnn_wide s6_r7] pretrain epoch 250/500 | val_loss 11555628050731046921043968.0000 | elapsed 2h38m25s, phase ETA 2h38m25s
 [time]     [rnn_wide s6_r7] pretrain epoch 300/500 | val_loss 11555628050731046921043968.0000 | elapsed 3h10m06s, phase ETA 2h06m44s
 [time]     [rnn_wide s6_r7] pretrain epoch 350/500 | val_loss 11555628050731046921043968.0000 | elapsed 3h41m47s, phase ETA 1h35m03s
+[time]     [rnn_wide s6_r7] pretrain epoch 400/500 | val_loss 11555628050731046921043968.0000 | elapsed 4h13m28s, phase ETA 1h03m22s
+[time]     [rnn_wide s6_r7] pretrain epoch 450/500 | val_loss 11555628050731046921043968.0000 | elapsed 4h45m09s, phase ETA 31m41s
+[time]     [rnn_wide s6_r7] finetune epoch 50/100 | val_loss 13348397325318804339687424.0000 | elapsed 5m06s, phase ETA 5m06s
+[rnn_wide] subject 6 repeat 7: acc=0.250 kappa=0.000
+[time] [rnn_wide] fold 2/4 done in 5h27m03s (pretrain 5h16m50s, finetune 10m12s) | avg 5h26m24s | rnn_wide elapsed 10h52m48s, ETA 10h52m48s | benchmark ETA 10h52m48s -> finish ~Thu 12 Nov 23:17
+[time] [rnn_wide] SUBJECT 6 finished: 1 folds in 5h27m03s (5h27m03s/fold) | subjects done 2/4
+[time] [rnn_wide] fold 3/4 start (subject 7, repeat 9)
+[time]     [rnn_wide s7_r9] pretrain epoch 50/500 | val_loss 19493725243888340370980864.0000 | elapsed 31m41s, phase ETA 4h45m12s
+[time]     [rnn_wide s7_r9] pretrain epoch 100/500 | val_loss 19493725243888340370980864.0000 | elapsed 1h03m23s, phase ETA 4h13m33s
+[time]     [rnn_wide s7_r9] pretrain epoch 150/500 | val_loss 19493725243888340370980864.0000 | elapsed 1h35m05s, phase ETA 3h41m53s
+[time]     [rnn_wide s7_r9] pretrain epoch 200/500 | val_loss 19493725243888340370980864.0000 | elapsed 2h06m47s, phase ETA 3h10m11s
+[time]     [rnn_wide s7_r9] pretrain epoch 250/500 | val_loss 19493725243888340370980864.0000 | elapsed 2h38m30s, phase ETA 2h38m30s
+[time]     [rnn_wide s7_r9] pretrain epoch 300/500 | val_loss 19493725243888340370980864.0000 | elapsed 3h10m12s, phase ETA 2h06m48s
+[time]     [rnn_wide s7_r9] pretrain epoch 350/500 | val_loss 19493725243888340370980864.0000 | elapsed 3h41m54s, phase ETA 1h35m06s
+[time]     [rnn_wide s7_r9] pretrain epoch 400/500 | val_loss 19493725243888340370980864.0000 | elapsed 4h13m36s, phase ETA 1h03m24s
+[time]     [rnn_wide s7_r9] pretrain epoch 450/500 | val_loss 19493725243888340370980864.0000 | elapsed 4h45m18s, phase ETA 31m42s
+[time]     [rnn_wide s7_r9] finetune epoch 50/100 | val_loss nan | elapsed 5m06s, phase ETA 5m06s
+[rnn_wide] subject 7 repeat 9: acc=0.250 kappa=0.000
+[time] [rnn_wide] fold 3/4 done in 5h27m13s (pretrain 5h17m00s, finetune 10m12s) | avg 5h26m40s | rnn_wide elapsed 16h20m01s, ETA 5h26m40s | benchmark ETA 5h26m40s -> finish ~Thu 12 Nov 23:18
+[time] [rnn_wide] SUBJECT 7 finished: 1 folds in 5h27m13s (5h27m13s/fold) | subjects done 3/4
+[time] [rnn_wide] fold 4/4 start (subject 9, repeat 1)
+[time]     [rnn_wide s9_r1] pretrain epoch 50/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 31m41s, phase ETA 4h45m09s
+[time]     [rnn_wide s9_r1] pretrain epoch 100/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 1h03m23s, phase ETA 4h13m30s
+[time]     [rnn_wide s9_r1] pretrain epoch 150/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 1h35m04s, phase ETA 3h41m50s
+[time]     [rnn_wide s9_r1] pretrain epoch 200/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 2h06m46s, phase ETA 3h10m09s
+[time]     [rnn_wide s9_r1] pretrain epoch 250/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 2h38m28s, phase ETA 2h38m28s
+[time]     [rnn_wide s9_r1] pretrain epoch 300/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 3h10m10s, phase ETA 2h06m47s
+[time]     [rnn_wide s9_r1] pretrain epoch 350/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 3h41m52s, phase ETA 1h35m05s
+[time]     [rnn_wide s9_r1] pretrain epoch 400/500 | val_loss 123791081014556383454752078299136.0000 | elapsed 4h13m34s, phase ETA 1h03m24s

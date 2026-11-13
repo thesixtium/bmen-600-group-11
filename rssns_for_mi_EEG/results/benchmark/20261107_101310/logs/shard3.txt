@@ -921,3 +921,43 @@ Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 
 [time]   stage benchmark: rnn                     0.0s  ( 0.0%)
 [time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
 [time]   stage benchmark: rnn_wide                0.0s  ( 0.0%)
+[time] >>> download_data
+[time] <<< download_data: 24s (pipeline elapsed 24s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 33s (pipeline elapsed 58s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261107_101310
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[shard] shard 3 of 12: 8 folds (whole run: 90); finalize=False
+[time] pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h29m52s, ann 1m39s, snn 0.8s, rnn 38m10s, rsnn_wide 5h41m51s, rnn_wide 5h26m36s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: ann
+[time] [ann] nothing to run (all folds already done)
+[time] <<< benchmark: ann: 0.0s (pipeline elapsed 58s)
+[time] >>> benchmark: snn
+[time] [snn] nothing to run (all folds already done)
+[time] <<< benchmark: snn: 0.0s (pipeline elapsed 58s)
+[time] >>> benchmark: rsnn
+[time] [rsnn] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn: 0.0s (pipeline elapsed 58s)
+[time] >>> benchmark: rnn
+[time] [rnn] nothing to run (all folds already done)
+[time] <<< benchmark: rnn: 0.0s (pipeline elapsed 58s)
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 58s)
+[time] >>> benchmark: rnn_wide
+[time] [rnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rnn_wide: 0.0s (pipeline elapsed 58s)
+[chain] INCOMPLETE: folds still pending per model (whole run): {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 12}. Analysis skipped; rerun/resubmit with BENCH_RUN_ID=20261107_101310 to continue.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 59s
+[time]   stage download_data                       24s  (41.6%)
+[time]   stage preprocess_data                     33s  (56.8%)
+[time]   stage benchmark: ann                     0.0s  ( 0.0%)
+[time]   stage benchmark: snn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn                    0.0s  ( 0.0%)
+[time]   stage benchmark: rnn                     0.0s  ( 0.0%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time]   stage benchmark: rnn_wide                0.0s  ( 0.0%)
