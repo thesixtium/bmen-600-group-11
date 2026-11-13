@@ -1,82 +1,184 @@
-HOW TO RUN THE BENCHMARK ON ARC
-===============================
+HOW TO RUN THE BENCHMARK (ARC) AND THE ANALYSIS
+===============================================
 
-1. CONNECT (on campus, or on the UCalgary General VPN)
-   ssh aleksander.berezowsk@arc.ucalgary.ca
+Project layout (rssns_for_mi_EEG/):
+  src/                     all Python code; src/main.py = training, src/make_plots.py = analysis
+  run_benchmark.slurm      the SLURM job (shared by every model chain)
+  submit_chain.sh          generic chain submitter (called by the scripts below)
+  submit_chain_ann_snn.sh, submit_chain_rsnn.sh, submit_chain_rnn.sh,
+  submit_chain_rsnn_wide.sh, submit_chain_rnn_wide.sh      one submission script per model chain
+  data/                    dataset cache (created by the first training job)
+  results/benchmark/<run id>/   everything a run produces
 
-2. GET THE CODE (first time only, from your home folder)
-   cd ~
-   git clone <your bmen-600-group-11 repo URL>
-   cd bmen-600-group-11/rssns_for_mi_EEG
-   (later runs: cd there and run "git pull" instead of cloning)
+Models: ann (EEGNet), snn (EEGNet converted to a spiking network, needs the ANN), rsnn, rnn (parameter-matched to the
+converted SNN), rsnn_wide, rnn_wide (as many hidden neurons as EEGNet / the SNN). 9 subjects x 10 repeats = 90 folds per model.
 
-3. PUT THE SLURM SCRIPT IN THE PROJECT FOLDER
-   run_benchmark.slurm must sit in rssns_for_mi_EEG/ (commit it, or scp it up).
-   If you edited it on Windows, fix line endings:
-   sed -i 's/\r$//' run_benchmark.slurm
 
-4. FIND A PYTHON 3.10-3.12 MODULE (first time only)
-   python3 --version
-   module avail python
-   If python3 is not 3.10-3.12, set PY_MODULE near the top of
-   run_benchmark.slurm, e.g. PY_MODULE="python/3.11.x"
+1. ENVIRONMENT
+--------------
+On ARC nothing has to be installed by hand: every job loads python/3.12.5 (module), creates a fresh venv in /tmp and
+installs:  pip wheel setuptools==69.5.1, torch==2.4.0, snntorch moabb mne numpy scipy pandas scikit-learn matplotlib
+(the exact versions of each job are saved in results/benchmark/<run id>/logs/pip_freeze_<chain>_job<g>.txt).
+Python must be 3.10-3.12. To force another module: PY_MODULE="python/3.11.x" ./submit_chain_rsnn.sh 4
 
-5. SMOKE TEST (optional but recommended, runs 1 fold, 2 epochs)
-   BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0 sbatch run_benchmark.slurm
+For the analysis on your own PC or a login node use the same packages in any Python 3.10-3.12 environment
+(make_plots.py imports torch and snntorch through the project modules).
 
-6. FULL RUN (always submit from rssns_for_mi_EEG/)
-   ONE COMMAND, ANY NUMBER OF DAYS (recommended):
-       chmod +x submit_chain.sh        (first time only; also: sed -i 's/\r$//' submit_chain.sh if edited on Windows)
-       ./submit_chain.sh 6
-   This queues 6 jobs that share ONE run id; each starts after the previous one ends. Every job stops starting new
-   folds ~30 min before its 24 h limit, so nothing is lost mid-fold, and the next job resumes where it stopped.
-   When all folds of all 4 models are done, the job writes the analysis + a COMPLETE file in the run folder. Any job
-   that starts after that sees COMPLETE and exits in seconds, so it can NEVER retrain anything: queue more jobs than
-   you think you need. Leftover queued jobs can be removed with: scancel -u $USER --name=rsnn_benchmark
-   The analysis (results.csv, figures, comparison/) is only produced once everything is finished; before that the
-   log ends with "[chain] INCOMPLETE: folds still pending ...".
+Connect (on campus or UCalgary General VPN):   ssh aleksander.berezowsk@arc.ucalgary.ca
+Get the code (first time):   cd ~ ; git clone <your bmen-600-group-11 repo URL> ; cd bmen-600-group-11/rssns_for_mi_EEG
+Later:                       cd ~/bmen-600-group-11/rssns_for_mi_EEG ; git pull
+First time only (and after editing on Windows):
+    sed -i 's/\r$//' run_benchmark.slurm submit_chain.sh submit_chain_*.sh
+    chmod +x submit_chain.sh submit_chain_*.sh
+PROJECT_DIR at the top of run_benchmark.slurm must point to this folder
+(default /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG).
 
-   Single job instead (old behaviour, resume by hand as in step 8):
-       sbatch run_benchmark.slurm
 
-7. WATCH IT
-   squeue -u $USER                                  job state
-   ls results/benchmark/                            find the run id
-   tail -f results/benchmark/<run id>/run_log.txt   follow live (Ctrl+C to stop)
-   cat results/benchmark/<run id>/run_log.txt       print everything
-   scancel <jobid>                                  cancel the job
+2. RUN IDS AND OUTPUTS
+----------------------
+One experiment = one run id = one folder results/benchmark/<run id>/. The id is BENCH_RUN_ID; if it is not set, the
+submit script makes one from the time (YYYYMMDD_HHMMSS, prefix quick_ for BENCH_QUICK=1) and prints it ("Run ID: ...").
+Every model chain of the same experiment must be submitted with that SAME id.
 
-8. IF IT HITS THE 24 H LIMIT, RESUME (finished folds are skipped)
+Inside the run folder:
+  config.json, folds.json            settings, parameter counts and the 90 folds (seeds, splits)
+  checkpoints/<model>/s<S>_r<R>.pt   pretrained + fine-tuned weights (not for snn), tagged with model / run id / fold
+  histories/<model>/s<S>_r<R>.json   per-epoch train/val loss, max gradient norm, fraction of clipped steps
+  metrics/<model>/s<S>_r<R>.json     test metrics of one fold; its existence = "this fold is done"
+  predictions/<model>/s<S>_r<R>.npz  test labels, predictions, scores
+  logs/<chain>_shard<k>.txt          output of one worker (training progress, errors)
+  logs/<chain>_job<g>_<jobid>.txt    setup log of one SLURM job
+  fold_times.jsonl, timings.json, speed_settings.json   timing information
+  COMPLETE                           written when EVERY fold of EVERY model is trained (training finished)
+Slurm's own output: slurm_bench_<chain>_<jobid>.out in the folder you submitted from.
 
-   a) Find the run id. It is the folder name under results/benchmark/
-      (quick_* folders are smoke tests, ignore them):
+Results of different experiments cannot be mixed:
+  * training refuses a run id whose config.json / folds.json differ from the current code and settings (other
+    hyperparameters, quick mode, older code): "...differs from the current configuration / folds..." -> use a new id;
+  * the SNN only accepts ANN checkpoints tagged with the same run id;
+  * make_plots.py stops if a metrics file belongs to another run id.
+A changed setting therefore always means a NEW run id.
 
-        ls -d results/benchmark/*/ | grep -v quick_
 
-      Run ids are timestamps (YYYYMMDD_HHMMSS), so the newest full run is
-      the last one listed. To pick it automatically:
+3. RUNNING THE MODEL CHAINS
+---------------------------
+Always submit from rssns_for_mi_EEG/. Each script queues N_GPUS (default 4) parallel GPU-chains of N chained 24 h jobs
+(argument, default 4); every job runs WORKERS_PER_JOB (default 3) workers on its GPU, so the 90 folds are split into
+4 x 3 = 12 shards. Jobs of a GPU-chain start one after the other (afterany), resume where the previous one stopped and
+skip finished folds.
 
-        RUN_ID=$(basename $(ls -d results/benchmark/*/ | grep -v quick_ | sort | tail -1))
-        echo $RUN_ID
+  ./submit_chain_ann_snn.sh 4                         # new experiment; note the printed Run ID
+  BENCH_RUN_ID=<id> ./submit_chain_rsnn.sh 4          # the other chains of the SAME experiment
+  BENCH_RUN_ID=<id> ./submit_chain_rnn.sh 4
+  BENCH_RUN_ID=<id> ./submit_chain_rsnn_wide.sh 4
+  BENCH_RUN_ID=<id> ./submit_chain_rnn_wide.sh 4
 
-      If you can't tell which folder it is, the id is also printed in the
-      "Run ID :" line at the top of the job's slurm output file:
+Options (put them in front of the command): N_GPUS=2 (GPUs per chain), WORKERS_PER_JOB=4, USE_MPS=1,
+BENCH_PATIENCE=100 (pretraining early stopping: CHANGES THE PROTOCOL, off by default),
+AFTER_G1=<jobid> (GPU-chain 1 starts after that job).
+ARC allows 4 GPUs per user: chains submitted together simply wait in the queue for free GPUs. N_GPUS=1 or 2 per chain
+lets several chains progress at the same time.
 
-        grep -h "Run ID" slurm_rsnn_benchmark_*.out
+ANN and SNN: the converted SNN has no training; it converts each fold's fine-tuned ANN checkpoint. Both run in ONE chain
+(submit_chain_ann_snn.sh): every worker first trains its ANN folds, then converts them. An SNN fold whose ANN fold is not
+finished yet is left pending ("[snn] N fold(s) wait for their ANN fold ...") and done by a later job of the chain, so queue
+enough jobs. The other four chains are independent of each other and of ann_snn: a failure in one never blocks another.
 
-   b) Check how far it got (folds finished out of 90 per model):
+Time limits: every job has --time=24:00:00. A job starts no new fold within 30 min of its limit (DEADLINE_MARGIN_MIN=30),
+ends cleanly, and the next job of its GPU-chain continues. Queue more jobs than you think you need: when nothing is
+pending a job finishes within minutes (after its ~3 min setup), and a job that finds COMPLETE exits at once.
 
-        for m in ann snn rsnn rnn; do echo $m $(ls results/benchmark/$RUN_ID/metrics/$m | wc -l); done
+Smoke test (one worker, one fold, 2 epochs; not comparable to the real protocol):
+  BENCH_QUICK=1 BENCH_TARGETS=1 BENCH_REPEATS=0 BENCH_MODELS=ann,snn CHAIN_NAME=ann_snn WORKERS_PER_JOB=1 sbatch run_benchmark.slurm
 
-   c) Resume with that id:
+Without SLURM (e.g. a local test), the training entry point is driven by environment variables:
+  BENCH_MODELS=ann,snn BENCH_RUN_ID=<id> python src/main.py
+  (BENCH_MODELS: any of ann,snn,rsnn,rnn,rsnn_wide,rnn_wide; default all. Also BENCH_SHARD / BENCH_N_SHARDS,
+   BENCH_TARGETS / BENCH_REPEATS, BENCH_QUICK.)
 
-        BENCH_RUN_ID=$RUN_ID sbatch run_benchmark.slurm
 
-   d) Confirm it is continuing, not starting over: the new slurm output
-      should show "pending folds per model" with the remaining counts
-      (e.g. {'ann': 0, 'snn': 0, 'rsnn': 39, 'rnn': 90}), not 90s. If it shows 90s,
-      the id was wrong: scancel the job and recheck step (a).
-RESULTS: results/benchmark/<run id>/
-   results.csv, comparison/ (tables + figures), figures/, run_log.txt
-   Download to your PC, e.g. from PowerShell:
-   scp -r aleksander.berezowsk@arc.ucalgary.ca:~/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/<run id> .
+4. WATCHING, FAILURES, RERUNS
+-----------------------------
+  squeue -u $USER                                       job state (names: bench_ann_snn, bench_rsnn, ...)
+  ls results/benchmark/                                 run ids
+  tail -f results/benchmark/<id>/logs/rsnn_shard0.txt   follow one worker
+  for m in ann snn rsnn rnn rsnn_wide rnn_wide; do echo $m $(ls results/benchmark/<id>/metrics/$m | wc -l); done
+                                                        finished folds per model (of 90)
+  scancel -u $USER --name=bench_rsnn                    cancel one chain
+  scancel <jobid>                                       cancel one job
+
+End of a worker log: "[chain] run <id> INCOMPLETE, pending folds per model: {...}" (normal until everything is trained)
+or "[chain] COMPLETE: ...".
+
+Continue / rerun one chain: resubmit it with the same id; finished folds are skipped, other models are not touched:
+  BENCH_RUN_ID=<id> ./submit_chain_rnn.sh 2
+Check that the new worker log shows "pending folds per model" with the remaining counts, not 90 everywhere (90 = wrong id).
+
+Redo one model completely in the same run (same settings): cancel its chain, delete its folders
+  results/benchmark/<id>/{metrics,predictions,checkpoints,histories}/<model>
+  (for the ANN also metrics/snn and predictions/snn, because those SNN results were converted from the old ANN weights),
+  plus results/benchmark/<id>/COMPLETE and finetune/pretrained_metrics.csv if they exist, then resubmit the chain.
+
+A setup problem (python module, pip, no GPU) is in logs/<chain>_job<g>_<jobid>.txt; a setup hanging > 40 min is cancelled by
+the watchdog. Errors during training are in logs/<chain>_shard<k>.txt.
+
+
+5. TROUBLESHOOTING NaN / Inf
+----------------------------
+Gradient clipping: benchmark_config.py, GRAD_CLIP_NORM = 1.0 (global L2 norm of all gradients, torch clip_grad_norm_ after
+backward(), before the optimizer step). One value for every trained model (ann, rsnn, rnn, rsnn_wide, rnn_wide) in
+pretraining and fine-tuning; it is recorded in config.json (ann_train / rsnn_train / rnn_train -> grad_clip_norm).
+
+Non-finite values are never skipped or replaced. Once per epoch, train loss, validation loss and the largest pre-clip
+gradient norm are checked; on NaN/Inf training stops with
+  NonFiniteTrainingError: Non-finite value in [<model> s<S>_r<R>] pretrain|finetune at epoch E/...: train_loss=...,
+  val_loss=..., max pre-clip grad norm=... (lr, dropout, batch size, seed, model, last finite epochs)
+Non-finite logits at test time raise the same error; a non-finite SNN calibration scale raises
+"Non-finite calibration scales in ANN->SNN conversion".
+
+Find it:   grep -l "NonFiniteTrainingError\|Non-finite" results/benchmark/<id>/logs/*.txt
+The message names the model, subject, repeat and phase. No checkpoint or metrics file is written for that fold.
+The worker stops, so the rest of its shard waits; the same fold fails again in the next job (same seed). Cancel that
+chain, look at the message and at the histories of finished folds of the same model (grad_norm_max, clip_fraction:
+growing norms or a clip fraction near 1 point to instability), then resubmit only that chain with the same id. Other
+chains are unaffected. Changing scientific settings (learning rate, clipping threshold, epochs, ...) is not a fix
+within a run: it needs a new run id for ALL models and must be reported as a protocol change.
+
+
+6. ANALYSIS AND PLOTS (make_plots.py)
+-------------------------------------
+Reads a saved run; never trains, never downloads, never preprocesses unless asked (--load-data). Works at any time,
+also on partially finished runs; no COMPLETE needed. Run from rssns_for_mi_EEG/:
+
+  python src/make_plots.py --list-runs                  run ids (COMPLETE marked)
+  python src/make_plots.py                              newest non-quick run, all stages
+  python src/make_plots.py <id>                         given run, all stages
+  python src/make_plots.py <id> --stages benchmark comparison csv
+  python src/make_plots.py <id> --stages subjects data_statistics --load-data
+  python src/make_plots.py <id> --stages finetune --finetune-inference
+
+Stages (always run in this order):
+  data_statistics  dataset figures + CSVs -> results/data_statistics/ (independent of the run). Needs --load-data.
+  benchmark        accuracy per subject, metric distributions, confusion matrices -> <run>/figures/
+  training         training / validation loss curves per trained model -> <run>/figures/training_loss_<model>.png
+  comparison       chance tests, paired Wilcoxon + Holm, bootstrap CIs, tables and figures -> <run>/comparison/
+  csv              numbers behind the benchmark, training and comparison figures, next to the PNGs
+                   (run comparison first, or in the same call, for the comparison CSVs)
+  finetune         pre- vs post-fine-tuning -> <run>/finetune/. Uses the cached finetune/pretrained_metrics.csv;
+                   --finetune-inference evaluates the pretrained checkpoints that are not cached yet (one inference pass
+                   per fold; implies --load-data)
+  subjects         subject difficulty (part A) -> <run>/subject_analysis/; with --load-data also signal quality and
+                   signal-vs-accuracy (parts B, C)
+Before the result-based stages, results.csv / predictions.csv / confusion_matrices.csv are rebuilt in <run>/ from the
+finished per-fold files.
+
+--load-data uses the dataset cache in data/ (refuses if it is empty); copy data/ along if you analyse on another machine.
+
+Partial runs: the script first prints finished folds per model (complete / PARTIAL / no results). Tables and figures use the
+finished folds only; nothing is filled in. Subject means of a partial model may average fewer repeats and subjects without
+results drop out of the paired tests, so such numbers are provisional. A stage without inputs is reported as
+"skipped: <reason>"; a stage that crashes is "FAILED" (with traceback) and the other stages still run. The summary at the end
+lists every stage; the exit code is 1 only if a stage failed.
+
+Download results to your PC (PowerShell):
+  scp -r aleksander.berezowsk@arc.ucalgary.ca:~/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/<run id> .
