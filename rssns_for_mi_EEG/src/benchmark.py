@@ -26,17 +26,17 @@ from sklearn.metrics import accuracy_score, cohen_kappa_score, confusion_matrix,
 from ann_to_snn import ConvertedEEGNetSNN
 from benchmark_config import (
     ANN_TRAIN,
+    EEGNET_CFG,
+    FOLD_CFG,
     N_CHANNELS,
     N_CLASSES,
     QUICK,
     RESULTS_DIR,
     RNN_CFG,
     RNN_TRAIN,
+    RSNN_CFG,
     RSNN_TRAIN,
-    EEGNetConfig,
-    FoldConfig,
-    RSNNConfig,
-    SNNConfig,
+    SNN_CFG,
 )
 from folds import Fold, build_fold_data, save_folds
 from models import EEGNet, RecurrentELUNet, RecurrentLIFNet, count_parameters, model_summary
@@ -44,7 +44,8 @@ from preprocess_data import ProcessedData
 from timing import PipelineTimer
 from training import TrainingOutcome, predict_logits, pretrain_then_finetune
 
-EEGNET_CFG, SNN_CFG, RSNN_CFG, FOLD_CFG = EEGNetConfig(), SNNConfig(), RSNNConfig(), FoldConfig()
+# EEGNET_CFG, SNN_CFG, RSNN_CFG, FOLD_CFG come from benchmark_config (like RNN_CFG and the *_TRAIN configs), so the QUICK-mode
+# overrides made there apply to every model. In full mode they equal the dataclass defaults.
 # ann / snn: EEGNet and its conversion. rsnn / rnn: recurrent nets whose parameter count matches the converted SNN.
 # rsnn_wide / rnn_wide: recurrent nets with as many hidden neurons as EEGNet / the converted SNN (2560).
 MODELS: tuple[str, ...] = ("ann", "snn", "rsnn", "rnn", "rsnn_wide", "rnn_wide")
