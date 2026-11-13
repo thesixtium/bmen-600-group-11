@@ -21,6 +21,12 @@ TEST_SESSION: str = "1test"  # session 2: held out, only used for final predicti
 INPUT_SCALE: float = 1e6
 
 
+# Numerical stability: ONE gradient-clipping threshold shared by every trained model (ANN, RSNN, RNN and their "_wide"
+# variants), in pretraining and fine-tuning alike. Global L2 norm of all gradients (torch.nn.utils.clip_grad_norm_),
+# applied after backward() and before the optimizer step. None disables clipping. The converted SNN is not trained.
+GRAD_CLIP_NORM: float | None = 1.0
+
+
 @dataclass(frozen=True)
 class FoldConfig:
     n_repeats: int = 10
@@ -58,6 +64,8 @@ class TrainConfig:
     learning_rate: float = 1e-3  # Adam default
     batch_size: int = 16  # EEGNet paper value; not specified in the research plan
     log_every_epochs: int = 50  # progress line (elapsed + ETA) every N epochs inside a training phase; 0 = off
+    grad_clip_norm: float | None = GRAD_CLIP_NORM  # see GRAD_CLIP_NORM above; inherited by ANN_TRAIN / RSNN_TRAIN / RNN_TRAIN
+    # Non-finite loss / gradient norm / validation loss raises NonFiniteTrainingError (see training.py); checked once per epoch.
 
 
 @dataclass(frozen=True)

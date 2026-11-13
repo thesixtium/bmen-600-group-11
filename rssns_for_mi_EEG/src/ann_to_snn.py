@@ -104,6 +104,8 @@ class ConvertedEEGNetSNN(nn.Module):
             q = cfg.calibration_percentile
             lam0, lam1, lam2, lam3 = _percentile(x, q), _percentile(a1, q), _percentile(a2, q), _percentile(out, q)
             self.lambdas = (lam0, lam1, lam2, lam3)
+            if not all(np.isfinite(l) for l in self.lambdas):  # NaN/Inf ANN weights or activations: never convert silently
+                raise FloatingPointError(f"Non-finite calibration scales in ANN->SNN conversion: lambdas={self.lambdas}")
 
             # layer 1 = [conv1, depthwise], layer 2 = [sep_depth, sep_point], layer 3 = [fc]
             self.conv1.weight.mul_(lam0 / lam1)
