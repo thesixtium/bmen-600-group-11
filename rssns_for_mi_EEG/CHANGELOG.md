@@ -106,3 +106,41 @@ main.py runs ann before snn on the same folds, and the SNN only uses ANN checkpo
 
 ## Unchanged
 All Python files (Tasks 1, 2A, 2B), resources, time limit, margin, scientific settings.
+
+# Task 3 CHANGELOG: analysis-only workflow (make_plots.py)
+(Static edits only; nothing was run, no plot / CSV / statistic was generated or tested. Append to CHANGELOG.md.)
+
+## New: src/make_plots.py
+- CLI: `python src/make_plots.py [RUN_ID] [--stages ...] [--load-data] [--finetune-inference] [--list-runs]`.
+  Stages: data_statistics, benchmark, training, comparison, csv, finetune, subjects (default: all, in that order).
+  RUN_ID = folder under results/benchmark/; default = newest non-quick run with a config.json.
+- Prints fold coverage per model (finished / total from folds.json; complete / PARTIAL / no results). No COMPLETE marker
+  needed. Exits if a metrics file carries another run's run_id (no mixing of runs).
+- Rebuilds results.csv / predictions.csv / confusion_matrices.csv with the existing `benchmark.collect_results()` before the
+  result-based stages, so tables always match the finished per-fold files.
+- Each stage calls the existing functions (plot_benchmarks, plot_training, compare_models + plot_comparison,
+  export_figure_csvs, run_finetune_analysis, analyze_subjects, data_statistics + export_data_statistics_csvs). A stage
+  without inputs is "skipped: <reason>"; an exception is "FAILED" with traceback; the other stages continue. Summary at the
+  end; exit code 1 only if a stage failed.
+- No training, no implicit download, preprocessing or inference. `--load-data` (cached dataset only; refuses an empty data
+  folder) is required for data_statistics and subjects parts B/C. `--finetune-inference` (implies --load-data) evaluates
+  uncached pretrained checkpoints, using the run's own folds.json.
+
+## src/finetune_plots.py
+- `run_finetune_analysis(processed=None, ...)` uses only the cached `finetune/pretrained_metrics.csv` (new
+  `load_pretrained_metrics`, which reports how many checkpoints are not cached). With processed given: unchanged.
+- Per-subject figures use `reindex` instead of `.loc`, so a subject missing for one model (partial run) is left empty
+  instead of raising KeyError.
+
+## src/subject_analysis.py
+- `analyze_subjects(None, None, run_dir)` makes Part A (decoding) only; Parts B/C need the data. With data: unchanged.
+- Chance-test stars: missing subject/model entries count as not passed (were KeyError or bool(NaN) = True).
+
+## src/comparison_plots.py
+- Missing subject/model results are never drawn as passing chance checks (fillna(False); bool(NaN) was True); empty cells
+  in chance_tests.png get no text; the mean +/- SD marker uses the subjects that have results (identical for complete runs).
+
+## Not changed
+benchmark.py (collect_results reused as is), comparison.py, benchmark_plots.py, training_plots.py, csv_export.py,
+data_statistics*.py, main.py, all Task 1 / 2A / 2B / 2C files and every scientific setting. No collect.py exists in the
+project; collection is `benchmark.collect_results()`.

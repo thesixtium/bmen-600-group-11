@@ -4,7 +4,8 @@
 loss) evaluated on the target subject's session 2, i.e. zero-shot: no data of the target subject was used. "Post" = the
 fine-tuned model, exactly the result already in results.csv. The converted SNN is not trained, so it is left out.
 Pre metrics are computed from checkpoints/<model>/s<S>_r<R>.pt after the benchmark and cached in pretrained_metrics.csv;
-nothing is retrained and no existing result changes.
+nothing is retrained and no existing result changes. With processed=None (make_plots.py without --finetune-inference) only
+the cached pre metrics are used: no data is loaded and no inference is run.
 
 Output (<run_dir>/finetune/): pretrained_metrics.csv, finetune_folds.csv (every fold), and for each figure a PNG with a CSV of
 the same stem: finetune_pre_post_per_subject, finetune_gain_per_subject, finetune_pre_post_aggregate, finetune_gain_aggregate.
@@ -34,6 +35,7 @@ from training import predict_logits
 TRAINED: tuple[str, ...] = tuple(m for m in MODEL_ORDER if m != "snn")
 METRIC_LABEL: dict[str, str] = {c: t for c, t, _ in METRICS}
 REF_LINE: dict[str, float] = {"accuracy": CHANCE_ACCURACY, "kappa": 0.0}  # nominal chance
+PRE_COLS: list[str] = ["model", "subject", "repeat", "pre_accuracy", "pre_kappa", "pre_macro_f1"]
 
 NOTES: dict[str, tuple[str, str]] = {
     "finetune_pre_post_per_subject.png": (
@@ -86,7 +88,7 @@ def _build(model: str) -> torch.nn.Module:
 def compute_pretrained_metrics(processed: dict, folds: list[Fold], run_dir: Path, device: torch.device) -> pd.DataFrame:
     """Test metrics of the pretrained (pre fine-tuning) checkpoint of every fold and trained model; cached on disk."""
     path = run_dir / "finetune" / "pretrained_metrics.csv"
-    cols = ["model", "subject", "repeat", "pre_accuracy", "pre_kappa", "pre_macro_f1"]
+    cols = PRE_COLS
     rows = pd.read_csv(path).to_dict("records") if path.exists() else []
     done = {(r["model"], int(r["subject"]), int(r["repeat"])) for r in rows}
     nets: dict[str, torch.nn.Module] = {}
@@ -110,6 +112,23 @@ def compute_pretrained_metrics(processed: dict, folds: list[Fold], run_dir: Path
                          "pre_kappa": met["kappa"], "pre_macro_f1": met["macro_f1"]})
     df = pd.DataFrame(rows, columns=cols)
     write_csv(df, path)
+    return df
+
+
+def load_pretrained_metrics(run_dir: Path) -> pd.DataFrame:
+    """Cached pre-fine-tuning metrics only (no data, no inference). Reports how many checkpoints are not covered."""
+    path = run_dir / "finetune" / "pretrained_metrics.csv"
+    df = pd.read_csv(path) if path.exists() else pd.DataFrame(columns=PRE_COLS)
+    cached = {(r.model, int(r.subject), int(r.repeat)) for r in df.itertuples()}
+    n_ckpt = n_missing = 0
+    for m in TRAINED:
+        for p in (run_dir / "checkpoints" / m).glob("s*_r*.pt"):
+            s, r = p.stem[1:].split("_r")
+            n_ckpt += 1
+            n_missing += (m, int(s), int(r)) not in cached
+    if n_missing:
+        print(f"[finetune] {n_missing} of {n_ckpt} trained-model checkpoints have no cached pre-fine-tuning metrics; those folds "
+              "are left out (make_plots.py --finetune-inference computes them).")
     return df
 
 
@@ -165,7 +184,8 @@ def _pre_post_per_subject(per: pd.DataFrame, models: list[str], out: Path) -> No
     for r, (col, title, ylim) in enumerate(METRICS):
         for c, m in enumerate(models):
             ax = axes[r, c]
-            d = per[(per["model"] == m) & (per["metric"] == col)].set_index("subject").loc[subjects]
+            # reindex: a subject without results for this model (partial run) is left empty, not an error
+            d = per[(per["model"] == m) & (per["metric"] == col)].set_index("subject").reindex(subjects)
             ax.vlines(x, d["pre_mean"], d["post_mean"], color="gray", lw=1)
             ax.scatter(x, d["pre_mean"], s=38, facecolor="white", edgecolor=MODEL_COLORS[m], zorder=3, label="pre (zero-shot)")
             ax.scatter(x, d["post_mean"], s=38, color=MODEL_COLORS[m], edgecolor="k", zorder=3, label="post (fine-tuned)")
@@ -191,7 +211,7 @@ def _gain_per_subject(per: pd.DataFrame, models: list[str], out: Path) -> None:
     for r, (col, title, _) in enumerate(METRICS):
         ax = axes[r, 0]
         for i, m in enumerate(models):
-            d = per[(per["model"] == m) & (per["metric"] == col)].set_index("subject").loc[subjects]
+            d = per[(per["model"] == m) & (per["metric"] == col)].set_index("subject").reindex(subjects)
             ax.bar(x + (i - (len(models) - 1) / 2) * width, d["gain_mean"], width, yerr=d["gain_sd_repeats"], capsize=2,
                    color=MODEL_COLORS[m], edgecolor="k", lw=0.5, label=MODEL_LABELS[m])
         ax.axhline(0, ls="--", c="gray", lw=1)
@@ -252,15 +272,19 @@ def _gain_aggregate(per: pd.DataFrame, agg: pd.DataFrame, models: list[str], out
 # ---------------------------------------------------------------- entry point
 
 
-def run_finetune_analysis(processed: dict, folds: list[Fold], run_dir: Path, device: torch.device) -> None:
-    """Evaluate the pretrained checkpoints, then write the tables, CSVs and figures to <run_dir>/finetune/."""
+def run_finetune_analysis(processed: dict | None, folds: list[Fold] | None, run_dir: Path, device: torch.device | None) -> None:
+    """Write the tables, CSVs and figures to <run_dir>/finetune/. With processed given, uncached pretrained checkpoints are
+    evaluated first (inference); with processed=None only the cached pre-fine-tuning metrics are used."""
     results_path = run_dir / "results.csv"
     if not results_path.exists():
         print("[finetune] no results.csv; run collect_results() first.")
         return
     out = run_dir / "finetune"
     out.mkdir(parents=True, exist_ok=True)
-    pre = compute_pretrained_metrics(processed, folds, run_dir, device)
+    if processed is None:
+        pre = load_pretrained_metrics(run_dir)
+    else:
+        pre = compute_pretrained_metrics(processed, folds, run_dir, device)
     folds_tbl = _fold_table(pd.read_csv(results_path), pre)
     if folds_tbl.empty:
         print("[finetune] no folds with pre- and post-fine-tuning metrics; nothing to plot.")

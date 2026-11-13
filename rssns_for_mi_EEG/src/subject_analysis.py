@@ -9,6 +9,7 @@ Part B, raw signal quality per subject and session (model independent), from the
   explained by the four classes) at the sensorimotor channels C3/Cz/C4, and the same as an SNR eta^2/(1-eta^2); trial-to-trial
   variability (coefficient of variation of the trial RMS); artifact rate; and the session 1 -> 2 shift.
 Part C: Spearman correlation of subject accuracy with each signal measure.
+Parts B and C need the EEG data; with data=None / processed=None (make_plots.py without --load-data) only Part A is made.
 
 Output (<run_dir>/subject_analysis/): every figure PNG has a CSV with the same stem (see the NOTES keys), plus
 subject_signal_vs_accuracy_correlations.csv. With nine subjects, correlations are exploratory: a rho must be very large to be
@@ -260,6 +261,9 @@ def _decoding_part(res: pd.DataFrame, run_dir: Path, out: Path) -> pd.Series | N
     if chance_path.exists():
         ch = pd.read_csv(chance_path)
         passed = ch[ch["metric"] == "accuracy"].pivot(index="subject", columns="model", values="above_chance")
+        # a subject / model without a chance result (comparison made before more folds finished) counts as not passed,
+        # never as passed (bool(NaN) would be True)
+        passed = passed.reindex(index=acc.index, columns=models).fillna(False).astype(bool)
 
     ranks = acc.rank(ascending=False, method="average")
     tbl = acc.copy()
@@ -336,21 +340,27 @@ def _correlations(ana: pd.DataFrame, acc: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------- entry point
 
 
-def analyze_subjects(data: RawData, processed: ProcessedData, run_dir: Path) -> None:
-    """Write the subject-comparison figures and CSVs to <run_dir>/subject_analysis/."""
+def analyze_subjects(data: RawData | None, processed: ProcessedData | None, run_dir: Path) -> None:
+    """Write the subject-comparison figures and CSVs to <run_dir>/subject_analysis/.
+
+    data / processed = None: the signal-quality parts (B, C) are skipped and only the decoding part (A) is written."""
     out = run_dir / "subject_analysis"
     out.mkdir(parents=True, exist_ok=True)
-    channels = _eeg_channels(data[min(data)]["0train"]["0"])
-    sig, shift = signal_quality(processed, channels), session_shift(processed)
-    _plot_signal_quality(sig, out)
-    _plot_session_shift(shift, out)
+    sig = shift = None
+    if data is not None and processed is not None:
+        channels = _eeg_channels(data[min(data)]["0train"]["0"])
+        sig, shift = signal_quality(processed, channels), session_shift(processed)
+        _plot_signal_quality(sig, out)
+        _plot_session_shift(shift, out)
+    else:
+        print("[subjects] no EEG data given: signal-quality parts (B, C) skipped.")
 
     results_path = run_dir / "results.csv"
     if not results_path.exists():
-        print("[subjects] no results.csv; only the signal-quality part was written.")
+        print("[subjects] no results.csv; the decoding part was not written.")
         return
     acc = _decoding_part(pd.read_csv(results_path), run_dir, out)
-    if acc is None:
+    if acc is None or sig is None:
         return
     wide = sig.pivot(index="subject", columns="session")
     wide.columns = [f"{name}_s{sess}" for name, sess in wide.columns]

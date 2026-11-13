@@ -3,6 +3,7 @@ figure, 150 dpi). Reads the tables written by comparison.compare_models() and sa
 
 The subject is the independent unit: every mark is a subject-level mean (over the 10 repeats), never a single fold.
 Accuracy is the primary metric (research plan, Section 4); kappa and macro-F1 are shown alongside.
+Partial runs: a subject without results for a model is left empty (NaN) and never drawn as passing the chance checks.
 """
 
 import textwrap
@@ -79,7 +80,8 @@ def _save(fig: Figure, out_dir: Path, name: str) -> None:
 
 def _accuracy_slopes(subjects: pd.DataFrame, chance: pd.DataFrame, models: list[str], out_dir: Path) -> None:
     acc = subjects[subjects["metric"] == PRIMARY_METRIC].pivot(index="subject", columns="model", values="mean")[models]
-    passed = chance[chance["metric"] == PRIMARY_METRIC].pivot(index="subject", columns="model", values="above_chance")[models]
+    passed = chance[chance["metric"] == PRIMARY_METRIC].pivot(index="subject", columns="model", values="above_chance")
+    passed = passed.reindex(index=acc.index, columns=models).fillna(False).astype(bool)  # missing = not passed
     fig, ax = plt.subplots(figsize=(10, 5.5))
     x = np.arange(len(models))
     for s in acc.index:
@@ -88,10 +90,11 @@ def _accuracy_slopes(subjects: pd.DataFrame, chance: pd.DataFrame, models: list[
     for i, model in enumerate(models):
         ok = passed[model].to_numpy(dtype=bool)
         vals = acc[model].to_numpy()
+        present = vals[~np.isnan(vals)]  # identical to vals when every subject has results
         ax.scatter(np.full(ok.sum(), i), vals[ok], s=45, color=MODEL_COLORS[model], edgecolor="k", zorder=3)
         ax.scatter(np.full((~ok).sum(), i), vals[~ok], s=45, facecolor="white", edgecolor=MODEL_COLORS[model], zorder=3)
-        ax.errorbar(i + 0.18, vals.mean(), yerr=vals.std(ddof=1) if len(vals) > 1 else 0, fmt="D", ms=9, color=MODEL_COLORS[model],
-                    mec="k", capsize=4, zorder=4, label=f"{MODEL_LABELS[model]} mean +/- SD")
+        ax.errorbar(i + 0.18, present.mean(), yerr=present.std(ddof=1) if len(present) > 1 else 0, fmt="D", ms=9,
+                    color=MODEL_COLORS[model], mec="k", capsize=4, zorder=4, label=f"{MODEL_LABELS[model]} mean +/- SD")
     ax.axhline(CHANCE_ACCURACY, ls="--", c="gray", label="nominal chance (25%)")
     thr = chance[chance["metric"] == PRIMARY_METRIC]["binomial_threshold"].dropna()
     if len(thr):
@@ -138,12 +141,14 @@ def _chance_tests(chance: pd.DataFrame, models: list[str], out_dir: Path) -> Non
     for ax, metric in zip(axes[0], METRIC_NAMES):
         sub = chance[chance["metric"] == metric]
         value = sub.pivot(index="model", columns="subject", values="observed").loc[models]
-        ok = sub.pivot(index="model", columns="subject", values="above_chance").loc[models]
+        ok = sub.pivot(index="model", columns="subject", values="above_chance").loc[models].fillna(False).astype(bool)
         lo, hi = METRIC_YLIM[metric]
         im = ax.imshow(value.to_numpy(), cmap="Blues", vmin=lo, vmax=hi, aspect="auto")
         for i in range(value.shape[0]):
             for j in range(value.shape[1]):
                 v = value.to_numpy()[i, j]
+                if np.isnan(v):
+                    continue  # partial run: no result for this subject and model
                 ax.text(j, i, f"{v:.2f}" + ("*" if bool(ok.to_numpy()[i, j]) else ""), ha="center", va="center", fontsize=8,
                         color="w" if (v - lo) / (hi - lo) > 0.6 else "k")
         ax.set_xticks(range(value.shape[1]), [f"S{s}" for s in value.columns])
