@@ -1,15 +1,39 @@
 {
- "total_s": 57.29337996605318,
+ "total_s": 59184.73101053608,
  "stages_s": {
-  "download_data": 23.386219572043046,
-  "preprocess_data": 33.41989085904788,
-  "benchmark: ann": 0.000967459985986352,
-  "benchmark: snn": 0.0003359400434419513,
-  "benchmark: rsnn": 0.0019748969934880733,
-  "benchmark: rnn": 0.0019483179785311222,
-  "benchmark: rsnn_wide": 0.001949450932443142,
-  "benchmark: rnn_wide": 0.0019324299646541476
+  "download_data": 20.822822200949304,
+  "preprocess_data": 30.04752440599259,
+  "data_statistics": 24.127349883085117,
+  "data_statistics_csv": 14.860802324023098,
+  "benchmark: ann": 0.00036184501368552446,
+  "benchmark: snn": 0.00017657701391726732,
+  "benchmark: rsnn": 0.0008120849961414933,
+  "benchmark: rnn": 0.0007954539032652974,
+  "benchmark: rsnn_wide": 0.0007923559751361609,
+  "benchmark: rnn_wide": 58901.55083577894,
+  "collect_results": 4.471586955012754,
+  "plot_benchmarks": 2.8941420069895685,
+  "plot_training": 6.92545073106885,
+  "compare_models": 39.964427527971566,
+  "plot_comparison": 5.077841558959335,
+  "export_figure_csvs": 1.1244229389121756,
+  "finetune_analysis": 126.10440644691698,
+  "subject_analysis": 6.14707049599383
  },
- "per_model": {},
- "per_model_subject_s": {}
+ "per_model": {
+  "rnn_wide": {
+   "n_folds": 3,
+   "total_s": 58901.5439387809,
+   "mean_s": 19633.847979593633,
+   "min_s": 19603.445963885984,
+   "max_s": 19650.910190770985
+  }
+ },
+ "per_model_subject_s": {
+  "rnn_wide": {
+   "7": 19647.187784123933,
+   "8": 19650.910190770985,
+   "9": 19603.445963885984
+  }
+ }
 }

@@ -526,3 +526,15 @@
 {"model": "rnn_wide", "subject": 8, "repeat": 8, "seconds": 19605.278046974912, "pretrain_s": 18993.152280447073, "finetune_s": 611.0909272410208}
 {"model": "rnn_wide", "subject": 8, "repeat": 9, "seconds": 19591.17772912397, "pretrain_s": 19014.699010928976, "finetune_s": 575.6439156059641}
 {"model": "rnn_wide", "subject": 9, "repeat": 0, "seconds": 19562.79551426496, "pretrain_s": 19019.491065072943, "finetune_s": 542.6318664120045}
+{"model": "rnn_wide", "subject": 9, "repeat": 1, "seconds": 19631.104980657925, "pretrain_s": 19018.14646066504, "finetune_s": 612.1260700459825}
+{"model": "rnn_wide", "subject": 9, "repeat": 2, "seconds": 19592.835153592983, "pretrain_s": 19012.09444091108, "finetune_s": 580.0822039109189}
+{"model": "rnn_wide", "subject": 9, "repeat": 3, "seconds": 19578.195660050027, "pretrain_s": 19021.80618593702, "finetune_s": 555.915646814974}
+{"model": "rnn_wide", "subject": 7, "repeat": 1, "seconds": 19597.835023361025, "pretrain_s": 18984.507908986998, "finetune_s": 612.3127119499259}
+{"model": "rnn_wide", "subject": 7, "repeat": 2, "seconds": 19641.702347047976, "pretrain_s": 19028.52537663805, "finetune_s": 612.0633228579536}
+{"model": "rnn_wide", "subject": 7, "repeat": 0, "seconds": 19647.187784123933, "pretrain_s": 19033.684117364, "finetune_s": 612.5168683259981}
+{"model": "rnn_wide", "subject": 8, "repeat": 3, "seconds": 19635.604238089058, "pretrain_s": 19022.666605141014, "finetune_s": 612.0705931399716}
+{"model": "rnn_wide", "subject": 8, "repeat": 4, "seconds": 19639.00377911399, "pretrain_s": 19026.214107341017, "finetune_s": 611.9309441139922}
+{"model": "rnn_wide", "subject": 8, "repeat": 2, "seconds": 19650.910190770985, "pretrain_s": 19037.547778115026, "finetune_s": 612.5701918939594}
+{"model": "rnn_wide", "subject": 9, "repeat": 5, "seconds": 19639.159516579937, "pretrain_s": 19025.87277182704, "finetune_s": 612.4226666579489}
+{"model": "rnn_wide", "subject": 9, "repeat": 6, "seconds": 19611.92368012201, "pretrain_s": 19018.449361709063, "finetune_s": 592.8013951119501}
+{"model": "rnn_wide", "subject": 9, "repeat": 4, "seconds": 19603.445963885984, "pretrain_s": 19028.07407840097, "finetune_s": 574.8001568020554}
