@@ -1,0 +1,3 @@
+run id: 20261113_124400
+source: C:\Users\ajrbe\Documents\Git\bmen-600-group-11\rssns_for_mi_EEG\results\benchmark\20261113_124400
+figures: 36

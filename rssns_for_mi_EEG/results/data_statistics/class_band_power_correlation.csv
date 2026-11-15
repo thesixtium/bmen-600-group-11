@@ -2,10 +2,10 @@ measure,channel,band,class,value
 one_vs_rest_pearson_r,Fz,mu,left hand,-0.08358606493860642
 one_vs_rest_pearson_r,Fz,beta,left hand,-0.06679061864120314
 one_vs_rest_pearson_r,FC3,mu,left hand,-0.10160056526065295
-one_vs_rest_pearson_r,FC3,beta,left hand,-0.08677913765396716
+one_vs_rest_pearson_r,FC3,beta,left hand,-0.08677913765396714
 one_vs_rest_pearson_r,FC1,mu,left hand,-0.09565762884647547
 one_vs_rest_pearson_r,FC1,beta,left hand,-0.09059481534964911
-one_vs_rest_pearson_r,FCz,mu,left hand,-0.08910602939402305
+one_vs_rest_pearson_r,FCz,mu,left hand,-0.08910602939402304
 one_vs_rest_pearson_r,FCz,beta,left hand,-0.08837854725788091
 one_vs_rest_pearson_r,FC2,mu,left hand,-0.09206925107296902
 one_vs_rest_pearson_r,FC2,beta,left hand,-0.10048453835710963

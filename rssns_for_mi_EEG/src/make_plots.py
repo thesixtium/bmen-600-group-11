@@ -1,7 +1,7 @@
 """Analysis entry point: figures, statistics and CSVs from a SAVED run. Never trains, never runs a benchmark.
 
 Usage (from the project folder, e.g. rssns_for_mi_EEG/):
-  python src/make_plots.py                         # newest non-quick run, every stage that has its inputs
+  python src/make_plots.py                         # no arguments: DEFAULT_ARGS at the bottom of this file
   python src/make_plots.py 20261113_140000         # a given run id (folder name under results/benchmark/)
   python src/make_plots.py <id> --stages benchmark comparison csv
   python src/make_plots.py <id> --stages data_statistics subjects --load-data
@@ -12,6 +12,8 @@ Stages (run in this order): data_statistics, benchmark, training, comparison, cs
 Outputs go where the existing modules put them: <run_dir>/figures/, <run_dir>/comparison/, <run_dir>/finetune/,
 <run_dir>/subject_analysis/, and results.csv / predictions.csv / confusion_matrices.csv in <run_dir>. data_statistics does not
 depend on the run and writes to results/data_statistics/ (its existing location).
+After the stages, every figure (PNG) of the run and of results/data_statistics/ is also copied into ONE flat folder,
+<project>/most_recent_results/, which is emptied first so it only ever holds the latest analysis (see _collect_figures).
 
 Partial runs: no COMPLETE marker is needed. The fold coverage of every model is printed first; tables and figures are built
 from the folds that are finished (nothing is filled in). A stage without its inputs is skipped with the reason; a stage that
@@ -28,6 +30,7 @@ Data and inference are opt-in, never implicit:
 
 import argparse
 import json
+import shutil
 import sys
 import traceback
 from pathlib import Path
@@ -36,6 +39,10 @@ from benchmark_config import RESULTS_DIR
 
 STAGES: tuple[str, ...] = ("data_statistics", "benchmark", "training", "comparison", "csv", "finetune", "subjects")
 RESULT_STAGES = {"benchmark", "comparison", "csv", "finetune", "subjects"}  # read results.csv (collected first)
+
+PROJECT_DIR: Path = RESULTS_DIR.parent.parent  # rssns_for_mi_EEG/
+MOST_RECENT_DIR: Path = PROJECT_DIR / "most_recent_results"
+DATA_STATS_DIR: Path = RESULTS_DIR.parent / "data_statistics"  # same folder as data_statistics.OUT_DIR
 
 
 class Skip(Exception):
@@ -210,6 +217,30 @@ STAGE_FUNCS = {
 }
 
 
+# ---------------------------------------------------------------- one folder with every figure
+
+
+def _collect_figures(run_dir: Path) -> None:
+    """Copy every PNG of the run (figures/, comparison/figures/, finetune/, subject_analysis/) and of results/data_statistics/
+    into ONE flat folder, most_recent_results/. The folder is emptied first, so it never mixes runs or stale figures; the
+    originals stay where they are. File names are unique across these folders; a clash would get its source folder as prefix."""
+    sources = [DATA_STATS_DIR, run_dir / "figures", run_dir / "comparison" / "figures", run_dir / "finetune",
+               run_dir / "subject_analysis"]
+    if MOST_RECENT_DIR.exists():
+        shutil.rmtree(MOST_RECENT_DIR)
+    MOST_RECENT_DIR.mkdir(parents=True)
+    copied = 0
+    for src in sources:
+        for png in sorted(src.glob("*.png")) if src.exists() else []:
+            target = MOST_RECENT_DIR / png.name
+            if target.exists():
+                target = MOST_RECENT_DIR / f"{src.name}__{png.name}"
+            shutil.copy2(png, target)
+            copied += 1
+    (MOST_RECENT_DIR / "RUN.txt").write_text(f"run id: {run_dir.name}\nsource: {run_dir}\nfigures: {copied}\n")
+    print(f"[make_plots] copied {copied} figure(s) to {MOST_RECENT_DIR}")
+
+
 # ---------------------------------------------------------------- entry point
 
 
@@ -258,6 +289,11 @@ def main(argv: list[str] | None = None) -> int:
             status[s] = f"FAILED: {type(exc).__name__}: {exc}"
         print(f"[make_plots] {s}: {status[s]}")
 
+    try:
+        _collect_figures(run_dir)
+    except OSError as exc:  # copying is a convenience; never let it hide the analysis result
+        print(f"[make_plots] could not fill {MOST_RECENT_DIR}: {exc}")
+
     print(f"\n[make_plots] summary for run {run_dir.name}:")
     for s, st in status.items():
         print(f"    {s:<16s} {st}")
@@ -265,4 +301,9 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # With no arguments, run the full analysis of the benchmark run: every stage, using the cached dataset and
+    # evaluating the pretrained checkpoints. Any arguments given on the command line replace these defaults.
+    # scp -r aleksander.berezowsk@arc.ucalgary.ca:~/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400/checkpoints results\benchmark\20261113_124400\
+
+    DEFAULT_ARGS = ["20261113_124400", "--load-data", "--finetune-inference"]
+    sys.exit(main(sys.argv[1:] or DEFAULT_ARGS))

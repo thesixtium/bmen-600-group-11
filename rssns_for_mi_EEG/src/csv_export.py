@@ -4,7 +4,8 @@ Convention: the CSV has the SAME FILE STEM as its PNG and sits next to it
   <run_dir>/figures/<stem>.csv                (benchmark_plots.py, training_plots.py)
   <run_dir>/comparison/figures/<stem>.csv     (comparison_plots.py)
 Figures with several kinds of marks get extra files <stem>_<what>.csv (for example per-repeat dots).
-The figures of data_statistics.py are handled by data_statistics_csv.py, the new figures write their own CSVs.
+The figures of data_statistics.py are handled by data_statistics_csv.py, the new figures write their own CSVs (the
+training-process figures added to training_plots.py write theirs from training_plots.py itself).
 
 Also holds two helpers shared by the new modules: save_fig() (same 'How to read / Takeaways' caption style as the
 existing plots) and write_csv(). Nothing here changes an existing figure or table.
@@ -24,7 +25,7 @@ from matplotlib.figure import Figure
 
 from benchmark_plots import MODEL_ORDER
 from data_statistics import CLASSES
-from training_plots import PHASES, _load, _mean_sd, _phase_curves
+from training_plots import PHASES, _load, _mean_sd, _median_iqr, _phase_curves
 
 METRIC_COLS: tuple[str, ...] = ("accuracy", "kappa", "macro_f1")
 
@@ -110,6 +111,8 @@ def _export_benchmark(run_dir: Path) -> None:
 
 
 def _export_training(run_dir: Path) -> None:
+    """training_loss_<model>.csv: the figure draws the median / IQR columns (subject curve = median over repeats); the
+    mean / SD columns (subject curve = mean over repeats) are kept for reference."""
     models = [m for m in MODEL_ORDER if any((run_dir / "histories" / m).glob("s*_r*.json"))]
     out = run_dir / "figures"
     for m in models:
@@ -118,15 +121,24 @@ def _export_training(run_dir: Path) -> None:
         curve_rows, subject_rows, kept_rows = [], [], []
         for ph, ph_title in PHASES:
             c = _phase_curves(hist, ph)
+            cm = _phase_curves(hist, ph, agg="median")
             epochs = np.arange(1, c["n_epochs"] + 1)
             tm, ts = _mean_sd(c["train"])
             vm, vs = _mean_sd(c["val"])
+            tmed, tq1, tq3 = _median_iqr(cm["train"])
+            vmed, vq1, vq3 = _median_iqr(cm["val"])
             curve_rows.append(pd.DataFrame({
-                "phase": ph, "epoch": epochs, "train_loss_mean": tm, "train_loss_sd": ts, "val_loss_mean": vm,
-                "val_loss_sd": vs, "n_subjects": len(subjects)}))
+                "phase": ph, "epoch": epochs,
+                "train_loss_median": tmed, "train_loss_q1": tq1, "train_loss_q3": tq3,
+                "val_loss_median": vmed, "val_loss_q1": vq1, "val_loss_q3": vq3,
+                "train_loss_mean": tm, "train_loss_sd": ts, "val_loss_mean": vm, "val_loss_sd": vs,
+                "n_subjects": len(subjects)}))
             for i, s in enumerate(subjects):
                 subject_rows.append(pd.DataFrame({"phase": ph, "subject": s, "epoch": epochs,
-                                                  "train_loss": c["train"][i], "val_loss": c["val"][i]}))
+                                                  "train_loss_median_over_repeats": cm["train"][i],
+                                                  "val_loss_median_over_repeats": cm["val"][i],
+                                                  "train_loss_mean_over_repeats": c["train"][i],
+                                                  "val_loss_mean_over_repeats": c["val"][i]}))
             kept_rows.append({"phase": ph, "n_folds": len(c["best"]), "median_kept_epoch": float(np.median(c["best"])),
                               "pct_folds_kept_epoch_is_last": 100 * float(c["at_end"].mean()), "n_epochs_shown": c["n_epochs"]})
         write_csv(pd.concat(curve_rows), out / f"training_loss_{m}.csv")
