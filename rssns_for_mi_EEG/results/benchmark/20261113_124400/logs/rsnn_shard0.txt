@@ -135,3 +135,44 @@ Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 
 [time]   stage benchmark: rsnn               11h04m16s  (99.9%)
 [time]   rsnn: 8 folds, total 11h04m15s, mean 1h23m02s (min 1h22m44s, max 1h24m35s)
 [time]     per subject: S1 1h24m35s, S2 1h22m46s, S3 1h22m50s, S4 1h22m46s, S5 1h22m56s, S7 1h22m49s, S8 1h22m51s, S9 1h22m44s
+[time] >>> download_data
+[time] <<< download_data: 14s (pipeline elapsed 14s)
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 14s
+[time]   stage download_data                       14s  (100.0%)
+Traceback (most recent call last):
+  File "/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/main.py", line 106, in <module>
+    data = download_data(redo=False)  # only files not already cached are downloaded
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/download_data.py", line 35, in download_data
+    return dataset.get_data()
+           ^^^^^^^^^^^^^^^^^^
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/moabb/datasets/base.py", line 894, in get_data
+    results = Parallel(n_jobs=n_jobs)(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/joblib/parallel.py", line 2012, in __call__
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/joblib/parallel.py", line 1940, in _get_sequential_output
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/moabb/datasets/base.py", line 914, in _get_selected_subject_data
+    subject_data = self._get_single_subject_data_using_cache(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/moabb/datasets/base.py", line 1458, in _get_single_subject_data_using_cache
+    sessions_data = self._get_single_subject_data(subject)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/moabb/datasets/bnci/bnci_2014.py", line 531, in _get_single_subject_data
+    return _load_data_001_2014(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "<decorator-gen-357>", line 10, in _load_data_001_2014
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/moabb/datasets/bnci/bnci_2014.py", line 81, in _load_data_001_2014
+    runs, ev = _convert_mi(
+               ^^^^^^^^^^^^
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/moabb/datasets/bnci/base.py", line 335, in _convert_mi
+    raw, evd = _convert_run(
+               ^^^^^^^^^^^^^
+  File "<decorator-gen-350>", line 12, in _convert_run
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/moabb/datasets/bnci/base.py", line 456, in _convert_run
+    montage = make_standard_montage("standard_1005")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/mne/channels/montage.py", line 2089, in make_standard_montage
+  File "/tmp/venv_51291836/lib/python3.12/site-packages/mne/channels/_standard_montage_utils.py", line 81, in _mgh_or_standard
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/venv_51291836/lib/python3.12/site-packages/mne/channels/data/montages/colin27_1005.elc'

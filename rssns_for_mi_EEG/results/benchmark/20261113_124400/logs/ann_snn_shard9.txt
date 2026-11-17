@@ -172,3 +172,4 @@ Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 
 [time]     per subject: S1 1m53s, S3 1m54s, S4 1m54s, S5 1m54s, S6 1m54s, S7 1m54s, S9 1m52s
 [time]   snn: 7 folds, total 4.4s, mean 0.6s (min 0.6s, max 0.7s)
 [time]     per subject: S1 0.7s, S3 0.6s, S4 0.6s, S5 0.6s, S6 0.6s, S7 0.6s, S9 0.6s
+[time] >>> download_data

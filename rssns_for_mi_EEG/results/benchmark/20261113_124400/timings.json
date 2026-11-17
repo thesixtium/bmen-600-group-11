@@ -1,24 +1,10 @@
 {
- "total_s": 61120.61708989204,
+ "total_s": 51.533747754991055,
  "stages_s": {
-  "download_data": 20.633854373008944,
-  "preprocess_data": 30.0635173820192,
-  "benchmark: rsnn_wide": 61069.24243209208
+  "download_data": 20.85423868894577,
+  "preprocess_data": 30.44545175204985,
+  "benchmark: rsnn_wide": 0.001387184951454401
  },
- "per_model": {
-  "rsnn_wide": {
-   "n_folds": 3,
-   "total_s": 61069.23144079186,
-   "mean_s": 20356.410480263952,
-   "min_s": 20257.815487439977,
-   "max_s": 20434.756089135888
-  }
- },
- "per_model_subject_s": {
-  "rsnn_wide": {
-   "1": 20376.659864215995,
-   "3": 20434.756089135888,
-   "4": 20257.815487439977
-  }
- }
+ "per_model": {},
+ "per_model_subject_s": {}
 }
