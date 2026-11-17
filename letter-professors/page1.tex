@@ -1,0 +1,45 @@
+% ================================================================ PAGE 1: LETTER (input by letter_body.tex)
+% \Salutation is set by the wrapper file of each professor (letter_shamsi.tex, letter_kenny-lang.tex).
+16 November 2026
+
+Dear \Salutation,
+
+We are Lex Berezowski, Amirsaeed Ghodsinejad and Pahansith Kiriwaththuduwage, students in BMEN 600 (Group 11). We
+are writing to ask for your feedback on our course project. Page 2 shows our method and the four models. Page 3 shows
+our results.
+
+\textbf{Our research question.} We want to know if a recurrent spiking neural network (RSNN) can classify four motor
+imagery tasks from the electroencephalogram (EEG) better than a spiking neural network (SNN). We made the SNN by
+converting EEGNet. EEGNet is a small convolutional network for EEG.
+
+\textbf{What we did.} We used BCI Competition IV dataset 2a. It has 9 subjects and 22 EEG channels. For each subject,
+we first trained every model on session 1 of five other subjects. Then we fine-tuned the model on session 1 of that
+subject. We tested it on session 2 of the same subject (288 trials). We repeated this 10 times with different training
+subjects, so each model has 90 test results (Figure 1). The RSNN has one recurrent layer of leaky integrate-and-fire
+neurons. It has almost the same number of parameters as the converted SNN (752 and 776). We also trained a non-spiking
+recurrent network (RNN) of the same size as a control. Figure 2 shows the four models.
+
+\textbf{What we found.} These results are preliminary. The converted SNN had a mean accuracy of 0.565. The RSNN had
+0.385. The SNN was better for all 9 subjects. EEGNet had 0.600. The difference
+between EEGNet and the SNN was not significant ($p = 0.098$). But, in our results, the RSNN does not do better than the
+converted SNN. Table 1 shows the full results of the four models, Table 2 shows the accuracy of each subject and
+Table 3 shows the statistical tests.
+
+One more model is still training. It is an RSNN with 2,560 neurons, the same number of hidden units as EEGNet.
+
+\textbf{Our questions.} We would be grateful for your view on two points:
+\begin{enumerate}\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}\setlength{\topsep}{2pt}
+  \item Is our comparison fair? We matched the models by number of parameters. Should we also report the models
+        matched by number of neurons?
+  \item Do you see anything in our design that could explain the low accuracy of the RSNN? What would you propose to
+        increase its accuracy, while keeping the comparison between the models fair?
+\end{enumerate}
+
+If you have time, we would be happy to meet for 15 to 20 minutes, in person or online. We can also send you our code
+and results. Our final report is due on 4 December.
+
+Thank you for your time.
+
+Sincerely,\\[4pt]
+Lex Berezowski, Amirsaeed Ghodsinejad and Pahansith Kiriwaththuduwage\\
+BMEN 600, Group 11
