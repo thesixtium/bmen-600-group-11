@@ -1,0 +1,172 @@
+% One-page project summary, BMEN 600 Group 11. Sent as an attachment; the request itself is in the email (email.md).
+% Numbers: run 20261113_124400 of the group repository (main, commit 2585c0b), printed by export_numbers.py.
+% Method details: config.json of that run and src/models.py, src/training.py, src/ann_to_snn.py at that commit.
+% No reference list on the page. The sources of the Motivation claims are in ../references/references_fixed.md
+% ([8] and [9] conversion, [11] speech and gesture, [12] and [13] motor cortex spike trains, [15] the study on our dataset).
+% Build:  latexmk -pdf summary.tex     (must stay on one page: pdfinfo summary.pdf)
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[letterpaper,top=0.45in,bottom=0.45in,left=0.7in,right=0.7in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}            % Times text and maths, as in most journals
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[font=footnotesize,labelfont=bf,labelsep=period,justification=justified,singlelinecheck=false,skip=3pt]{caption}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage[hidelinks]{hyperref}
+\pgfplotsset{compat=1.18}
+
+% colour-blind-safe categorical slots 1 to 3 (figure markers only)
+\definecolor{snncol}{HTML}{2A78D6}
+\definecolor{rsnncol}{HTML}{EB6834}
+\definecolor{anncol}{HTML}{1BAF7A}
+\definecolor{rangecol}{HTML}{C4CAD3}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\pagestyle{empty}
+\newcommand{\head}[1]{\textbf{#1.}}
+\newcommand{\sect}[1]{\par\vspace{3pt}{\large\bfseries #1}\par\vspace{-1pt}}
+
+\begin{document}
+
+\fontsize{9.7}{11.6}\selectfont
+{\Large\bfseries Recurrent versus converted spiking neural networks for motor imagery EEG decoding}\\[2pt]
+{\bfseries A parameter-matched, cross-session comparison on 4 classes}
+\hfill {\small Project summary, 18 November 2026. Preliminary results.}\\[1pt]
+Lex Berezowski, Amirsaeed Ghodsinejad and Pahansith Kiriwaththuduwage \hfill BMEN 600, Group 11, University of Calgary
+\par\vspace{1pt}\hrule
+
+\sect{Motivation}
+Spiking neural networks (SNNs) communicate with binary spikes and can be energy efficient on neuromorphic hardware,
+so they are candidates for decoding in wearable brain--computer interfaces (BCIs). For motor imagery from the electroencephalogram (EEG), most SNNs are feedforward.
+Many are made by ANN-to-SNN conversion of a trained convolutional network, and the accuracy is usually about the same.
+Recurrent SNNs (RSNNs) trained with surrogate gradients achieve good results on time-domain tasks such as speech and
+gesture recognition, and on spike trains from the primary motor cortex of monkeys. On those spike trains, RSNNs were
+more accurate than feedforward SNNs. For EEG, we have very limited evidence. On our dataset, one study compared a
+recurrent model with a convolutional SNN. But it used k-fold cross-validation within each subject, so the training
+trials and the test trials came from the same recordings. It also did not test if the difference between the models
+was statistically significant. A real BCI is trained on one day and used on another day. To our knowledge, no study
+has tested if an RSNN is better than a feedforward SNN in that case.
+
+\head{Research question} With an equal number of parameters, and with training and test on sessions recorded on
+different days (cross-session evaluation), does a directly trained RSNN decode 4-class motor imagery more accurately
+than a feedforward SNN converted from EEGNet?
+
+\sect{Methods}
+\head{Data} BCI Competition IV dataset 2a: 9 subjects, 22 EEG channels, 4 motor imagery tasks (left hand, right hand,
+both feet, tongue), 2 sessions of 288 trials per subject, recorded on different days. Signals were band-pass filtered
+(4--40\,Hz) and resampled to 128\,Hz. Each trial is the 2\,s window from 0.5\,s after cue onset
+(22\,$\times$\,256 samples). Trials marked as artifacts were kept.
+
+\head{Evaluation protocol} For each target subject, a model was pretrained on session~1 of 5 of the 8 other subjects
+(the 3 others gave the validation set, up to 500 epochs), then fine-tuned on session~1 of the target subject
+(80\,\% training, 20\,\% validation, 100 epochs), then tested once on session~2 of the target subject (288 trials). This
+was repeated for 10 random choices of the pretraining subjects: 90 folds per model, the same folds for all models.
+Training used Adam, cross-entropy loss, batch size 16, learning rate 0.001 and gradient clipping. The weights
+with the lowest validation loss were kept. Session~2 was never used for training or model selection.
+
+\head{Models} \textbf{(a)~EEGNet-4,2}: a compact convolutional network with depthwise and separable
+convolutions, 796 parameters. \textbf{(b)~Converted SNN}: ANN-to-SNN conversion of the fine-tuned EEGNet of the same
+fold. Batch normalization was integrated into the weights, the weights were normalized with the 99.9th percentile of
+the activations, and the units were replaced by integrate-and-fire neurons, simulated for 256 time steps; 776
+parameters, no further training. \textbf{(c)~RSNN}: a fully connected input layer, one fully connected recurrent layer
+of 17 leaky integrate-and-fire (LIF) neurons, and a linear readout of the firing rates; 752 parameters, matched
+to (b); trained directly by backpropagation through time with a surrogate gradient. \textbf{(d)~RNN control}: the same
+layers as (c) with non-spiking units, 752 parameters. \textbf{(e)~Neuron-matched RSNN}: as (c) with 2,560 LIF
+neurons, the same number of neurons as EEGNet (6.6 million parameters).
+
+\head{Statistics} The subject is the unit of analysis: the 10 repeats of a subject were averaged, which gives 9 paired
+values per model. Models were compared with the exact two-sided Wilcoxon signed-rank test, with Holm correction over the
+three planned comparisons. An accuracy is significantly above chance if it is above 0.292, the threshold from the
+binomial distribution (288 trials, 4 classes, $\alpha = 0.05$).
+
+\sect{Results}
+\begin{minipage}[t]{0.53\linewidth}\vspace{0pt}
+\captionof{table}{Performance on the test session (mean $\pm$ standard deviation over 9 subjects).
+$\kappa$: Cohen's kappa. Last column: subjects above the chance threshold.}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrccc@{}}
+\toprule
+Model & Parameters & Accuracy & $\kappa$ & Above chance \\
+\midrule
+(a) EEGNet                & 796       & 0.600 $\pm$ 0.150 & 0.466 & 9 of 9 \\
+(b) Converted SNN         & 776       & 0.565 $\pm$ 0.154 & 0.420 & 9 of 9 \\
+(c) RSNN                  & 752       & 0.385 $\pm$ 0.100 & 0.180 & 6 of 9 \\
+(d) RNN control           & 752       & 0.411 $\pm$ 0.106 & 0.215 & 7 of 9 \\
+(e) Neuron-matched RSNN   & 6,622,724 & 0.341 $\pm$ 0.085 & 0.122 & 5 of 9 \\
+\bottomrule
+\end{tabular}
+
+\vspace{5pt}\fontsize{9.7}{11.6}\selectfont
+The converted SNN kept most of the accuracy of EEGNet (difference 0.034, $p = 0.098$). The RSNN was less accurate than
+the converted SNN for all 9 subjects (difference 0.180, Holm-corrected $p = 0.012$, the smallest value possible with
+9 subjects). The non-spiking RNN control was only slightly above the RSNN (difference 0.026, uncorrected $p = 0.074$).
+More neurons did not help: the neuron-matched RSNN was below the 17-neuron RSNN for all 9 subjects.
+\end{minipage}\hfill
+\begin{minipage}[t]{0.44\linewidth}\vspace{0pt}
+\pgfplotstableread[col sep=comma]{
+row,snn,rsnn,ann,wide,mid,half
+1,0.618,0.453,0.712,0.368,0.5403,0.1719
+2,0.400,0.281,0.409,0.263,0.3363,0.0731
+3,0.734,0.477,0.781,0.419,0.6000,0.1812
+4,0.463,0.374,0.524,0.333,0.4281,0.0955
+5,0.366,0.275,0.413,0.262,0.3373,0.0755
+6,0.416,0.284,0.458,0.251,0.3547,0.1033
+7,0.679,0.314,0.628,0.273,0.4758,0.2029
+8,0.656,0.515,0.737,0.423,0.5797,0.1571
+9,0.756,0.493,0.736,0.480,0.6182,0.1380
+10,0.565,0.385,0.600,0.341,0.4706,0.1293
+}\persubject
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth, height=5.0cm,
+  font=\scriptsize,
+  xmin=0.2, xmax=0.8, ymin=0.4, ymax=10.6, y dir=reverse,
+  ytick={1,...,10},
+  yticklabels={Subject 1,Subject 2,Subject 3,Subject 4,Subject 5,Subject 6,Subject 7,Subject 8,Subject 9,\textbf{Mean}},
+  xtick={0.2,0.3,...,0.8},
+  xticklabel style={/pgf/number format/fixed,/pgf/number format/precision=1},
+  xlabel={Test accuracy (session 2)}, xlabel style={yshift=2pt},
+  xmajorgrids, major grid style={color=black!10},
+  axis line style={color=black!50}, tick style={color=black!50},
+  legend style={at={(1,1.02)}, anchor=south east, draw=none, legend columns=2, font=\scriptsize, inner sep=0pt,
+                /tikz/every even column/.append style={column sep=6pt}},
+  legend cell align=left,
+]
+  \draw[dashed, color=black!60, line width=0.6pt] (axis cs:0.2917,0.4) -- (axis cs:0.2917,10.6);
+  \draw[color=black!40] (axis cs:0.2,9.5) -- (axis cs:0.8,9.5);
+  \addplot[forget plot, draw=none, mark=none,
+           error bars/.cd, x dir=both, x explicit, error mark=none,
+           error bar style={line width=1.6pt, color=rangecol}]
+    table[x=mid, y=row, x error=half] {\persubject};
+  \addplot[only marks, mark=*, mark size=2.1pt, mark options={fill=anncol, draw=white, line width=0.6pt}]
+    table[x=ann, y=row] {\persubject};
+  \addlegendentry{(a) EEGNet}
+  \addplot[only marks, mark=*, mark size=2.1pt, mark options={fill=snncol, draw=white, line width=0.6pt}]
+    table[x=snn, y=row] {\persubject};
+  \addlegendentry{(b) Converted SNN}
+  \addplot[only marks, mark=*, mark size=2.1pt, mark options={fill=rsnncol, draw=white, line width=0.6pt}]
+    table[x=rsnn, y=row] {\persubject};
+  \addlegendentry{(c) RSNN}
+  \addplot[only marks, mark=o, mark size=1.9pt, mark options={draw=rsnncol, line width=0.9pt}]
+    table[x=wide, y=row] {\persubject};
+  \addlegendentry{(e) Neuron-matched RSNN}
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{Test accuracy of each subject (mean of 10 repeats). Dashed line: chance threshold 0.292.}
+\end{minipage}
+
+\sect{Interpretation and limits}
+ANN-to-SNN conversion of a compact convolutional network gave a much better spiking decoder than direct training of
+a one-layer RSNN, and neither more neurons nor non-spiking units closed the gap. This suggests that the limit is the single recurrent layer applied directly to the EEG samples, and not spiking.
+The models also differ in architecture and in
+training method, so the difference cannot be attributed to recurrence alone. The RSNN settings came from our research
+plan and were not tuned. There are 9 subjects from one offline dataset. Results are preliminary until our pipeline checks are complete.
+
+\end{document}
