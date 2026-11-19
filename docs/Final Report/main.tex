@@ -1,0 +1,387 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{booktabs}
+\usepackage{url}
+
+\title{BCI Reccurence}
+\author{Author}
+\date{November 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Dataset and Methods}
+\label{sec:methods}
+
+\subsection{Dataset}
+
+We used BCI Competition IV Dataset 2a \cite{brunner2008,tangermann2012}, accessed through MOABB \cite{jayaram2018}
+on October 8, 2026. Nine subjects (S1--S9) each completed two sessions on different days. In each trial an arrow cue
+at $t = 2$~s asked the subject to imagine moving the left hand, right hand, both feet or tongue until $t = 6$~s,
+without feedback. Each session has 288 trials (72 per class), giving 5{,}184 trials in total. EEG was recorded from
+22 electrodes at 250~Hz; the three EOG channels were not used, as the dataset description requires
+\cite{tangermann2012}. The input to every model is the EEG of one trial and the outcome is its class label, with a
+nominal chance accuracy of 25\%.
+
+Trials from one subject share electrode placement, physiology and recording conditions, so the subject, not the
+trial, is the independent case, and all results are summarized per subject (Section~\ref{sec:eval}). No subject or
+trial was excluded. Trials marked by the dataset's expert as containing artifacts were kept, leaving 72 trials per
+class in every session. Fig.~\ref{fig:topo} shows the class-specific band-power changes in the preprocessed data.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth, trim=0 133.4bp 0 0, clip]{figures/class_topomaps.png}
+  \caption{Class-specific band power of the preprocessed data (all subjects, both sessions): mean $\log_{10}$ mu
+  (8--13~Hz, top) and beta (13--30~Hz, bottom) power of each class minus the mean over all classes, averaged over
+  subjects. Blue: lower power than average.}
+  \label{fig:topo}
+\end{figure}
+
+The data are free for research use, provided the competition review is cited \cite{tangermann2012}; the providers
+also ask that the recording group be credited \cite{brunner2008,naeem2006}. Subjects are identified only by code. We
+did not attempt to link them to other sources, report results only by code or in aggregate, and do not redistribute
+the recordings. The documentation reports no age, sex, handedness or health status. Nine subjects from one
+laboratory, recorded offline with a cue-based paradigm, are a small and narrow sample that does not include people
+with the motor impairments a BCI is meant to serve.
+
+\subsection{Preprocessing and protocol}
+
+Following EEGNet \cite{lawhern2018}, each run was band-pass filtered at 4--40~Hz, resampled to 128~Hz and cut into
+epochs from 0.5 to 2.5~s after the cue, giving a $22 \times 256$ (channels $\times$ samples) input per trial. No
+artifact removal or baseline correction was applied.
+
+For each target subject, session~1 of five randomly chosen other subjects was used for pretraining (1{,}440 trials)
+and session~1 of the remaining three for pretraining validation (864 trials). The model was then fine-tuned on the
+target's session~1 (230 training and 58 validation trials, stratified by class) and tested on its 288 session-2
+trials, which were never used for training, model selection, input normalization or SNN calibration. This mimics a
+new user who records one calibration session and uses the BCI on a later day. The random split was repeated ten
+times per subject, giving 90 folds shared by all models.
+
+\subsection{Models}
+
+Fig.~\ref{fig:arch} shows the architectures and Table~\ref{tab:models} summarizes the five models.
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/model_architectures.png}
+  \caption{Architectures of the implemented models. (a) EEGNet (ANN) and the SNN converted from it, which share
+  layers and weights and differ only in their neurons. (b) The recurrent networks, which receive one EEG sample per
+  step and feed every hidden neuron's state back to all hidden neurons through $W_{rec}$. The RNN uses ELU units and
+  the RSNN leaky integrate-and-fire (LIF) spiking neurons. Shapes exclude the batch dimension.}
+  \label{fig:arch}
+\end{figure*}
+
+\begin{table}[!t]
+  \centering
+  \caption{Compared models}
+  \label{tab:models}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lcccr}
+    \toprule
+    Model & Neurons & Recurrent & Hidden units & Parameters \\
+    \midrule
+    ANN (EEGNet) & ELU & No & 2560 & 796 \\
+    SNN (converted) & IF, spiking & No & 2560 & 776 \\
+    RNN-p & ELU & Yes & 17 & 752 \\
+    RSNN-p & LIF, spiking & Yes & 17 & 752 \\
+    RSNN-n & LIF, spiking & Yes & 2560 & 6{,}622{,}724 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{ANN.} The baseline is EEGNet-4,2 \cite{lawhern2018}. A temporal convolution learns frequency filters, a
+depthwise convolution learns spatial filters across the 22 channels, a separable convolution summarizes the
+resulting feature maps over time, and a dense layer gives four class scores.
+
+\textbf{SNN.} The feedforward SNN is each fold's fine-tuned ANN converted to a spiking network without retraining
+\cite{rueckauer2017}. It keeps the ANN's layers and weights, replaces each ELU with integrate-and-fire neurons, and
+rescales the weights using the ANN's activations on the target's fine-tuning trials. The whole trial is applied as a
+constant input over 256 simulation steps, and the class whose output neurons fire most is the prediction.
+
+\textbf{RNN.} The recurrent network has one layer of $H$ ELU units in which every unit is connected to every other
+unit and to itself. Its input is standardized per channel with statistics from the pretraining subjects only. It
+receives one EEG sample (22 values) per step, so 256 steps cover the trial. At each step every unit combines the
+current sample with the previous activity of all units through trained recurrent weights. The activity averaged over
+the 256 steps feeds a linear readout.
+
+\textbf{RSNN.} The RSNN is identical to the RNN except that the ELU units are replaced by leaky integrate-and-fire
+spiking neurons, with the same threshold as the SNN. Its trained recurrent loops are what distinguish it from the
+feedforward SNN, whose only memory is each neuron's membrane potential. It was trained with surrogate gradients
+\cite{neftci2019}.
+
+\textbf{Network size.} RNN-p and RSNN-p use $H = 17$, giving 752 parameters, the closest match to the SNN's 776.
+RSNN-p versus the SNN therefore tests the research question at equal size, and RNN-p versus RSNN-p isolates the
+effect of spiking neurons. The SNN and RSNN-p also differ in input encoding and in the RSNN's lack of dedicated
+spatial and temporal filters, so this comparison tests the recurrent design as a whole, not recurrence alone. RSNN-n
+uses $H = 2560$, the number of hidden neurons in EEGNet, to test whether RSNN-p was simply too small.
+
+\subsection{Training}
+
+The ANN and the recurrent models were trained with EEGNet's settings \cite{lawhern2018}: Adam (learning rate
+$10^{-3}$), cross-entropy loss and batches of 16. Pretraining ran for 500 epochs (dropout 0.25) and fine-tuning for
+100 epochs (dropout 0.5). In each phase the weights with the lowest validation loss were kept. Gradients were clipped
+to a norm of 1.0 because earlier runs were numerically unstable. Using one set of settings keeps the comparison
+controlled and never uses test data for model selection; tuning each model separately was out of scope. The SNN was
+not trained. The code was written in Python with PyTorch, run on the University of Calgary's ARC cluster, and is
+available at \url{https://github.com/thesixtium/bmen-600-group-11}.
+
+\subsection{Evaluation}
+\label{sec:eval}
+
+Accuracy on session~2 is the primary measure, because low accuracy is the main barrier to practical motor imagery
+BCIs; with balanced classes it equals balanced accuracy. Cohen's $\kappa$ corrects for chance, and macro-averaged F1
+falls if a model ignores a class. Confusion matrices pooled over subjects and repeats give per-class recall.
+
+The ten repeats of each subject were averaged, giving nine paired values per model and metric, summarized as mean
+$\pm$ SD across subjects. A result was called above chance only if it exceeded the binomial threshold for 288 trials
+(29.2\%, $\alpha = 0.05$) \cite{combrisson2015} and a 10{,}000-shuffle label permutation test ($p < 0.05$).
+
+The primary comparisons were RSNN-p vs.\ SNN (the research question), RSNN-p vs.\ ANN, ANN vs.\ SNN (cost of
+conversion), RNN-p vs.\ RSNN-p (effect of spiking) and RNN-p vs.\ ANN. A secondary family compared RSNN-n with
+RSNN-p, the SNN and the ANN. Each paired difference was tested with an exact two-sided Wilcoxon signed-rank test,
+with Holm correction within each family and metric, and reported as the median difference with a bootstrap 95\%
+confidence interval over subjects. With nine subjects the smallest possible $p$ is about 0.004, so only effects
+consistent across nearly all subjects can reach significance, which guards against small random differences
+\cite{tangermann2012}.
+
+Three secondary analyses support the interpretation. Each trained model's pretrained checkpoint was tested on
+session~2 without target data (zero-shot) to measure the gain from fine-tuning (Wilcoxon, Holm across the four
+trained models). Training and validation loss curves were summarized by their median over subjects, with a loss
+spike defined as an epoch with loss above $10 \ln 4$. Finally, agreement of subject rankings across models was
+measured with Kendall's $W$ and a split of accuracy variance into subject, model and residual parts, and each subject's mean accuracy was correlated (Spearman, uncorrected) with signal
+measures from the preprocessed EEG: class separability of mu and beta band power at C3, Cz and C4, between-session
+band-power and covariance shift, trial-amplitude variability and the rate of trials exceeding $\pm 100~\mu$V.
+
+\section{Results}
+
+\subsection{Recurrent versus non-recurrent decoding}
+
+The non-recurrent models outperformed the recurrent models in every subject (Fig.~\ref{fig:acc}). Mean session-2
+accuracy was $0.600 \pm 0.150$ for the ANN, $0.565 \pm 0.154$ for the SNN,
+$0.411 \pm 0.106$ for RNN-p, $0.385 \pm 0.100$ for RSNN-p and $0.341 \pm 0.085$ for RSNN-n. Cohen's $\kappa$ (0.466,
+0.421, 0.215, 0.180, 0.122) and macro F1 (0.586, 0.542, 0.378, 0.340, 0.294) gave the same order. The ANN and SNN
+exceeded chance in all nine subjects, RNN-p in seven, RSNN-p in six and RSNN-n in five.
+
+RSNN-p was less accurate than the SNN in all nine subjects (median paired difference
+$-0.142$, 95\% CI $[-0.264, -0.092]$, $p_\mathrm{Holm} = 0.020$) and less accurate than the ANN ($-0.222$,
+$[-0.304, -0.138]$, $p_\mathrm{Holm} = 0.020$). Replacing the LIF neurons with ELU units changed accuracy little:
+RNN-p exceeded RSNN-p by $0.031$ ($[-0.007, 0.063]$; 7/9 subjects; $p_\mathrm{Holm} = 0.148$), while RNN-p remained
+$0.196$ below the ANN ($[-0.254, -0.130]$; 9/9 subjects; $p_\mathrm{Holm} = 0.020$). Conversion cost the SNN $0.047$
+relative to the ANN ($[-0.020, 0.081]$; 7/9 subjects; $p_\mathrm{Holm} = 0.148$). Kappa and macro F1 led to the same
+conclusion for every comparison. On test trials that the ANN misclassified, RSNN-p and RNN-p were correct 26\% of the
+time.
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.75\textwidth, trim=0 99.8bp 0 0, clip]{figures/accuracy_slopes.png}
+  \caption{Session-2 accuracy per subject (gray lines; mean over 10 repeats). Filled markers exceeded chance, hollow
+  markers did not. Diamonds: mean $\pm$ SD over subjects. Dotted line: binomial threshold; dashed line: nominal
+  chance.}
+  \label{fig:acc}
+\end{figure*}
+
+\subsection{Network size}
+
+Widening the recurrent spiking layer from 17 to 2560 neurons lowered accuracy in all nine subjects (RSNN-n $-$
+RSNN-p: median $-0.041$, $[-0.084, -0.013]$, $p_\mathrm{Holm} = 0.012$). RSNN-n remained $0.234$ below the SNN
+($[-0.315, -0.130]$, $p_\mathrm{Holm} = 0.012$). Its selected checkpoints came from the first epochs of each phase:
+median epoch 6 of 500 in pretraining (89\% of folds by epoch 10) and epoch 4 of 100 in fine-tuning.
+
+\subsection{Training behaviour}
+
+The three recurrent configurations trained differently (Fig.~\ref{fig:train}). RSNN-p's median pretraining validation loss
+stayed between 1.38 and 1.52 throughout ($\ln 4 = 1.386$; median selected epoch 45), and its median training loss was
+still 1.29 at the end of fine-tuning. RNN-p reached its pretraining validation minimum early (median epoch 12), after which validation loss rose
+while training loss fell; 17\% of its pretraining folds and 12\% of its fine-tuning folds contained a loss spike.
+RSNN-n's median training loss was lowest at epoch 44 of pretraining and epoch 23 of fine-tuning and then rose, to a
+maximum of 2.42 and 2.10. The ANN's median pretraining validation loss was lowest at epoch 13 (median selected epoch
+17.5), and its fine-tuning validation loss reached its minimum at epoch 99 of 100; 19\% of folds selected the final
+epoch. Mean time per fold was 113~s for the ANN, 2{,}556~s for RNN-p, 6{,}712~s for RSNN-p and 20{,}442~s for
+RSNN-n.
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth, trim=0 94.6bp 0 24.0bp, clip]{figures/training_curves_overlay.png}
+  \caption{Median training and validation loss over subjects. Triangles: median selected (lowest-validation-loss)
+  epoch. Dashed line: $\ln 4$, the loss of a uniform guess.}
+  \label{fig:train}
+\end{figure*}
+
+\subsection{Fine-tuning}
+
+Fine-tuning improved every trained model in all nine subjects ($p_\mathrm{Holm} = 0.016$ for each model;
+Fig.~\ref{fig:ft}). Mean zero-shot accuracy was 0.374 for the ANN and 0.279--0.310 for the recurrent
+models, and RSNN-p was within 0.06 of chance in seven of nine subjects. Mean gains were 0.225 for the ANN, 0.101 for
+RSNN-p and RNN-p and 0.062 for RSNN-n, so the RSNN-p deficit to the ANN grew from 0.090 before fine-tuning to 0.215
+after it.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.9\columnwidth, trim=0 71.5bp 806.3bp 25.9bp, clip]{figures/finetune_pre_post_aggregate.png}
+  \caption{Session-2 accuracy of the pretrained model without target data (zero-shot) and after fine-tuning, mean
+  $\pm$ SD over subjects; gray lines join each subject's values. Dashed line: nominal chance.}
+  \label{fig:ft}
+\end{figure}
+
+\subsection{Subject differences}
+
+All models ranked the subjects in nearly the same order (Kendall's $W = 0.90$). Subject identity explained 49\% of
+the variance of the subject-by-model accuracy table, model identity 44\% and their interaction 7\%. S9, S3, S8 and S1
+had the highest mean accuracy over models (0.53--0.60) and S5, S2 and S6 the lowest (0.32--0.35). Mean accuracy
+increased with session-1 class separability ($\rho = 0.87$, $p = 0.002$; session 2: $\rho = 0.90$, $p = 0.001$) and
+decreased with between-session covariance distance ($\rho = -0.87$, $p = 0.002$) and
+band-power shift ($\rho = -0.78$, $p = 0.013$). Trial-amplitude variability ($\rho = 0.17$, $p = 0.67$) and artifact
+rate ($\rho = 0.41$, $p = 0.27$) showed no clear relation. S5 had the lowest separability, S2 the largest between-session change, and
+S9 the highest separability with the smallest shift.
+
+The recurrent deficit varied in size but never in direction. RSNN-p kept 43--54\% of the ANN's margin above chance in
+S1, S3, S4, S8 and S9, but only 15--20\% in S2, S5, S6 and S7. In S7 the SNN exceeded the ANN in all ten repeats
+(0.679 vs.\ 0.628), while RSNN-p reached 0.314.
+
+
+\subsection{Class-specific performance}
+
+Feet was the least accurately classified class for every model (Table~\ref{tab:class}) and was most often confused
+with tongue: 28\% of feet trials for the ANN and 40\% for RSNN-p. Pooled ANN recall was higher for left than right hand
+(0.671 vs.\ 0.621), but right-hand recall was higher in S1, S3, S7 and S8. The SNN predicted left hand for 35.8\% of
+trials. Tongue had the highest recall of the four classes for every recurrent model; RSNN-p predicted tongue for
+35.2\% of trials, with a tongue precision of 0.408. On hand trials that were predicted as a hand class, RSNN-p chose the
+correct hand 60\% of the time and the ANN 78\%.
+
+\begin{table}[!t]
+  \centering
+  \caption{Per-class recall, pooled over subjects and repeats}
+  \label{tab:class}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lcccccc}
+    \toprule
+    Model & Left & Right & Feet & Tongue & F$\to$T & T pred. \\
+    \midrule
+    ANN    & 0.671 & 0.621 & 0.467 & 0.640 & 0.275 & 27.3\% \\
+    SNN    & 0.729 & 0.637 & 0.398 & 0.498 & 0.167 & 19.3\% \\
+    RSNN-p & 0.458 & 0.343 & 0.166 & 0.574 & 0.404 & 35.2\% \\
+    RNN-p  & 0.475 & 0.387 & 0.253 & 0.529 & 0.366 & 29.6\% \\
+    RSNN-n & 0.378 & 0.296 & 0.225 & 0.467 & 0.351 & 31.1\% \\
+    \bottomrule
+  \end{tabular}
+  \\[2pt]
+  \footnotesize F$\to$T: share of feet trials predicted as tongue. T pred.: share of all predictions that were tongue
+  (25\% of trials are tongue).
+\end{table}
+
+\section{Discussion}
+
+\subsection{Answer to the research question}
+
+Under subject-level, cross-session evaluation, the parameter-matched RSNN did not outperform the converted feedforward
+SNN. It was less accurate in every subject and by every metric, and exceeded chance in only six of nine subjects. The
+results therefore do not support the hypothesis that trained inter-neuron recurrence improves spiking decoding of motor
+imagery EEG. This negative result is limited to one recurrent design, tested at two sizes with hyperparameters taken
+from EEGNet. It does not show that recurrence cannot help.
+
+\subsection{Spiking is not the main source of the deficit}
+
+The non-spiking RNN control locates most of the deficit. Replacing LIF neurons with ELU units at the same topology
+changed accuracy by about 0.03, while both recurrent models fell about 0.2 below the ANN. Conversion cost was also small,
+consistent with reports that a converted EEGNet performs comparably to its ANN \cite{chen2026} and that SNNs are
+generally somewhat less accurate than comparable CNNs \cite{zhang2025}. The deficit therefore lies mainly in the
+recurrent pathway as implemented, not in spiking.
+
+That pathway differs from EEGNet in more than recurrence. It projects the 22 channels onto 17 units with one linear
+layer, receives one EEG sample per step, and reads out time-averaged activity, with no dedicated spatial or temporal
+filters. No model was trained that differs from RSNN-p only by lacking recurrent connections. The study therefore cannot tell
+whether recurrence itself helped, hurt or made no difference within this design; it shows only that the design as a
+whole decoded less well than EEGNet. Two results suggest that the input pathway accounts for much of the gap:
+\begin{itemize}
+  \item The recurrent models lost most on the left/right hand distinction, which depends on a lateralized spatial
+  pattern (Fig.~\ref{fig:topo}).
+  \item On trials the ANN missed, the recurrent models were correct only 26\% of the time. They did not capture
+  information that the convolutional model lacked.
+\end{itemize}
+
+These findings complicate earlier evidence for recurrence in spiking EEG decoders. Removing spiking LSTM units lowered
+accuracy on PhysioNet, but trials from all subjects were pooled into random splits \cite{gong2023}. Lim and Kim compared
+a recurrent model with a convolutional SNN on this dataset using within-subject $k$-fold cross-validation without a
+held-out session \cite{lim2025}. With a held-out session and the subject as the unit of analysis, a standalone recurrent
+decoder showed no benefit here. Recurrent SNNs have outperformed feedforward SNNs on speech, gesture and cortical
+spike-train data \cite{yin2021,liu2025,liu2024}, whose inputs are already event streams. Continuous EEG, by contrast,
+had to be injected as a current one sample at a time, and the membrane decay used ($\beta = 0.9$) corresponds to a time
+constant of about 74~ms at 128~Hz. Whether a longer time constant or a learned encoding would change the result was not
+tested.
+
+\subsection{Network size and trainability}
+
+The size comparison does not show that capacity is irrelevant. RSNN-n's selected checkpoints came from the first few
+epochs, and its training loss later rose. Under the shared settings, the wider recurrent model was therefore not
+trained to convergence, so the comparison mixes capacity with optimization. What the results do show is that parameter
+count was not the limiting factor: EEGNet with 796 parameters outperformed RSNN-n with 6.6 million.
+
+Each recurrent configuration failed in a different way: RSNN-p underfit, RNN-p overfit early with loss spikes, and
+RSNN-n became unstable. This is the main alternative explanation for the recurrent deficit. The learning rate,
+schedule, batch size and dropout were chosen for a convolutional ANN. Keeping them fixed made the comparison controlled
+but probably disadvantaged the recurrent models. How much tuning would narrow the gap is unknown. RSNN-p's high final
+training loss shows that it was not at its capacity. The recurrent models also took 20 to 180 times longer per fold to
+train than the ANN. This reflects GPU training time in this implementation, not inference energy on neuromorphic
+hardware.
+
+\subsection{Transfer, fine-tuning and implications for users}
+
+Zero-shot accuracy was low for every model. The ANN's 0.374 is close to the cross-subject accuracy near 40\%
+that the EEGNet authors reported without target-subject data \cite{lawhern2018}. Most of each model's final accuracy came
+from 230 session-1 trials of the target subject. For people who would use a motor imagery BCI to control a mobility
+device, this means that under this paradigm a subject-specific calibration session remains necessary; data from other
+users was not enough.
+
+Whether pretraining improves the final accuracy at all remains open, because no model was fine-tuned from random
+initialization. The recurrent models gained less from fine-tuning than the ANN, so their deficit is partly a deficit in
+adapting to a new user. One implementation difference may contribute and is untested: the recurrent models normalized
+their inputs with statistics fixed from the pretraining subjects, whereas the ANN's batch-normalization statistics
+updated during fine-tuning and the SNN was calibrated on target-subject data.
+
+\subsection{Subject and class differences}
+
+Subject identity explained about as much variance as model choice (49\% vs.\ 44\%), and every model ranked the subjects
+almost identically. Subjects with weaker class separability and larger between-session change were harder for every
+model. These are correlations across nine subjects, consistent with weaker or less stable motor imagery patterns in some
+recordings rather than with a property of any one decoder. A mean over subjects therefore hides users who are poorly
+served by every decoder tested. This supports reporting at the subject level rather than over non-independent folds
+\cite{lawhern2018}. Because small differences can arise from random fluctuation \cite{tangermann2012}, only effects that
+were consistent across subjects are interpreted here.
+
+The recurrent deficit was proportionally largest in middle- and low-accuracy subjects (S2, S5, S6, S7). This suggests
+that the recurrent models captured mainly the strongest class information in each recording. S7 stands out: both
+convolutional models decoded it well, but the recurrent models did not. Why is unresolved.
+
+Feet was the hardest class for every model. In the class topographies it produced the smallest band-power deviation
+from the all-class mean, and because feet and tongue are both bilateral, the left/right contrast that separates the
+hand classes cannot separate them. The recurrent models' relatively high tongue recall partly reflects a bias toward
+predicting tongue. Tongue imagery also produced the broadest, least lateralized band-power change, which a model without
+spatial filters may detect more easily than lateralized hand patterns. The pooled left-hand advantage was not consistent
+across subjects. The SNN's left-hand bias arose during conversion, not in the data. The dataset reports no handedness, so
+handedness effects could not be examined.
+
+\subsection{Limitations}
+
+\begin{itemize}
+  \item \textbf{Shared hyperparameters.} The recurrent models used settings chosen for EEGNet.
+  \item \textbf{Missing controls.} No recurrence-free model with the RSNN's topology was trained, and network size was
+  tested at only two points, one of which did not train stably.
+  \item \textbf{Input normalization.} It differed between the recurrent and convolutional models.
+  \item \textbf{Sample.} Nine subjects from one laboratory, recorded with a cue-based offline paradigm, are a small and
+  narrow sample that does not represent users with complex mobility needs. Each subject's session 1 also contributes to
+  the pretraining of the other subjects' models, so the nine cases are only approximately independent.
+\end{itemize}
+
+\subsection{Next step}
+
+The most useful next step is to isolate recurrence within the existing models. Evaluating the saved RSNN-p checkpoints
+with the recurrent weights set to zero would show, without retraining, whether the trained recurrence contributes at all.
+Training a feedforward LIF control with the same input projection and readout would separate recurrence from the input
+pathway. Both should then be repeated with hyperparameters tuned for the recurrent models on pretraining-validation data
+only.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
