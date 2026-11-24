@@ -46,6 +46,7 @@ v1 --+-- v1.1  (batch 16) ------------ v1.1-rnn  (RNN control, batch 16)
 | `v1.2-rnn/` | Control run, 90 folds | RNN with the 4-window readout, 14 units, as the v1.2 RSNN (v1.2) | RNN | Session 2 | RNN 0.422 | 0.597 (v1) |
 | `v1.0-fflif/` | Control run, 90 folds | RSNN without recurrent weights, 28 neurons, 760 parameters (v1) | FF-LIF | Session 2 | FF-LIF 0.380 | 0.597 (v1) |
 | `v1.7-fflif/` | Control run, 90 folds | RSNN without recurrent weights, 15 neurons, 739 parameters (v1.7-full) | FF-LIF | Session 2 | FF-LIF 0.479 | 0.654 (v1.7-full) |
+| `v2.x/` | Screens, 9 folds | Tests of the feedback on the project summary: wider RSNN, EEGNet block 1 as a front end, frozen EEGNet stage, reservoir, training schedule (v1.4 code) | EEGNet, RSNN, RNN, reservoir | Session 1 | 0.527 (front end + 17 neurons, 20 % split) | 0.623 |
 
 Session-2 accuracies are means over 9 subjects (each the mean of 10 repeats). Converted SNN: v1 0.569, v1.6-full 0.578, v1.7-full 0.647. RNN control: v1 0.411, v1.6-full 0.423, v1.7-full 0.477. In the control rows the accuracy column gives the control model, not the RSNN. Screen accuracies are on session-1 data and are **not comparable** with the session-2 column of the full runs.
 
@@ -59,6 +60,7 @@ Session-2 accuracies are means over 9 subjects (each the mean of 10 repeats). Co
 | `v1.6-full/`, `v1.7-full/`, `v1.1-rnn/`, `v1.2-rnn/`, `v1.0-fflif/`, `v1.7-fflif/` | The same layout as `v1/`: `README.md`, `code/` (pipeline source as run, launch helpers), `results/<run id>/` (complete run folder). The control runs hold only the model they trained |
 | `v1.1/` … `v1.4/`, and every folder above: `CODE_CHANGES_vs_<base>.diff` | Every source line that differs from the version it was built from |
 | `v1.5/` … `v1.7/` | `README.md`, `code/` (screen scripts, the same in all three), `results/` (one JSON per job, logs, `summary.json`) |
+| `v2.x/` | `README.md`, `code/` (screen and audit scripts), `results/` (one JSON per job, loss histories, CSV summaries), `results_reservoir/`, `audit/`, `filters/`, `V2x_Meeting_Page.html` |
 | `summary/` | `compute_metrics.py` and its output `metrics_by_version.csv`: accuracy, Cohen's kappa, macro-F1, macro specificity, macro precision and subjects above chance for every model that a full or control run trained (the rows labelled `v1.6` and `v1.7` are the `-full` runs) |
 | `summary/build_tables.py`, `table31.csv`, `table32.csv`, `table33.csv` | Table 31: every version × model, session 2 and session 1. Table 32: all metrics per model and run (the same values as `metrics_by_version.csv`). Table 33: RSNN against FF-LIF for v1 and v1.7, with an exact Wilcoxon test |
 | `summary/score_saved.py`, `summary/session1_scores/` | Session-1 scores (target's 20 % fine-tuning validation split, 9 development folds) of the saved fine-tuned checkpoints of every full and control run; no training, session 2 never reaches a model |

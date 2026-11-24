@@ -1,0 +1,32 @@
+{
+ "test": "firing_and_gradients",
+ "arm": "frozen_rsnn64",
+ "target": 3,
+ "initial_loss_expected_ln4": 1.3862943611198906,
+ "at_init": {
+  "median_rate": 0.015380859375,
+  "frac_silent": 0.375,
+  "frac_saturated": 0.0,
+  "grad_norms": {
+   "recurrent_net.input_proj.weight": 0.021876221522688866,
+   "recurrent_net.input_proj.bias": 0.011299428530037403,
+   "recurrent_net.recurrent.weight": 0.020321287214756012,
+   "recurrent_net.readout.weight": 0.12037299573421478,
+   "recurrent_net.readout.bias": 0.019221356138586998
+  }
+ },
+ "initial_loss": 1.3733018636703491,
+ "after_finetuning": {
+  "median_rate": 0.3778076171875,
+  "frac_silent": 0.0,
+  "frac_saturated": 0.21875,
+  "grad_norms": {
+   "recurrent_net.input_proj.weight": 0.008882949128746986,
+   "recurrent_net.input_proj.bias": 0.010660912841558456,
+   "recurrent_net.recurrent.weight": 0.041885245591402054,
+   "recurrent_net.readout.weight": 0.07983653992414474,
+   "recurrent_net.readout.bias": 0.016398446634411812
+  }
+ },
+ "ft_ft_val": 0.9310344827586207
+}

@@ -1,0 +1,12 @@
+{
+ "test": "state_reset",
+ "target": 3,
+ "conv_rsnn64": {
+  "max_diff_alone_vs_in_batch": 7.450580596923828e-09,
+  "max_diff_before_vs_after_other_trials": 0.0
+ },
+ "frozen_rsnn64": {
+  "max_diff_alone_vs_in_batch": 7.450580596923828e-09,
+  "max_diff_before_vs_after_other_trials": 0.0
+ }
+}

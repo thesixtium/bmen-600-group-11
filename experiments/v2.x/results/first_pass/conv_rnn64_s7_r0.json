@@ -1,0 +1,31 @@
+{
+ "arm": "conv_rnn64",
+ "front_end": true,
+ "kind": "elu",
+ "hidden": 64,
+ "steps": 64,
+ "target": 7,
+ "repeat": 0,
+ "fold_seed": 2726,
+ "trainable_params": 5260,
+ "batch_size": 64,
+ "pretrain_epochs": 500,
+ "finetune_epochs": 100,
+ "pre_pre_train": 0.30486111111111114,
+ "pre_pre_val": 0.33449074074074076,
+ "pre_target_s1": 0.2604166666666667,
+ "pre_ft_val": 0.2413793103448276,
+ "pretrain_best_epoch": 9,
+ "ft_ft_train": 0.4434782608695652,
+ "ft_ft_val": 0.3448275862068966,
+ "finetune_best_epoch": 98,
+ "max_loss": 4.191668528097647,
+ "pretrain_seconds": 235.9534113057889,
+ "finetune_seconds": 7.108685813145712,
+ "seconds": 243.22241691104136,
+ "environment": {
+  "python": "3.12.14",
+  "torch": "2.4.0+cu121",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+ }
+}

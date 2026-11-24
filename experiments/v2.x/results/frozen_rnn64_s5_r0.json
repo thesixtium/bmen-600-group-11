@@ -1,0 +1,21 @@
+{
+ "arm": "frozen_rnn64",
+ "front_end": "frozen EEGNet block 1",
+ "kind": "elu",
+ "hidden": 64,
+ "steps": 64,
+ "target": 5,
+ "repeat": 0,
+ "fold_seed": 2526,
+ "trainable_params": 4932,
+ "pre_pre_train": 0.3076388888888889,
+ "pre_pre_val": 0.26157407407407407,
+ "pre_target_s1": 0.24305555555555555,
+ "pre_ft_val": 0.20689655172413793,
+ "pretrain_best_epoch": 1,
+ "ft_ft_train": 0.6391304347826087,
+ "ft_ft_val": 0.5689655172413793,
+ "finetune_best_epoch": 39,
+ "max_loss": 28.476509235523366,
+ "seconds": 213.64269114797935
+}

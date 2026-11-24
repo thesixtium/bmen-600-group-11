@@ -1,0 +1,50 @@
+question,arm,against,folds,mean_difference,better,worse,passes_rule
+beats the group's RSNN,wide256,base17,9,0.004,4,4,False
+beats the group's RSNN,wide1024,base17,9,-0.019,3,5,False
+beats the group's RSNN,conv_rsnn17,base17,9,0.107,8,0,True
+beats the group's RSNN,conv_rnn17,base17,9,0.071,6,2,False
+beats the group's RSNN,conv_rsnn64,base17,9,0.114,9,0,True
+beats the group's RSNN,conv_rsnn256,base17,9,0.13,8,1,True
+beats the group's RSNN,conv_rnn64,base17,9,0.03,6,2,False
+beats the group's RSNN,conv_fflif64,base17,9,0.14,9,0,True
+beats the group's RSNN,frozen_rsnn64,base17,9,0.211,9,0,True
+beats the group's RSNN,frozen_rnn64,base17,9,0.23,9,0,True
+beats the group's RSNN,sched_rsnn64,base17,9,0.079,6,1,False
+beats the group's RSNN,sched_eegnet,base17,9,0.151,9,0,True
+beats the group's RSNN,ft1000_rsnn64,base17,9,0.278,9,0,True
+beats the group's RSNN,ft1000_eegnet,base17,9,0.282,9,0,True
+beats the group's RSNN,res500_r0_raw,base17,9,0.063,7,2,True
+beats the group's RSNN,res500_r1_raw,base17,9,0.036,5,4,False
+beats the group's RSNN,res1000_r0_raw,base17,9,0.067,6,2,False
+beats the group's RSNN,res1000_r1_raw,base17,9,0.027,3,5,False
+beats the group's RSNN,res2000_r0_raw,base17,9,0.092,8,1,True
+beats the group's RSNN,res2000_r1_raw,base17,9,0.073,6,2,False
+beats the group's RSNN,res500_r0_bands,base17,9,0.096,9,0,True
+beats the group's RSNN,res500_r1_bands,base17,9,0.059,7,2,True
+beats the group's RSNN,res1000_r0_bands,base17,9,0.14,8,0,True
+beats the group's RSNN,res1000_r1_bands,base17,9,0.082,8,1,True
+beats the group's RSNN,res2000_r0_bands,base17,9,0.146,9,0,True
+beats the group's RSNN,res2000_r1_bands,base17,9,0.113,8,1,True
+recurrence helps with a front end,conv_rsnn64,conv_fflif64,9,-0.026,2,7,False
+non-spiking twin against spiking,conv_rnn64,conv_rsnn64,9,-0.084,3,6,False
+against EEGNet,conv_rsnn64,EEGNet (reference),9,-0.089,1,8,False
+against EEGNet,conv_rsnn256,EEGNet (reference),9,-0.073,0,8,False
+more neurons with a front end,conv_rsnn256,conv_rsnn64,9,0.016,4,5,False
+non-spiking twin against spiking,conv_rnn17,conv_rsnn17,9,-0.036,4,5,False
+more neurons with a front end,conv_rsnn64,conv_rsnn17,9,0.007,6,3,False
+learning-rate schedule helps the RSNN,sched_rsnn64,conv_rsnn64,9,-0.035,2,7,False
+learning-rate schedule helps EEGNet,sched_eegnet,EEGNet (reference),9,-0.052,3,6,False
+"RSNN against EEGNet, both with the schedule",sched_rsnn64,sched_eegnet,9,-0.073,0,7,False
+"1,000 fine-tuning epochs help the RSNN",ft1000_rsnn64,conv_rsnn64,9,0.164,9,0,True
+"1,000 fine-tuning epochs help EEGNet",ft1000_eegnet,EEGNet (reference),9,0.079,7,1,True
+"RSNN against EEGNet, both with 1,000 epochs",ft1000_rsnn64,ft1000_eegnet,9,-0.004,3,5,False
+frozen EEGNet stage against trained stage,frozen_rsnn64,conv_rsnn64,9,0.097,9,0,True
+against the EEGNet its stage comes from,frozen_rsnn64,EEGNet (saved checkpoint),9,0.011,6,2,False
+against the EEGNet its stage comes from,frozen_rnn64,EEGNet (saved checkpoint),9,0.031,7,2,True
+non-spiking twin against spiking,frozen_rnn64,frozen_rsnn64,9,0.019,5,4,False
+reservoir recurrence helps,res500_r1_raw,res500_r0_raw,9,-0.027,3,5,False
+reservoir recurrence helps,res1000_r1_raw,res1000_r0_raw,9,-0.04,2,6,False
+reservoir recurrence helps,res2000_r1_raw,res2000_r0_raw,9,-0.019,2,5,False
+reservoir recurrence helps,res500_r1_bands,res500_r0_bands,9,-0.036,3,5,False
+reservoir recurrence helps,res1000_r1_bands,res1000_r0_bands,9,-0.057,1,6,False
+reservoir recurrence helps,res2000_r1_bands,res2000_r0_bands,9,-0.033,2,6,False

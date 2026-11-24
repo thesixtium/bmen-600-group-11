@@ -1,0 +1,9 @@
+{
+ "test": "label_shuffle",
+ "arm": "frozen_rsnn64",
+ "target": 9,
+ "ft_val_true_labels": 0.3793103448275862,
+ "pre_val_true_labels": 0.3090277777777778,
+ "chance": 0.25,
+ "binomial_threshold_58": 0.3620689655172414
+}

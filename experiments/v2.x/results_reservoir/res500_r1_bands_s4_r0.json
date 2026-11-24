@@ -1,0 +1,20 @@
+{
+ "arm": "res500_r1_bands",
+ "neurons": 500,
+ "spectral_radius": 1.0,
+ "input": "bands",
+ "target": 4,
+ "repeat": 0,
+ "fold_seed": 2426,
+ "trainable_params": 2004,
+ "fixed_weights": 272000,
+ "input_gain": 1.2060205407051674,
+ "median_rate": 0.10505371540784836,
+ "frac_silent": 0.020000001415610313,
+ "pre_pre_train": 0.5222222222222223,
+ "pre_target_s1": 0.2708333333333333,
+ "pre_ft_val": 0.27586206896551724,
+ "ft_ft_train": 0.5695652173913044,
+ "ft_ft_val": 0.3620689655172414,
+ "seconds": 118.9474734859541
+}
