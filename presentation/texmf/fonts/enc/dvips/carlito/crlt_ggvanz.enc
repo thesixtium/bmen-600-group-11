@@ -1,0 +1,63 @@
+% THIS FILE WAS AUTOMATICALLY GENERATED -- DO NOT EDIT
+
+%%AutoEnc_ggvanzw5mq66f3xmnp5bkyvsvf
+% Encoding created by otftotfm on Wed Oct  5 08:45:08 2022
+% Command line follows encoding
+/AutoEnc_ggvanzw5mq66f3xmnp5bkyvsvf [
+%00
+  /.notdef /Euro /.notdef /.notdef /fraction /dotaccent /hungarumlaut /ogonek
+  /.notdef /.notdef /uni200C /.notdef /.notdef /.notdef /.notdef /.notdef
+%10
+  /dotlessi /uni0237 /grave /acute /caron /breve /macron /ring
+  /cedilla /germandbls /ae /oe /oslash /AE /OE /Oslash
+%20
+  /space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright
+  /uni207D /uni207E /asterisk /uni207A /comma /hyphen /period /slash
+%30
+  /uni2070 /uni00B9 /uni00B2 /uni00B3 /uni2074 /uni2075 /uni2076 /uni2077
+  /uni2078 /uni2079 /colon /semicolon /less /uni207C /greater /question
+%40
+  /at /A.superior /B.superior /C.superior /D.superior /E.superior /F.superior /G.superior
+  /H.superior /I.superior /J.superior /K.superior /L.superior /M.superior /N.superior /O.superior
+%50
+  /P.superior /Q.superior /R.superior /S.superior /T.superior /U.superior /V.superior /W.superior
+  /X.superior /Y.superior /Z.superior /bracketleft /backslash /bracketright /circumflex /underscore
+%60
+  /quoteleft /a.superior /b.superior /c.superior /d.superior /e.superior /f.superior /g.superior
+  /h.superior /i.superior /j.superior /k.superior /l.superior /m.superior /uni207F /o.superior
+%70
+  /p.superior /q.superior /r.superior /s.superior /t.superior /u.superior /v.superior /w.superior
+  /x.superior /y.superior /z.superior /braceleft /bar /braceright /tilde /dieresis
+%80
+  /Lslash /quotesingle /quotesinglbase /florin /quotedblbase /ellipsis /dagger /daggerdbl
+  /circumflex /perthousand /Scaron /guilsinglleft /OE /Zcaron /asciicircum /uni207B
+%90
+  /lslash /quoteleft /quoteright /quotedblleft /quotedblright /bullet /endash /emdash
+  /tilde /trademark /scaron /guilsinglright /oe /zcaron /asciitilde /Ydieresis
+%A0
+  /.notdef /exclamdown /cent /sterling /currency /yen /brokenbar /section
+  /dieresis /copyright /ordfeminine /guillemotleft /logicalnot /.notdef /registered /macron
+%B0
+  /degree /plusminus /uni00B2 /uni00B3 /acute /mu /paragraph /periodcentered
+  /cedilla /uni00B9 /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown
+%C0
+  /Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla
+  /Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis
+%D0
+  /Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply
+  /Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls
+%E0
+  /agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla
+  /egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis
+%F0
+  /eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide
+  /oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis
+] def
+% Command line: 'otftotfm --automatic --encoding=fontools_ly1
+% --tfm-directory=texmf/fonts/tfm/google/carlito
+% --vf-directory=texmf/fonts/vf/google/carlito
+% --truetype-directory=texmf/fonts/truetype/google/carlito
+% --encoding-directory=texmf/fonts/enc/dvips/carlito
+% --map-file=texmf/fonts/map/dvips/carlito/Crlt.map --no-updmap --force
+% --coding-scheme=TEX TYPEWRITER AND WINDOWS ANSI --feature=sups --ligkern=*
+% {KL} * Crlt-BoldItalic.ttf Crlt-BoldItalic-sup-ly1'

@@ -1,0 +1,63 @@
+% THIS FILE WAS AUTOMATICALLY GENERATED -- DO NOT EDIT
+
+%%AutoEnc_diffleqmiubuvgafbpv3ams4ic
+% Encoding created by otftotfm on Wed Oct  5 08:45:08 2022
+% Command line follows encoding
+/AutoEnc_diffleqmiubuvgafbpv3ams4ic [
+%00
+  /Gamma /uni0394 /Theta /Lambda /Xi /Pi /Sigma /Upsilon
+  /Phi /Psi /uni03A9 /.notdef /.notdef /.notdef /.notdef /.notdef
+%10
+  /dotlessi /uni0237 /grave /acute /caron /breve /macron /ring
+  /cedilla /germandbls /ae /oe /oslash /AE /OE /Oslash
+%20
+  /space /exclam /quotedblright /numbersign /dollar /percent /ampersand /quoteright
+  /uni207D /uni207E /asterisk /uni207A /comma /hyphen /period /slash
+%30
+  /uni2070 /uni00B9 /uni00B2 /uni00B3 /uni2074 /uni2075 /uni2076 /uni2077
+  /uni2078 /uni2079 /colon /semicolon /exclamdown /uni207C /questiondown /question
+%40
+  /at /A.superior /B.superior /C.superior /D.superior /E.superior /F.superior /G.superior
+  /H.superior /I.superior /J.superior /K.superior /L.superior /M.superior /N.superior /O.superior
+%50
+  /P.superior /Q.superior /R.superior /S.superior /T.superior /U.superior /V.superior /W.superior
+  /X.superior /Y.superior /Z.superior /bracketleft /quotedblleft /bracketright /circumflex /dotaccent
+%60
+  /quoteleft /a.superior /b.superior /c.superior /d.superior /e.superior /f.superior /g.superior
+  /h.superior /i.superior /j.superior /k.superior /l.superior /m.superior /uni207F /o.superior
+%70
+  /p.superior /q.superior /r.superior /s.superior /t.superior /u.superior /v.superior /w.superior
+  /x.superior /y.superior /z.superior /endash /emdash /hungarumlaut /tilde /dieresis
+%80
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+%90
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+%A0
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+%B0
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+%C0
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+%D0
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+%E0
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+%F0
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+  /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+] def
+% Command line: 'otftotfm --automatic --encoding=fontools_ot1
+% --tfm-directory=texmf/fonts/tfm/google/carlito
+% --vf-directory=texmf/fonts/vf/google/carlito
+% --truetype-directory=texmf/fonts/truetype/google/carlito
+% --encoding-directory=texmf/fonts/enc/dvips/carlito
+% --map-file=texmf/fonts/map/dvips/carlito/Crlt.map --no-updmap --force
+% --coding-scheme=TEX TEXT --feature=sups --ligkern=* {KL} *
+% Crlt-BoldItalic.ttf Crlt-BoldItalic-sup-ot1'

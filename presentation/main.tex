@@ -1,0 +1,331 @@
+% set documentclass to widescree 16:9 ratio
+\documentclass[aspectratio=169]{beamer}
+
+% Load UofC_dynamic style file
+\usepackage{UofC_dynamic}
+
+% Title and author data
+\title{Recurrent Spiking Neural Networks for EEG Decoding} %Title
+\subtitle{Towards reliable BCI} %Subtitle
+% Had to use \texorpdfstring{//} to ensure new line in presenter details
+\author[]{Lex Berezowski, Amirsaeed Ghodsinejad, Pahansith Kiriwaththuduwage\\  \texorpdfstring{\\} % presenter info
+        \texorpdfstring{\\}
+        Group 11}
+\date{} % date
+
+\begin{document}
+
+%------------------------------------------------------------------------------------------------
+\CustomTitlePage
+
+
+%------------------------------------------------------------------------------------------------
+\begin{frame}{Motor Imagery BCI Setup}
+    \begin{center}
+        \includegraphics[width=\linewidth,
+        height=4.6cm,keepaspectratio]{Images/setup.png}
+    \end{center}
+    \begin{itemize}
+        \item Goal: decode which movement is imagined from 2~s of EEG.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Previous Work: EEGNet}
+    \begin{center}
+        \includegraphics[width=0.9\linewidth,
+        height=4.4cm,keepaspectratio]{Images/EEGNet.png}
+    \end{center}
+    \begin{itemize}
+        \item Artificial neural network (ANN) for EEG decoding.
+        \item Dedicated layers to extract temporal and spatial EEG features.
+        \item Classifies four imagined movements: left hand, right hand, feet and tongue.
+    \end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Motivation}
+
+    \begin{columns}[c]
+
+        % Left column: Text
+        \begin{column}{0.52\textwidth}
+            \begin{itemize}
+                \item Independent control of assistive devices for people with mobility impairments.
+                \item Motor imagery as a control signal.
+                \item Low EEG decoding accuracy remains a major barrier.
+            \end{itemize}
+        \end{column}
+
+        % Right column: Image
+        \begin{column}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth,
+            height=6cm,keepaspectratio]{Images/BCI.png}
+        \end{column}
+
+    \end{columns}
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Spiking Neural Networks (SNNs)}
+    \begin{columns}[c]
+        \begin{column}{0.46\textwidth}
+            \begin{itemize}
+                \item Neurons communicate with spikes instead of numbers.
+                \item Neuron dynamics closer to those of biological neurons.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.52\textwidth}
+            \centering
+            \includegraphics[width=\linewidth,
+            height=6cm,keepaspectratio]{Images/SNN.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Research Question/Gap}
+    \small
+    \begin{itemize}
+        \item EEG originates from the collective activity of recurrently connected cortical neurons.
+        \item Feedforward SNNs lack recurrent connections between neurons, limiting their ability to mimic these biological dynamics.
+        \item RSNNs could exploit these dynamics to extract temporal features from EEG signals.
+    \end{itemize}
+    \begin{center}
+        \large
+        \centering
+        \textbf{Can One Recurrent Spiking Layer Replace Dedicated Spatial and Temporal Filters for Cross-Session Motor Imagery EEG Decoding?}
+    \end{center}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+% \begin{frame}{Research Question} 
+
+% \large
+% \centering
+% \textbf{Can One Recurrent Spiking Layer Replace Dedicated Spatial and Temporal Filters for Cross-Session Motor Imagery EEG Decoding?}
+
+% \end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{The Dataset}
+    
+    \begin{center}
+        \includegraphics[width=0.95\linewidth,
+        height=6.7cm,keepaspectratio]{Images/dataset_description.png}
+    \end{center}
+\end{frame}
+
+
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Analysis Workflow}
+    
+    \begin{center}
+        \includegraphics[width=0.95\linewidth,
+        height=6.7cm,keepaspectratio]{Images/analysis_workflow.png}
+    \end{center}
+\end{frame}
+
+
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Model Comparison}
+    \begin{columns}[c]
+        \begin{column}{0.63\textwidth}
+            \centering
+            \includegraphics[width=\linewidth,
+            height=6.7cm,keepaspectratio]{Images/model_comparison.png}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \centering
+            \small
+            \renewcommand{\arraystretch}{1.25}
+            \begin{tabular}{lrr}
+                \textbf{Model} & \textbf{Neurons} & \textbf{Parameters} \\
+                \hline
+                ANN    & 2,560 & 796 \\
+                SNN    & 2,560 & 776 \\
+                RNN-p  & 17    & 752 \\
+                RSNN-p & 17    & 752 \\
+                RSNN-n & 2,560 & 6,622,724 \\
+            \end{tabular}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Results}
+
+    \begin{columns}[T]
+
+        \begin{column}{0.69\textwidth}
+            \centering
+            \includegraphics[width=\linewidth,
+            height=6.7cm,keepaspectratio]
+            {Images/accuracy_per_model.png}
+        \end{column}
+
+        \begin{column}{0.43\textwidth}
+            \centering
+            \includegraphics[width=\linewidth,
+            height=6.7cm,keepaspectratio]
+            {Images/class_wise_accuracy_table.png}
+        \end{column}
+
+    \end{columns}
+
+\end{frame}
+
+
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Limitations}
+    \small
+    \begin{itemize}
+                    \item Hyperparameters selected for EEGNet rather than RSNNs.
+                    \item Individual contributions of intra- and inter-recurrence not isolated.
+                    \item Limited exploration of network sizes.
+                    \item Small sample size and offline evaluation.
+                    \item Energy efficiency not evaluated.
+                \end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Future Works}
+    \small
+    \begin{itemize}
+                    \item Optimize RSNN-specific hyperparameters.
+                    \item Investigate intra- and inter-recurrence separately.
+                    \item Introduce learnable transmission delays to improve temporal feature extraction.
+                    \item Validate using larger, clinically relevant datasets.
+                    \item Evaluate energy efficiency and real-time performance.
+                \end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Final Interpretation }
+
+\Large
+\centering
+A single recurrent spiking layer did not match EEGNet under the investigated conditions.The recurrent feature extraction design appears to be a greater limitation than spiking itself.
+
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\ThankYouFrame{
+    Thank you!
+}{
+    \small
+    GitHub Repository:  \url{https://github.com/thesixtium/bmen-600-group-11}
+}{
+    \small
+    Lex Berezowski, Amirsaeed Ghodsinejad, Pahansith Kiriwaththuduwage\\
+    Group 11
+}
+
+
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Training: Loss vs. Epoch}
+    \begin{center}
+        \includegraphics[width=\linewidth,
+        height=4.6cm,keepaspectratio]{Images/loss_vs_epoch.png}
+    \end{center}
+    \vspace{-0.2cm}
+    \begin{columns}[T]
+        \begin{column}{0.50\textwidth}
+            \scriptsize
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabular}{ll}
+                Loss & Cross-entropy (chance: $\ln 4 = 1.39$) \\
+                Optimizer & Adam, learning rate 0.001, batch 16 \\
+                Epochs & 500 pretraining + 100 fine-tuning \\
+                Kept model & Epoch with lowest validation loss \\
+                Gradient clipping & Norm 1.0 \\
+            \end{tabular}
+        \end{column}
+        \begin{column}{0.46\textwidth}
+            \scriptsize
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabular}{lrr}
+                \multicolumn{3}{l}{\textbf{Kept epoch} (median of 90 folds)} \\
+                Model & Pretraining & Fine-tuning \\
+                \hline
+                ANN    & 17.5 & 96.5 \\
+                RNN-p  & 12   & 60 \\
+                RSNN-p & 45   & 89 \\
+                RSNN-n & 6    & 4 \\
+            \end{tabular}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{The Dataset}
+    
+    \small
+        \begin{itemize}
+            \item No subject or trial was excluded. 
+            \item Trials marked by the dataset’s expert as containing artifacts were kept, leaving \textbf{72 trials per class in every session}. 
+            \item A class-specific band-power changes in the data demonstrated the quality and ability to use the dataset. 
+        \end{itemize}
+        \begin{center}
+            \includegraphics[width=0.95\linewidth,
+            height=4.5cm,keepaspectratio]{Images/class_topomaps.png}
+        \end{center}
+    
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Analysis Workflow}
+    
+    \begin{center}
+        \includegraphics[width=0.95\linewidth,
+        height=6.7cm,keepaspectratio]{Images/model_architectures.png}
+    \end{center}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Results}
+    
+    \begin{center}
+        \includegraphics[width=0.95\linewidth,
+        height=6.7cm,keepaspectratio]{Images/accuracy_per_subject.png}
+    \end{center}
+\end{frame}
+
+%------------------------------------------------------------------------------------------------
+
+\begin{frame}{Results}
+    
+    \begin{center}
+        \includegraphics[width=0.95\linewidth,
+        height=6.7cm,keepaspectratio]{Images/model_comparison_accuracy_table.png}
+    \end{center}
+\end{frame}
+
+\end{document}
