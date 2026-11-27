@@ -1,0 +1,7 @@
+Why rnn_wide failed
+
+The wide non-spiking RNN, with 2560 neurons using ELU, “explodes” during training. ELU has no upper limit, so once the recurrent connections get even slightly too strong, the activity grows bigger on every one of the 256 time steps until the numbers overflow to NaN. With 2560 neurons, ordinary-sized training updates are enough to push it over that edge. Gradient clipping can’t prevent this, because the blow-up happens while the network runs forward, not in the gradients.
+
+The other models survive for simple reasons. The small RNN (17 neurons) is too small for this to happen. The wide RSNN’s spikes can only be 0 or 1, so its activity can never grow without limit.
+
+Result to report: under the same training protocol as every other model (Adam, learning rate 1e‑3, gradient clipping at 1.0), the neuron‑matched RNN (rnn_wide) diverged in all 12 workers within the first pretraining epochs. In the logged fold (subject 1, repeat 0), the loss never dropped below chance (ln 4 ≈ 1.39). At epoch 34 the gradient norm jumped from about 42 to about 1.7×10¹³, and at epoch 35 the values became NaN. No rnn_wide results exist, so the comparisons involving it are left out. Bounded spiking dynamics kept the wide RSNN stable under the same settings.

@@ -1,0 +1,35 @@
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 30s (pipeline elapsed 51s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rnn_wide
+[shard] shard 8 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rnn_wide': 7} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h39m16s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 38h08m35s
+[time] >>> benchmark: rnn_wide
+[time] [rnn_wide] 7 folds to run over 7 subject(s); prior estimate 38h08m35s (5h26m56s/fold)
+[time] [rnn_wide] fold 1/7 start (subject 1, repeat 8)
+[time] <<< benchmark: rnn_wide: 2m37s (pipeline elapsed 3m29s)
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 3m29s
+[time]   stage download_data                       21s  (10.1%)
+[time]   stage preprocess_data                     30s  (14.5%)
+[time]   stage benchmark: rnn_wide               2m37s  (75.3%)
+Traceback (most recent call last):
+  File "/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/main.py", line 129, in <module>
+    _run_model(model, processed, folds, run_dir, device)
+  File "/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/main.py", line 96, in _run_model
+    run_rnn_benchmark(processed, folds, run_dir, device, timer, wide=model == "rnn_wide")
+  File "/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py", line 326, in run_rnn_benchmark
+    outcome = pretrain_then_finetune(model, data, RNN_TRAIN, fold.seed, device, tag=f"[{key} {_stem(fold)}]")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/training.py", line 166, in pretrain_then_finetune
+    pre_state, pre_hist = fit(
+                          ^^^^
+  File "/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/training.py", line 129, in fit
+    raise NonFiniteTrainingError(
+training.NonFiniteTrainingError: Non-finite value in [rnn_wide s1_r8] pretrain at epoch 5/500: train_loss=nan, val_loss=nan, max pre-clip grad norm=nan (grad_clip_norm=1.0, lr=0.001, dropout=0.25, batch_size=16, seed=2134, model=RecurrentELUNet, n_train=1440, n_val=864). Last finite epochs: [{'epoch': 2, 'train_loss': 4965.8017361111115, 'val_loss': 2.4214613172743054, 'grad_norm_max': 1322022272.0, 'clip_fraction': 1.0}, {'epoch': 3, 'train_loss': 20.4864990234375, 'val_loss': 105.10983615451389, 'grad_norm_max': 104217821184.0, 'clip_fraction': 1.0}, {'epoch': 4, 'train_loss': 21468337.777777776, 'val_loss': 276.26689091435185, 'grad_norm_max': 3023438872576.0, 'clip_fraction': 1.0}]. Note: weights are already corrupted; no checkpoint was written.

@@ -1,0 +1,41 @@
+{
+ "model": "rsnn_wide",
+ "run_id": "20261113_124400",
+ "subject": 9,
+ "repeat": 4,
+ "seed": 2930,
+ "n_test": 288,
+ "accuracy": 0.5173611111111112,
+ "kappa": 0.3564814814814815,
+ "macro_f1": 0.4639681245632582,
+ "confusion": [
+  [
+   50,
+   4,
+   12,
+   6
+  ],
+  [
+   7,
+   7,
+   8,
+   50
+  ],
+  [
+   5,
+   2,
+   20,
+   45
+  ],
+  [
+   0,
+   0,
+   0,
+   72
+  ]
+ ],
+ "n_params": 6622724,
+ "n_hidden": 2560,
+ "pretrain_best_epoch": 9,
+ "finetune_best_epoch": 3
+}

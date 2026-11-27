@@ -21,6 +21,12 @@ TEST_SESSION: str = "1test"  # session 2: held out, only used for final predicti
 INPUT_SCALE: float = 1e6
 
 
+# Numerical stability: ONE gradient-clipping threshold shared by every trained model (ANN, RSNN, RNN and their "_wide"
+# variants), in pretraining and fine-tuning alike. Global L2 norm of all gradients (torch.nn.utils.clip_grad_norm_),
+# applied after backward() and before the optimizer step. None disables clipping. The converted SNN is not trained.
+GRAD_CLIP_NORM: float | None = 1.0
+
+
 @dataclass(frozen=True)
 class FoldConfig:
     n_repeats: int = 10
@@ -58,6 +64,8 @@ class TrainConfig:
     learning_rate: float = 1e-3  # Adam default
     batch_size: int = 16  # EEGNet paper value; not specified in the research plan
     log_every_epochs: int = 50  # progress line (elapsed + ETA) every N epochs inside a training phase; 0 = off
+    grad_clip_norm: float | None = GRAD_CLIP_NORM  # see GRAD_CLIP_NORM above; inherited by ANN_TRAIN / RSNN_TRAIN / RNN_TRAIN
+    # Non-finite loss / gradient norm / validation loss raises NonFiniteTrainingError (see training.py); checked once per epoch.
 
 
 @dataclass(frozen=True)
@@ -74,13 +82,41 @@ class SNNConfig:
 
 @dataclass(frozen=True)
 class RSNNConfig:
-    n_hidden: int | None = None  # None -> chosen to match the converted SNN's parameter count
+    n_hidden: int | None = None  # None -> chosen to match the converted SNN's parameter count (parameter-matched models)
+    n_hidden_wide: int | None = None  # None -> number of hidden neurons of EEGNet / the converted SNN (neuron-matched models)
     n_steps: int = N_SAMPLES  # one simulation step per EEG sample (128 Hz)
     beta: float = 0.9  # membrane decay per step (fixed). The converted SNN's IF neurons have no leak (beta=1)
     threshold: float = 1.0  # copied from the converted SNN
     surrogate_slope: float = 25.0  # snntorch.surrogate.fast_sigmoid default
     recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2)
-    batch_size: int = 64  # larger than the ANN's to keep BPTT over 256 steps tractable
+    batch_size: int = 16  # same as the ANN (TrainConfig), so every trained model takes the same number of optimizer steps per epoch
+    # Per-channel standardization of the input (mean/std over trials and time of the PRETRAINING subjects' session 1
+    # only; fixed afterwards, so no target or test information is used). The ANN has BatchNorm and the converted SNN
+    # divides by lambda_0; this gives the RSNN the equivalent scale handling. False = previous behaviour (raw uV).
+    normalize_input: bool = True
+
+
+@dataclass(frozen=True)
+class RNNConfig:
+    """Non-spiking control for the RSNN: same topology (input projection -> ONE dense all-to-all recurrent layer ->
+    linear readout on the time-averaged hidden activity), but the LIF neurons are replaced by the ELU of the EEGNet ANN
+    (Elman style: h_t = ELU(W_in x_t + b + W_rec h_{t-1}); no leak, no threshold, no reset).
+
+    The hidden size is NOT set here: it is always the RSNN's hidden size (model_summary()["rsnn_hidden"] for the
+    parameter-matched pair, ["rsnn_wide_hidden"] for the neuron-matched pair), so each RNN and its RSNN have exactly the
+    same number of recurrent nodes and parameters. Init, input standardization, simulation steps,
+    batch size and the pretrain/finetune schedule mirror the RSNN.
+
+    Stability note: ELU is unbounded for x > 0, so a recurrent loop over 256 steps can in principle diverge. The RSNN init
+    (recurrent std = gain / sqrt(n_hidden)) is kept on purpose. Add gradient clipping (e.g.
+    torch.nn.utils.clip_grad_norm_ in training.fit, RNN only) ONLY if training diverges (NaN / exploding loss), and then
+    document it as a deliberate deviation from the RSNN's training.
+    """
+
+    n_steps: int = N_SAMPLES  # one step per EEG sample, same as the RSNN
+    recurrent_init_gain: float = 1.0  # W_rec ~ N(0, (gain / sqrt(n_hidden))^2), same as the RSNN
+    batch_size: int = 16  # same as the RSNN and the ANN
+    normalize_input: bool = True  # same per-channel standardization (pretraining subjects only) as the RSNN
 
 
 @dataclass(frozen=True)
@@ -98,8 +134,10 @@ FOLD_CFG = FoldConfig()
 EEGNET_CFG = EEGNetConfig()
 SNN_CFG = SNNConfig()
 RSNN_CFG = RSNNConfig()
+RNN_CFG = RNNConfig()
 ANN_TRAIN = TrainConfig()
 RSNN_TRAIN = TrainConfig(batch_size=RSNN_CFG.batch_size)
+RNN_TRAIN = TrainConfig(batch_size=RNN_CFG.batch_size)
 COMPARISON_CFG = ComparisonConfig()
 
 # Bug-testing mode: BENCH_QUICK=1 shrinks epochs and simulation steps. Results are NOT comparable to the real
@@ -109,6 +147,8 @@ QUICK: bool = QUICK_MODE or os.environ.get("BENCH_QUICK") == "1"  # the environm
 if QUICK:
     ANN_TRAIN = replace(ANN_TRAIN, pretrain_epochs=2, finetune_epochs=2)
     RSNN_TRAIN = replace(RSNN_TRAIN, pretrain_epochs=2, finetune_epochs=2)
+    RNN_TRAIN = replace(RNN_TRAIN, pretrain_epochs=2, finetune_epochs=2)
     SNN_CFG = replace(SNN_CFG, n_steps=32)
     COMPARISON_CFG = replace(COMPARISON_CFG, n_permutations=200, n_bootstrap=200)
     RSNN_CFG = replace(RSNN_CFG, n_steps=64)  # uses only the first 64 of 256 samples
+    RNN_CFG = replace(RNN_CFG, n_steps=64)

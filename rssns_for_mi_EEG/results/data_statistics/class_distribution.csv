@@ -1,0 +1,73 @@
+subject,session,class,n_trials
+1,train,left hand,72
+1,train,right hand,72
+1,train,feet,72
+1,train,tongue,72
+1,test,left hand,72
+1,test,right hand,72
+1,test,feet,72
+1,test,tongue,72
+2,train,left hand,72
+2,train,right hand,72
+2,train,feet,72
+2,train,tongue,72
+2,test,left hand,72
+2,test,right hand,72
+2,test,feet,72
+2,test,tongue,72
+3,train,left hand,72
+3,train,right hand,72
+3,train,feet,72
+3,train,tongue,72
+3,test,left hand,72
+3,test,right hand,72
+3,test,feet,72
+3,test,tongue,72
+4,train,left hand,72
+4,train,right hand,72
+4,train,feet,72
+4,train,tongue,72
+4,test,left hand,72
+4,test,right hand,72
+4,test,feet,72
+4,test,tongue,72
+5,train,left hand,72
+5,train,right hand,72
+5,train,feet,72
+5,train,tongue,72
+5,test,left hand,72
+5,test,right hand,72
+5,test,feet,72
+5,test,tongue,72
+6,train,left hand,72
+6,train,right hand,72
+6,train,feet,72
+6,train,tongue,72
+6,test,left hand,72
+6,test,right hand,72
+6,test,feet,72
+6,test,tongue,72
+7,train,left hand,72
+7,train,right hand,72
+7,train,feet,72
+7,train,tongue,72
+7,test,left hand,72
+7,test,right hand,72
+7,test,feet,72
+7,test,tongue,72
+8,train,left hand,72
+8,train,right hand,72
+8,train,feet,72
+8,train,tongue,72
+8,test,left hand,72
+8,test,right hand,72
+8,test,feet,72
+8,test,tongue,72
+9,train,left hand,72
+9,train,right hand,72
+9,train,feet,72
+9,train,tongue,72
+9,test,left hand,72
+9,test,right hand,72
+9,test,feet,72
+9,test,tongue,72

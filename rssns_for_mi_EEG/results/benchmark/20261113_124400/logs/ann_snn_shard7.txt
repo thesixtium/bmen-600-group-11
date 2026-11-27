@@ -1,0 +1,200 @@
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 31s (pipeline elapsed 51s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: ann, snn
+[shard] shard 7 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'ann': 7, 'snn': 7} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h29m52s, ann 1m55s, snn 0.6s, rnn 38m10s, rsnn_wide 5h42m09s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 13m31s
+[time] >>> benchmark: ann
+[time] [ann] 7 folds to run over 7 subject(s); prior estimate 13m27s (1m55s/fold)
+[time] [ann] fold 1/7 start (subject 1, repeat 7)
+/tmp/venv_51291815/lib/python3.12/site-packages/torch/nn/modules/conv.py:454: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at ../aten/src/ATen/native/Convolution.cpp:1031.)
+  return F.conv2d(input, weight, bias, self.stride,
+[time]     [ann s1_r7] pretrain epoch 50/500 | val_loss 2.1379 | elapsed 11s, phase ETA 1m40s
+[time]     [ann s1_r7] pretrain epoch 100/500 | val_loss 3.1255 | elapsed 22s, phase ETA 1m27s
+[time]     [ann s1_r7] pretrain epoch 150/500 | val_loss 3.2224 | elapsed 33s, phase ETA 1m17s
+[time]     [ann s1_r7] pretrain epoch 200/500 | val_loss 3.0744 | elapsed 44s, phase ETA 1m06s
+[time]     [ann s1_r7] pretrain epoch 250/500 | val_loss 3.4955 | elapsed 55s, phase ETA 55s
+[time]     [ann s1_r7] pretrain epoch 300/500 | val_loss 3.2181 | elapsed 1m06s, phase ETA 44s
+[time]     [ann s1_r7] pretrain epoch 350/500 | val_loss 3.1440 | elapsed 1m17s, phase ETA 33s
+[time]     [ann s1_r7] pretrain epoch 400/500 | val_loss 2.9449 | elapsed 1m28s, phase ETA 22s
+[time]     [ann s1_r7] pretrain epoch 450/500 | val_loss 3.6068 | elapsed 1m39s, phase ETA 11s
+[time]     [ann s1_r7] finetune epoch 50/100 | val_loss 0.7993 | elapsed 1.9s, phase ETA 1.9s
+[ann] subject 1 repeat 7: acc=0.708 kappa=0.611
+[time] [ann] fold 1/7 done in 1m54s (pretrain 1m50s, finetune 3.9s) | avg 1m54s | ann elapsed 1m54s, ETA 11m25s | benchmark ETA 11m30s -> finish ~Fri 13 Nov 18:56
+[time] [ann] SUBJECT 1 finished: 1 folds in 1m54s (1m54s/fold) | subjects done 1/7
+[time] [ann] fold 2/7 start (subject 2, repeat 9)
+[time]     [ann s2_r9] pretrain epoch 50/500 | val_loss 1.4444 | elapsed 11s, phase ETA 1m39s
+[time]     [ann s2_r9] pretrain epoch 100/500 | val_loss 1.3316 | elapsed 22s, phase ETA 1m28s
+[time]     [ann s2_r9] pretrain epoch 150/500 | val_loss 1.4045 | elapsed 33s, phase ETA 1m17s
+[time]     [ann s2_r9] pretrain epoch 200/500 | val_loss 1.4679 | elapsed 44s, phase ETA 1m06s
+[time]     [ann s2_r9] pretrain epoch 250/500 | val_loss 1.4495 | elapsed 55s, phase ETA 55s
+[time]     [ann s2_r9] pretrain epoch 300/500 | val_loss 1.5311 | elapsed 1m06s, phase ETA 44s
+[time]     [ann s2_r9] pretrain epoch 350/500 | val_loss 1.5920 | elapsed 1m17s, phase ETA 33s
+[time]     [ann s2_r9] pretrain epoch 400/500 | val_loss 1.6379 | elapsed 1m28s, phase ETA 22s
+[time]     [ann s2_r9] pretrain epoch 450/500 | val_loss 1.6568 | elapsed 1m39s, phase ETA 11s
+[time]     [ann s2_r9] finetune epoch 50/100 | val_loss 1.2996 | elapsed 1.9s, phase ETA 1.9s
+[ann] subject 2 repeat 9: acc=0.378 kappa=0.171
+[time] [ann] fold 2/7 done in 1m54s (pretrain 1m50s, finetune 3.8s) | avg 1m54s | ann elapsed 3m48s, ETA 9m30s | benchmark ETA 9m35s -> finish ~Fri 13 Nov 18:56
+[time] [ann] SUBJECT 2 finished: 1 folds in 1m54s (1m54s/fold) | subjects done 2/7
+[time] [ann] fold 3/7 start (subject 4, repeat 1)
+[time]     [ann s4_r1] pretrain epoch 50/500 | val_loss 1.4810 | elapsed 11s, phase ETA 1m39s
+[time]     [ann s4_r1] pretrain epoch 100/500 | val_loss 1.7715 | elapsed 22s, phase ETA 1m28s
+[time]     [ann s4_r1] pretrain epoch 150/500 | val_loss 1.8163 | elapsed 33s, phase ETA 1m17s
+[time]     [ann s4_r1] pretrain epoch 200/500 | val_loss 2.0531 | elapsed 44s, phase ETA 1m06s
+[time]     [ann s4_r1] pretrain epoch 250/500 | val_loss 1.9616 | elapsed 55s, phase ETA 55s
+[time]     [ann s4_r1] pretrain epoch 300/500 | val_loss 2.0728 | elapsed 1m06s, phase ETA 44s
+[time]     [ann s4_r1] pretrain epoch 350/500 | val_loss 2.1038 | elapsed 1m17s, phase ETA 33s
+[time]     [ann s4_r1] pretrain epoch 400/500 | val_loss 1.9151 | elapsed 1m28s, phase ETA 22s
+[time]     [ann s4_r1] pretrain epoch 450/500 | val_loss 2.1608 | elapsed 1m39s, phase ETA 11s
+[time]     [ann s4_r1] finetune epoch 50/100 | val_loss 1.2409 | elapsed 1.9s, phase ETA 1.9s
+[ann] subject 4 repeat 1: acc=0.410 kappa=0.213
+[time] [ann] fold 3/7 done in 1m54s (pretrain 1m50s, finetune 3.8s) | avg 1m54s | ann elapsed 5m42s, ETA 7m36s | benchmark ETA 7m40s -> finish ~Fri 13 Nov 18:56
+[time] [ann] SUBJECT 4 finished: 1 folds in 1m54s (1m54s/fold) | subjects done 3/7
+[time] [ann] fold 4/7 start (subject 5, repeat 3)
+[time]     [ann s5_r3] pretrain epoch 50/500 | val_loss 1.3992 | elapsed 11s, phase ETA 1m39s
+[time]     [ann s5_r3] pretrain epoch 100/500 | val_loss 1.4679 | elapsed 22s, phase ETA 1m28s
+[time]     [ann s5_r3] pretrain epoch 150/500 | val_loss 1.5452 | elapsed 33s, phase ETA 1m17s
+[time]     [ann s5_r3] pretrain epoch 200/500 | val_loss 1.4898 | elapsed 44s, phase ETA 1m06s
+[time]     [ann s5_r3] pretrain epoch 250/500 | val_loss 1.6943 | elapsed 55s, phase ETA 55s
+[time]     [ann s5_r3] pretrain epoch 300/500 | val_loss 1.5400 | elapsed 1m06s, phase ETA 44s
+[time]     [ann s5_r3] pretrain epoch 350/500 | val_loss 1.6448 | elapsed 1m17s, phase ETA 33s
+[time]     [ann s5_r3] pretrain epoch 400/500 | val_loss 1.6265 | elapsed 1m28s, phase ETA 22s
+[time]     [ann s5_r3] pretrain epoch 450/500 | val_loss 1.7376 | elapsed 1m39s, phase ETA 11s
+[time]     [ann s5_r3] finetune epoch 50/100 | val_loss 1.3520 | elapsed 1.9s, phase ETA 1.9s
+[ann] subject 5 repeat 3: acc=0.410 kappa=0.213
+[time] [ann] fold 4/7 done in 1m54s (pretrain 1m50s, finetune 3.8s) | avg 1m54s | ann elapsed 7m36s, ETA 5m42s | benchmark ETA 5m46s -> finish ~Fri 13 Nov 18:56
+[time] [ann] SUBJECT 5 finished: 1 folds in 1m54s (1m54s/fold) | subjects done 4/7
+[time] [ann] fold 5/7 start (subject 6, repeat 5)
+[time]     [ann s6_r5] pretrain epoch 50/500 | val_loss 1.5152 | elapsed 11s, phase ETA 1m39s
+[time]     [ann s6_r5] pretrain epoch 100/500 | val_loss 1.4626 | elapsed 22s, phase ETA 1m28s
+[time]     [ann s6_r5] pretrain epoch 150/500 | val_loss 1.6066 | elapsed 33s, phase ETA 1m17s
+[time]     [ann s6_r5] pretrain epoch 200/500 | val_loss 1.6433 | elapsed 44s, phase ETA 1m06s
+[time]     [ann s6_r5] pretrain epoch 250/500 | val_loss 1.6681 | elapsed 55s, phase ETA 55s
+[time]     [ann s6_r5] pretrain epoch 300/500 | val_loss 1.6788 | elapsed 1m06s, phase ETA 44s
+[time]     [ann s6_r5] pretrain epoch 350/500 | val_loss 1.6421 | elapsed 1m17s, phase ETA 33s
+[time]     [ann s6_r5] pretrain epoch 400/500 | val_loss 1.6918 | elapsed 1m28s, phase ETA 22s
+[time]     [ann s6_r5] pretrain epoch 450/500 | val_loss 1.6579 | elapsed 1m39s, phase ETA 11s
+[time]     [ann s6_r5] finetune epoch 50/100 | val_loss 1.2478 | elapsed 1.9s, phase ETA 1.9s
+[ann] subject 6 repeat 5: acc=0.483 kappa=0.310
+[time] [ann] fold 5/7 done in 1m54s (pretrain 1m50s, finetune 3.8s) | avg 1m54s | ann elapsed 9m30s, ETA 3m48s | benchmark ETA 3m52s -> finish ~Fri 13 Nov 18:56
+[time] [ann] SUBJECT 6 finished: 1 folds in 1m54s (1m54s/fold) | subjects done 5/7
+[time] [ann] fold 6/7 start (subject 7, repeat 7)
+[time]     [ann s7_r7] pretrain epoch 50/500 | val_loss 1.2360 | elapsed 11s, phase ETA 1m39s
+[time]     [ann s7_r7] pretrain epoch 100/500 | val_loss 1.2165 | elapsed 22s, phase ETA 1m28s
+[time]     [ann s7_r7] pretrain epoch 150/500 | val_loss 1.2830 | elapsed 33s, phase ETA 1m17s
+[time]     [ann s7_r7] pretrain epoch 200/500 | val_loss 1.3366 | elapsed 44s, phase ETA 1m06s
+[time]     [ann s7_r7] pretrain epoch 250/500 | val_loss 1.3098 | elapsed 55s, phase ETA 55s
+[time]     [ann s7_r7] pretrain epoch 300/500 | val_loss 1.3498 | elapsed 1m06s, phase ETA 44s
+[time]     [ann s7_r7] pretrain epoch 350/500 | val_loss 1.4014 | elapsed 1m17s, phase ETA 33s
+[time]     [ann s7_r7] pretrain epoch 400/500 | val_loss 1.4063 | elapsed 1m28s, phase ETA 22s
+[time]     [ann s7_r7] pretrain epoch 450/500 | val_loss 1.3701 | elapsed 1m39s, phase ETA 11s
+[time]     [ann s7_r7] finetune epoch 50/100 | val_loss 0.9082 | elapsed 1.9s, phase ETA 1.9s
+[ann] subject 7 repeat 7: acc=0.618 kappa=0.491
+[time] [ann] fold 6/7 done in 1m54s (pretrain 1m50s, finetune 3.9s) | avg 1m54s | ann elapsed 11m24s, ETA 1m54s | benchmark ETA 1m58s -> finish ~Fri 13 Nov 18:56
+[time] [ann] SUBJECT 7 finished: 1 folds in 1m54s (1m54s/fold) | subjects done 6/7
+[time] [ann] fold 7/7 start (subject 8, repeat 9)
+[time]     [ann s8_r9] pretrain epoch 50/500 | val_loss 1.6180 | elapsed 11s, phase ETA 1m39s
+[time]     [ann s8_r9] pretrain epoch 100/500 | val_loss 2.0836 | elapsed 22s, phase ETA 1m28s
+[time]     [ann s8_r9] pretrain epoch 150/500 | val_loss 1.9031 | elapsed 33s, phase ETA 1m17s
+[time]     [ann s8_r9] pretrain epoch 200/500 | val_loss 2.1881 | elapsed 44s, phase ETA 1m06s
+[time]     [ann s8_r9] pretrain epoch 250/500 | val_loss 1.9585 | elapsed 55s, phase ETA 55s
+[time]     [ann s8_r9] pretrain epoch 300/500 | val_loss 1.9870 | elapsed 1m06s, phase ETA 44s
+[time]     [ann s8_r9] pretrain epoch 350/500 | val_loss 2.3161 | elapsed 1m17s, phase ETA 33s
+[time]     [ann s8_r9] pretrain epoch 400/500 | val_loss 1.9763 | elapsed 1m28s, phase ETA 22s
+[time]     [ann s8_r9] pretrain epoch 450/500 | val_loss 2.0375 | elapsed 1m39s, phase ETA 11s
+[time]     [ann s8_r9] finetune epoch 50/100 | val_loss 0.9274 | elapsed 1.8s, phase ETA 1.8s
+[ann] subject 8 repeat 9: acc=0.684 kappa=0.579
+[time] [ann] fold 7/7 done in 1m53s (pretrain 1m49s, finetune 3.6s) | avg 1m54s | ann elapsed 13m17s, ETA 0.0s | benchmark ETA 4.3s -> finish ~Fri 13 Nov 18:56
+[time] [ann] SUBJECT 8 finished: 1 folds in 1m53s (1m53s/fold) | subjects done 7/7
+[time] [ann] ALL 7 folds finished in 13m17s
+[time] <<< benchmark: ann: 13m17s (pipeline elapsed 14m08s)
+[time] >>> benchmark: snn
+[time] [snn] 7 folds to run over 7 subject(s); prior estimate 4.3s (0.6s/fold)
+[time] [snn] fold 1/7 start (subject 1, repeat 7)
+/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py:233: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(ckpt_path, map_location="cpu")
+[snn] subject 1 repeat 7: acc=0.608 kappa=0.477
+[time] [snn] fold 1/7 done in 0.6s (convert 0.0s, simulate 0.5s) | avg 0.6s | snn elapsed 0.6s, ETA 3.6s | benchmark ETA 3.6s -> finish ~Fri 13 Nov 18:56
+[time] [snn] SUBJECT 1 finished: 1 folds in 0.6s (0.6s/fold) | subjects done 1/7
+[time] [snn] fold 2/7 start (subject 2, repeat 9)
+/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py:233: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(ckpt_path, map_location="cpu")
+[snn] subject 2 repeat 9: acc=0.344 kappa=0.125
+[time] [snn] fold 2/7 done in 0.6s (convert 0.0s, simulate 0.5s) | avg 0.6s | snn elapsed 1.2s, ETA 3.1s | benchmark ETA 3.1s -> finish ~Fri 13 Nov 18:56
+[time] [snn] SUBJECT 2 finished: 1 folds in 0.6s (0.6s/fold) | subjects done 2/7
+[time] [snn] fold 3/7 start (subject 4, repeat 1)
+/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py:233: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(ckpt_path, map_location="cpu")
+[snn] subject 4 repeat 1: acc=0.351 kappa=0.134
+[time] [snn] fold 3/7 done in 0.6s (convert 0.0s, simulate 0.5s) | avg 0.6s | snn elapsed 1.8s, ETA 2.5s | benchmark ETA 2.5s -> finish ~Fri 13 Nov 18:56
+[time] [snn] SUBJECT 4 finished: 1 folds in 0.6s (0.6s/fold) | subjects done 3/7
+[time] [snn] fold 4/7 start (subject 5, repeat 3)
+/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py:233: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(ckpt_path, map_location="cpu")
+[snn] subject 5 repeat 3: acc=0.375 kappa=0.167
+[time] [snn] fold 4/7 done in 0.6s (convert 0.0s, simulate 0.5s) | avg 0.6s | snn elapsed 2.5s, ETA 1.8s | benchmark ETA 1.8s -> finish ~Fri 13 Nov 18:56
+[time] [snn] SUBJECT 5 finished: 1 folds in 0.6s (0.6s/fold) | subjects done 4/7
+[time] [snn] fold 5/7 start (subject 6, repeat 5)
+/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py:233: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(ckpt_path, map_location="cpu")
+[snn] subject 6 repeat 5: acc=0.399 kappa=0.199
+[time] [snn] fold 5/7 done in 0.6s (convert 0.0s, simulate 0.5s) | avg 0.6s | snn elapsed 3.1s, ETA 1.2s | benchmark ETA 1.2s -> finish ~Fri 13 Nov 18:56
+[time] [snn] SUBJECT 6 finished: 1 folds in 0.6s (0.6s/fold) | subjects done 5/7
+[time] [snn] fold 6/7 start (subject 7, repeat 7)
+/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py:233: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(ckpt_path, map_location="cpu")
+[snn] subject 7 repeat 7: acc=0.681 kappa=0.574
+[time] [snn] fold 6/7 done in 0.6s (convert 0.0s, simulate 0.5s) | avg 0.6s | snn elapsed 3.7s, ETA 0.6s | benchmark ETA 0.6s -> finish ~Fri 13 Nov 18:56
+[time] [snn] SUBJECT 7 finished: 1 folds in 0.6s (0.6s/fold) | subjects done 6/7
+[time] [snn] fold 7/7 start (subject 8, repeat 9)
+/home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/src/benchmark.py:233: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(ckpt_path, map_location="cpu")
+[snn] subject 8 repeat 9: acc=0.594 kappa=0.458
+[time] [snn] fold 7/7 done in 0.6s (convert 0.0s, simulate 0.5s) | avg 0.6s | snn elapsed 4.2s, ETA 0.0s | benchmark ETA 0.0s -> finish ~Fri 13 Nov 18:56
+[time] [snn] SUBJECT 8 finished: 1 folds in 0.6s (0.6s/fold) | subjects done 7/7
+[time] [snn] ALL 7 folds finished in 4.2s
+[time] <<< benchmark: snn: 4.3s (pipeline elapsed 14m13s)
+[chain] pending folds of the selected models (selected folds): {'ann': 22, 'snn': 28}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 22, 'snn': 28, 'rsnn': 90, 'rnn': 90, 'rsnn_wide': 90, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 14m13s
+[time]   stage download_data                       21s  ( 2.4%)
+[time]   stage preprocess_data                     31s  ( 3.6%)
+[time]   stage benchmark: ann                   13m17s  (93.5%)
+[time]   stage benchmark: snn                     4.3s  ( 0.5%)
+[time]   ann: 7 folds, total 13m17s, mean 1m54s (min 1m53s, max 1m54s)
+[time]     per subject: S1 1m54s, S2 1m54s, S4 1m54s, S5 1m54s, S6 1m54s, S7 1m54s, S8 1m53s
+[time]   snn: 7 folds, total 4.2s, mean 0.6s (min 0.6s, max 0.6s)
+[time]     per subject: S1 0.6s, S2 0.6s, S4 0.6s, S5 0.6s, S6 0.6s, S7 0.6s, S8 0.6s
+[time] >>> download_data
+[time] <<< download_data: 22s (pipeline elapsed 22s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 29s (pipeline elapsed 52s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: ann, snn
+[shard] shard 7 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'ann': 0, 'snn': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h39m16s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: ann
+[time] [ann] nothing to run (all folds already done)
+[time] <<< benchmark: ann: 0.0s (pipeline elapsed 52s)
+[time] >>> benchmark: snn
+[time] [snn] nothing to run (all folds already done)
+[time] <<< benchmark: snn: 0.0s (pipeline elapsed 52s)
+[chain] pending folds of the selected models (selected folds): {'ann': 0, 'snn': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 63, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 52s
+[time]   stage download_data                       22s  (42.6%)
+[time]   stage preprocess_data                     29s  (56.9%)
+[time]   stage benchmark: ann                     0.0s  ( 0.0%)
+[time]   stage benchmark: snn                     0.0s  ( 0.0%)

@@ -1,0 +1,327 @@
+[time] >>> download_data
+[time] <<< download_data: 24s (pipeline elapsed 24s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 34s (pipeline elapsed 58s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 7} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h39m16s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 39h34m55s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] 7 folds to run over 7 subject(s); prior estimate 39h34m55s (5h39m16s/fold)
+[time] [rsnn_wide] fold 1/7 start (subject 2, repeat 0)
+[time]     [rsnn_wide s2_r0] pretrain epoch 50/500 | val_loss 2.3262 | elapsed 33m01s, phase ETA 4h57m13s
+[time]     [rsnn_wide s2_r0] pretrain epoch 100/500 | val_loss 2.0690 | elapsed 1h06m12s, phase ETA 4h24m47s
+[time]     [rsnn_wide s2_r0] pretrain epoch 150/500 | val_loss 2.4099 | elapsed 1h39m20s, phase ETA 3h51m47s
+[time]     [rsnn_wide s2_r0] pretrain epoch 200/500 | val_loss 2.1341 | elapsed 2h12m29s, phase ETA 3h18m44s
+[time]     [rsnn_wide s2_r0] pretrain epoch 250/500 | val_loss 2.8191 | elapsed 2h45m38s, phase ETA 2h45m38s
+[time]     [rsnn_wide s2_r0] pretrain epoch 300/500 | val_loss 3.2577 | elapsed 3h18m47s, phase ETA 2h12m32s
+[time]     [rsnn_wide s2_r0] pretrain epoch 350/500 | val_loss 3.2342 | elapsed 3h51m56s, phase ETA 1h39m24s
+[time]     [rsnn_wide s2_r0] pretrain epoch 400/500 | val_loss 4.7792 | elapsed 4h25m06s, phase ETA 1h06m16s
+[time]     [rsnn_wide s2_r0] pretrain epoch 450/500 | val_loss 4.4050 | elapsed 4h58m15s, phase ETA 33m08s
+[time]     [rsnn_wide s2_r0] finetune epoch 50/100 | val_loss 1.6765 | elapsed 5m19s, phase ETA 5m19s
+[rsnn_wide] subject 2 repeat 0: acc=0.271 kappa=0.028
+[time] [rsnn_wide] fold 1/7 done in 5h42m04s (pretrain 5h31m24s, finetune 10m39s) | avg 5h42m04s | rsnn_wide elapsed 5h42m04s, ETA 34h12m26s | benchmark ETA 34h12m26s -> finish ~Tue 17 Nov 05:51
+[time] [rsnn_wide] SUBJECT 2 finished: 1 folds in 5h42m04s (5h42m04s/fold) | subjects done 1/7
+[time] [rsnn_wide] fold 2/7 start (subject 3, repeat 2)
+[time]     [rsnn_wide s3_r2] pretrain epoch 50/500 | val_loss 1.7947 | elapsed 33m09s, phase ETA 4h58m21s
+[time]     [rsnn_wide s3_r2] pretrain epoch 100/500 | val_loss 2.7272 | elapsed 1h06m20s, phase ETA 4h25m19s
+[time]     [rsnn_wide s3_r2] pretrain epoch 150/500 | val_loss 2.2970 | elapsed 1h39m30s, phase ETA 3h52m10s
+[time]     [rsnn_wide s3_r2] pretrain epoch 200/500 | val_loss 3.8198 | elapsed 2h12m40s, phase ETA 3h19m00s
+[time]     [rsnn_wide s3_r2] pretrain epoch 250/500 | val_loss 3.6165 | elapsed 2h45m50s, phase ETA 2h45m50s
+[time]     [rsnn_wide s3_r2] pretrain epoch 300/500 | val_loss 4.1385 | elapsed 3h19m00s, phase ETA 2h12m40s
+[time]     [rsnn_wide s3_r2] pretrain epoch 350/500 | val_loss 4.3784 | elapsed 3h52m10s, phase ETA 1h39m30s
+[time]     [rsnn_wide s3_r2] pretrain epoch 400/500 | val_loss 4.8355 | elapsed 4h25m19s, phase ETA 1h06m20s
+[time]     [rsnn_wide s3_r2] pretrain epoch 450/500 | val_loss 4.7298 | elapsed 4h58m28s, phase ETA 33m10s
+[time]     [rsnn_wide s3_r2] finetune epoch 50/100 | val_loss 1.5663 | elapsed 5m21s, phase ETA 5m21s
+[rsnn_wide] subject 3 repeat 2: acc=0.465 kappa=0.287
+[time] [rsnn_wide] fold 2/7 done in 5h42m20s (pretrain 5h31m37s, finetune 10m42s) | avg 5h42m12s | rsnn_wide elapsed 11h24m24s, ETA 28h31m01s | benchmark ETA 28h31m01s -> finish ~Tue 17 Nov 05:52
+[time] [rsnn_wide] SUBJECT 3 finished: 1 folds in 5h42m20s (5h42m20s/fold) | subjects done 2/7
+[time] [rsnn_wide] fold 3/7 start (subject 4, repeat 4)
+[time]     [rsnn_wide s4_r4] pretrain epoch 50/500 | val_loss 2.1086 | elapsed 32m57s, phase ETA 4h56m33s
+[time]     [rsnn_wide s4_r4] pretrain epoch 100/500 | val_loss 1.5873 | elapsed 1h05m55s, phase ETA 4h23m39s
+[time]     [rsnn_wide s4_r4] pretrain epoch 150/500 | val_loss 1.6618 | elapsed 1h38m53s, phase ETA 3h50m43s
+[time]     [rsnn_wide s4_r4] pretrain epoch 200/500 | val_loss 1.8804 | elapsed 2h11m50s, phase ETA 3h17m45s
+[time]     [rsnn_wide s4_r4] pretrain epoch 250/500 | val_loss 2.2709 | elapsed 2h44m48s, phase ETA 2h44m48s
+[time]     [rsnn_wide s4_r4] pretrain epoch 300/500 | val_loss 2.8270 | elapsed 3h17m46s, phase ETA 2h11m51s
+[time]     [rsnn_wide s4_r4] pretrain epoch 350/500 | val_loss 2.8542 | elapsed 3h50m44s, phase ETA 1h38m53s
+[time]     [rsnn_wide s4_r4] pretrain epoch 400/500 | val_loss 3.3782 | elapsed 4h23m41s, phase ETA 1h05m55s
+[time]     [rsnn_wide s4_r4] pretrain epoch 450/500 | val_loss 5.0170 | elapsed 4h56m39s, phase ETA 32m58s
+[time]     [rsnn_wide s4_r4] finetune epoch 50/100 | val_loss 1.5680 | elapsed 5m19s, phase ETA 5m19s
+[rsnn_wide] subject 4 repeat 4: acc=0.326 kappa=0.102
+[time] [rsnn_wide] fold 3/7 done in 5h39m49s (pretrain 5h29m36s, finetune 10m11s) | avg 5h41m24s | rsnn_wide elapsed 17h04m13s, ETA 22h45m37s | benchmark ETA 22h45m37s -> finish ~Tue 17 Nov 05:47
+[time] [rsnn_wide] SUBJECT 4 finished: 1 folds in 5h39m49s (5h39m49s/fold) | subjects done 3/7
+[time] deadline close (next rsnn_wide fold needs ~7h07m55s, 6h22m04s left): starting no more folds in this job.
+[time] <<< benchmark: rsnn_wide: 17h04m13s (pipeline elapsed 17h05m11s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 37}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 37, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 17h05m11s
+[time]   stage download_data                       24s  ( 0.0%)
+[time]   stage preprocess_data                     34s  ( 0.1%)
+[time]   stage benchmark: rsnn_wide          17h04m13s  (99.9%)
+[time]   rsnn_wide: 3 folds, total 17h04m13s, mean 5h41m24s (min 5h39m49s, max 5h42m20s)
+[time]     per subject: S2 5h42m04s, S3 5h42m20s, S4 5h39m49s
+[time] >>> download_data
+[time] <<< download_data: 23s (pipeline elapsed 23s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 33s (pipeline elapsed 56s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 4} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m40s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 22h50m38s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] 4 folds to run over 4 subject(s); prior estimate 22h50m38s (5h42m40s/fold)
+[time] [rsnn_wide] fold 1/4 start (subject 5, repeat 6)
+[time]     [rsnn_wide s5_r6] pretrain epoch 50/500 | val_loss 1.4142 | elapsed 32m56s, phase ETA 4h56m21s
+[time]     [rsnn_wide s5_r6] pretrain epoch 100/500 | val_loss 1.7612 | elapsed 1h06m03s, phase ETA 4h24m13s
+[time]     [rsnn_wide s5_r6] pretrain epoch 150/500 | val_loss 1.7007 | elapsed 1h39m11s, phase ETA 3h51m25s
+[time]     [rsnn_wide s5_r6] pretrain epoch 200/500 | val_loss 1.8842 | elapsed 2h12m19s, phase ETA 3h18m28s
+[time]     [rsnn_wide s5_r6] pretrain epoch 250/500 | val_loss 2.1317 | elapsed 2h45m27s, phase ETA 2h45m27s
+[time]     [rsnn_wide s5_r6] pretrain epoch 300/500 | val_loss 2.2527 | elapsed 3h18m36s, phase ETA 2h12m24s
+[time]     [rsnn_wide s5_r6] pretrain epoch 350/500 | val_loss 2.7785 | elapsed 3h51m44s, phase ETA 1h39m19s
+[time]     [rsnn_wide s5_r6] pretrain epoch 400/500 | val_loss 2.6705 | elapsed 4h24m52s, phase ETA 1h06m13s
+[time]     [rsnn_wide s5_r6] pretrain epoch 450/500 | val_loss 3.2276 | elapsed 4h58m01s, phase ETA 33m07s
+[time]     [rsnn_wide s5_r6] finetune epoch 50/100 | val_loss 1.7208 | elapsed 5m20s, phase ETA 5m20s
+[rsnn_wide] subject 5 repeat 6: acc=0.257 kappa=0.009
+[time] [rsnn_wide] fold 1/4 done in 5h41m50s (pretrain 5h31m10s, finetune 10m39s) | avg 5h41m50s | rsnn_wide elapsed 5h41m50s, ETA 17h05m31s | benchmark ETA 17h05m31s -> finish ~Tue 17 Nov 05:56
+[time] [rsnn_wide] SUBJECT 5 finished: 1 folds in 5h41m50s (5h41m50s/fold) | subjects done 1/4
+[time] [rsnn_wide] fold 2/4 start (subject 6, repeat 8)
+[time]     [rsnn_wide s6_r8] pretrain epoch 50/500 | val_loss 1.4878 | elapsed 33m04s, phase ETA 4h57m34s
+[time]     [rsnn_wide s6_r8] pretrain epoch 100/500 | val_loss 1.5451 | elapsed 1h06m08s, phase ETA 4h24m33s
+[time]     [rsnn_wide s6_r8] pretrain epoch 150/500 | val_loss 1.9305 | elapsed 1h39m13s, phase ETA 3h51m31s
+[time]     [rsnn_wide s6_r8] pretrain epoch 200/500 | val_loss 2.4692 | elapsed 2h12m16s, phase ETA 3h18m24s
+[time]     [rsnn_wide s6_r8] pretrain epoch 250/500 | val_loss 2.6668 | elapsed 2h45m19s, phase ETA 2h45m19s
+[time]     [rsnn_wide s6_r8] pretrain epoch 300/500 | val_loss 2.8161 | elapsed 3h18m22s, phase ETA 2h12m15s
+[time]     [rsnn_wide s6_r8] pretrain epoch 350/500 | val_loss 2.6061 | elapsed 3h51m25s, phase ETA 1h39m11s
+[time]     [rsnn_wide s6_r8] pretrain epoch 400/500 | val_loss 4.2611 | elapsed 4h24m29s, phase ETA 1h06m07s
+[time]     [rsnn_wide s6_r8] pretrain epoch 450/500 | val_loss 3.7029 | elapsed 4h57m31s, phase ETA 33m03s
+[time]     [rsnn_wide s6_r8] finetune epoch 50/100 | val_loss 1.5816 | elapsed 5m20s, phase ETA 5m20s
+[rsnn_wide] subject 6 repeat 8: acc=0.198 kappa=-0.069
+[time] [rsnn_wide] fold 2/4 done in 5h41m16s (pretrain 5h30m35s, finetune 10m41s) | avg 5h41m33s | rsnn_wide elapsed 11h23m07s, ETA 11h23m07s | benchmark ETA 11h23m07s -> finish ~Tue 17 Nov 05:55
+[time] [rsnn_wide] SUBJECT 6 finished: 1 folds in 5h41m16s (5h41m16s/fold) | subjects done 2/4
+[time] [rsnn_wide] fold 3/4 start (subject 8, repeat 0)
+[time]     [rsnn_wide s8_r0] pretrain epoch 50/500 | val_loss 2.0505 | elapsed 33m08s, phase ETA 4h58m09s
+[time]     [rsnn_wide s8_r0] pretrain epoch 100/500 | val_loss 1.5844 | elapsed 1h06m17s, phase ETA 4h25m09s
+[time]     [rsnn_wide s8_r0] pretrain epoch 150/500 | val_loss 1.7152 | elapsed 1h39m27s, phase ETA 3h52m02s
+[time]     [rsnn_wide s8_r0] pretrain epoch 200/500 | val_loss 1.8426 | elapsed 2h12m36s, phase ETA 3h18m54s
+[time]     [rsnn_wide s8_r0] pretrain epoch 250/500 | val_loss 2.2681 | elapsed 2h45m51s, phase ETA 2h45m51s
+[time]     [rsnn_wide s8_r0] pretrain epoch 300/500 | val_loss 2.5134 | elapsed 3h19m03s, phase ETA 2h12m42s
+[time]     [rsnn_wide s8_r0] pretrain epoch 350/500 | val_loss 3.2533 | elapsed 3h52m16s, phase ETA 1h39m32s
+[time]     [rsnn_wide s8_r0] pretrain epoch 400/500 | val_loss 3.0493 | elapsed 4h25m27s, phase ETA 1h06m22s
+[time]     [rsnn_wide s8_r0] pretrain epoch 450/500 | val_loss 2.4632 | elapsed 4h58m40s, phase ETA 33m11s
+[time]     [rsnn_wide s8_r0] finetune epoch 50/100 | val_loss 1.3685 | elapsed 5m20s, phase ETA 5m20s
+[rsnn_wide] subject 8 repeat 0: acc=0.420 kappa=0.227
+[time] [rsnn_wide] fold 3/4 done in 5h42m33s (pretrain 5h31m51s, finetune 10m40s) | avg 5h41m53s | rsnn_wide elapsed 17h05m39s, ETA 5h41m53s | benchmark ETA 5h41m53s -> finish ~Tue 17 Nov 05:56
+[time] [rsnn_wide] SUBJECT 8 finished: 1 folds in 5h42m33s (5h42m33s/fold) | subjects done 3/4
+[time] deadline close (next rsnn_wide fold needs ~7h08m11s, 6h20m46s left): starting no more folds in this job.
+[time] <<< benchmark: rsnn_wide: 17h05m39s (pipeline elapsed 17h06m36s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 5}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 5, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 17h06m36s
+[time]   stage download_data                       23s  ( 0.0%)
+[time]   stage preprocess_data                     33s  ( 0.1%)
+[time]   stage benchmark: rsnn_wide          17h05m39s  (99.9%)
+[time]   rsnn_wide: 3 folds, total 17h05m39s, mean 5h41m53s (min 5h41m16s, max 5h42m33s)
+[time]     per subject: S5 5h41m50s, S6 5h41m16s, S8 5h42m33s
+[time] >>> download_data
+[time] <<< download_data: 23s (pipeline elapsed 23s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 33s (pipeline elapsed 57s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 1} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h43m26s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 5h43m26s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] 1 folds to run over 1 subject(s); prior estimate 5h43m26s (5h43m26s/fold)
+[time] [rsnn_wide] fold 1/1 start (subject 9, repeat 2)
+[time]     [rsnn_wide s9_r2] pretrain epoch 50/500 | val_loss 1.9240 | elapsed 32m58s, phase ETA 4h56m39s
+[time]     [rsnn_wide s9_r2] pretrain epoch 100/500 | val_loss 1.6719 | elapsed 1h06m02s, phase ETA 4h24m09s
+[time]     [rsnn_wide s9_r2] pretrain epoch 150/500 | val_loss 2.5745 | elapsed 1h39m07s, phase ETA 3h51m17s
+[time]     [rsnn_wide s9_r2] pretrain epoch 200/500 | val_loss 2.3587 | elapsed 2h12m12s, phase ETA 3h18m18s
+[time]     [rsnn_wide s9_r2] pretrain epoch 250/500 | val_loss 2.1624 | elapsed 2h45m17s, phase ETA 2h45m17s
+[time]     [rsnn_wide s9_r2] pretrain epoch 300/500 | val_loss 2.4732 | elapsed 3h18m22s, phase ETA 2h12m15s
+[time]     [rsnn_wide s9_r2] pretrain epoch 350/500 | val_loss 2.5248 | elapsed 3h51m27s, phase ETA 1h39m12s
+[time]     [rsnn_wide s9_r2] pretrain epoch 400/500 | val_loss 3.4883 | elapsed 4h24m33s, phase ETA 1h06m08s
+[time]     [rsnn_wide s9_r2] pretrain epoch 450/500 | val_loss 2.7793 | elapsed 4h57m38s, phase ETA 33m04s
+[time]     [rsnn_wide s9_r2] finetune epoch 50/100 | val_loss 1.6566 | elapsed 5m21s, phase ETA 5m21s
+[rsnn_wide] subject 9 repeat 2: acc=0.368 kappa=0.157
+[time] [rsnn_wide] fold 1/1 done in 5h41m26s (pretrain 5h30m44s, finetune 10m41s) | avg 5h41m26s | rsnn_wide elapsed 5h41m26s, ETA 0.0s | benchmark ETA 0.0s -> finish ~Tue 17 Nov 06:17
+[time] [rsnn_wide] SUBJECT 9 finished: 1 folds in 5h41m26s (5h41m26s/fold) | subjects done 1/1
+[time] [rsnn_wide] ALL 1 folds finished in 5h41m26s
+[time] <<< benchmark: rsnn_wide: 5h41m26s (pipeline elapsed 5h42m23s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 2}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 2, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 5h42m23s
+[time]   stage download_data                       23s  ( 0.1%)
+[time]   stage preprocess_data                     33s  ( 0.2%)
+[time]   stage benchmark: rsnn_wide           5h41m26s  (99.7%)
+[time]   rsnn_wide: 1 folds, total 5h41m26s, mean 5h41m26s (min 5h41m26s, max 5h41m26s)
+[time]     per subject: S9 5h41m26s
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 30s (pipeline elapsed 51s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m56s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 51s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 51s
+[time]   stage download_data                       21s  (41.2%)
+[time]   stage preprocess_data                     30s  (58.3%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 29s (pipeline elapsed 50s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m56s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 50s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 50s
+[time]   stage download_data                       21s  (41.3%)
+[time]   stage preprocess_data                     29s  (58.2%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 29s (pipeline elapsed 50s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m56s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 50s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 50s
+[time]   stage download_data                       21s  (41.2%)
+[time]   stage preprocess_data                     29s  (58.3%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 31s (pipeline elapsed 52s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m56s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 52s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 52s
+[time]   stage download_data                       21s  (40.0%)
+[time]   stage preprocess_data                     31s  (59.6%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time] >>> download_data
+[time] <<< download_data: 20s (pipeline elapsed 20s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 30s (pipeline elapsed 50s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m56s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 50s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 50s
+[time]   stage download_data                       20s  (40.5%)
+[time]   stage preprocess_data                     30s  (59.0%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 31s (pipeline elapsed 51s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m56s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 51s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 51s
+[time]   stage download_data                       21s  (40.1%)
+[time]   stage preprocess_data                     31s  (59.5%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)
+[time] >>> download_data
+[time] <<< download_data: 21s (pipeline elapsed 21s)
+[time] >>> preprocess_data
+[time] <<< preprocess_data: 29s (pipeline elapsed 51s)
+Run directory: /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261113_124400
+Parameters: {'ann_params': 796, 'converted_snn_params': 776, 'rsnn_hidden': 17, 'rsnn_params': 752, 'rnn_hidden': 17, 'rnn_params': 752, 'rsnn_minus_snn_params': -24, 'rsnn_relative_difference': -0.030927835051546393, 'eegnet_hidden_neurons': 2560, 'rsnn_wide_hidden': 2560, 'rsnn_wide_params': 6622724, 'rnn_wide_hidden': 2560, 'rnn_wide_params': 6622724, 'rsnn_wide_params_over_snn': 8534.438144329897}
+[main] run 20261113_124400 | models: rsnn_wide
+[shard] shard 10 of 12: 7 folds (whole run: 90)
+[time] pending folds per model: {'rsnn_wide': 0} (device: cuda)
+[time] per-fold times from previous runs (used as ETA prior): rsnn 1h27m28s, ann 1m53s, snn 0.6s, rnn 36m35s, rsnn_wide 5h42m56s, rnn_wide 5h26m56s
+[time] initial benchmark estimate: 0.0s
+[time] >>> benchmark: rsnn_wide
+[time] [rsnn_wide] nothing to run (all folds already done)
+[time] <<< benchmark: rsnn_wide: 0.0s (pipeline elapsed 51s)
+[chain] pending folds of the selected models (selected folds): {'rsnn_wide': 0}
+[chain] run 20261113_124400 INCOMPLETE, pending folds per model: {'ann': 0, 'snn': 0, 'rsnn': 0, 'rnn': 0, 'rsnn_wide': 0, 'rnn_wide': 90}. Resume with BENCH_RUN_ID=20261113_124400.
+
+[time] ================ TIMING SUMMARY ================
+[time] total wall clock of this process: 51s
+[time]   stage download_data                       21s  (42.1%)
+[time]   stage preprocess_data                     29s  (57.5%)
+[time]   stage benchmark: rsnn_wide               0.0s  ( 0.0%)

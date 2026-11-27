@@ -1,0 +1,3 @@
+phase,n_folds,median_kept_epoch,pct_folds_kept_epoch_is_last,n_epochs_shown
+pretrain,90,17.5,0.0,500
+finetune,90,96.0,20.0,100

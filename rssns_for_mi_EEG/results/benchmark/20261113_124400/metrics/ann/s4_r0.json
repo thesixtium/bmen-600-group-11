@@ -1,0 +1,40 @@
+{
+ "model": "ann",
+ "run_id": "20261113_124400",
+ "subject": 4,
+ "repeat": 0,
+ "seed": 2426,
+ "n_test": 288,
+ "accuracy": 0.53125,
+ "kappa": 0.375,
+ "macro_f1": 0.5227716836234828,
+ "confusion": [
+  [
+   45,
+   18,
+   6,
+   3
+  ],
+  [
+   16,
+   45,
+   3,
+   8
+  ],
+  [
+   9,
+   13,
+   22,
+   28
+  ],
+  [
+   5,
+   10,
+   16,
+   41
+  ]
+ ],
+ "n_params": 796,
+ "pretrain_best_epoch": 27,
+ "finetune_best_epoch": 75
+}

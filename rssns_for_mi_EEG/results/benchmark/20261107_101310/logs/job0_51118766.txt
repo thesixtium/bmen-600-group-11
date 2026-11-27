@@ -1,0 +1,12 @@
+Job ID    : 51118766
+Node      : fg6
+Started   : Sun Nov  8 10:06:04 MST 2026
+Project   : /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG
+Run ID    : 20261107_101310
+Log file  : /home/aleksander.berezowsk/bmen-600-group-11/rssns_for_mi_EEG/results/benchmark/20261107_101310/logs/job0_51118766.txt
+Git commit: a8ef1d9
+Layout    : job index 0 of 4, 3 workers per GPU, 12 shards, 2 threads/worker
+BENCH_QUICK=0 BENCH_TARGETS=all BENCH_REPEATS=all BENCH_PATIENCE=off BENCH_FINALIZE=0
+-----------------------------------------------------------------------
+Deadline  : Mon Nov  9 09:36:04 MST 2026 (no new folds after this; margin 30 min)
+python3 is Python 3.6.8, not 3.10-3.12: searching for a module...

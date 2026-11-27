@@ -1,0 +1,10 @@
+{
+ "total_s": 51.533747754991055,
+ "stages_s": {
+  "download_data": 20.85423868894577,
+  "preprocess_data": 30.44545175204985,
+  "benchmark: rsnn_wide": 0.001387184951454401
+ },
+ "per_model": {},
+ "per_model_subject_s": {}
+}
