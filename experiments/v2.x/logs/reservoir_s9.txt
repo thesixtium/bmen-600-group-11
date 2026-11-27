@@ -1,0 +1,132 @@
+[time]     [res500_r1_raw s9] pretrain epoch 50/500 | val_loss 1.6840 | elapsed 18s, phase ETA 2m46s
+[time]     [res500_r1_raw s9] pretrain epoch 100/500 | val_loss 1.6302 | elapsed 37s, phase ETA 2m27s
+[time]     [res500_r1_raw s9] pretrain epoch 150/500 | val_loss 1.6015 | elapsed 55s, phase ETA 2m08s
+[time]     [res500_r1_raw s9] pretrain epoch 200/500 | val_loss 1.6460 | elapsed 1m11s, phase ETA 1m47s
+[time]     [res500_r1_raw s9] pretrain epoch 250/500 | val_loss 1.7212 | elapsed 1m29s, phase ETA 1m29s
+[time]     [res500_r1_raw s9] pretrain epoch 300/500 | val_loss 1.6374 | elapsed 1m46s, phase ETA 1m11s
+[time]     [res500_r1_raw s9] pretrain epoch 350/500 | val_loss 1.6677 | elapsed 2m05s, phase ETA 53s
+[time]     [res500_r1_raw s9] pretrain epoch 400/500 | val_loss 1.6132 | elapsed 2m23s, phase ETA 36s
+[time]     [res500_r1_raw s9] pretrain epoch 450/500 | val_loss 1.6635 | elapsed 2m42s, phase ETA 18s
+[time]     [res500_r1_raw s9] finetune epoch 50/100 | val_loss 1.1743 | elapsed 3.1s, phase ETA 3.1s
+{"arm": "res500_r1_raw", "target": 9, "pre_pre_train": 0.4111111111111111, "ft_ft_val": 0.5344827586206896, "seconds": 187.3768981678877}
+[time]     [res500_r0_raw s9] pretrain epoch 50/500 | val_loss 1.8896 | elapsed 19s, phase ETA 2m47s
+[time]     [res500_r0_raw s9] pretrain epoch 100/500 | val_loss 1.7554 | elapsed 35s, phase ETA 2m20s
+[time]     [res500_r0_raw s9] pretrain epoch 150/500 | val_loss 1.7333 | elapsed 53s, phase ETA 2m04s
+[time]     [res500_r0_raw s9] pretrain epoch 200/500 | val_loss 1.8455 | elapsed 1m11s, phase ETA 1m46s
+[time]     [res500_r0_raw s9] pretrain epoch 250/500 | val_loss 1.9053 | elapsed 1m28s, phase ETA 1m28s
+[time]     [res500_r0_raw s9] pretrain epoch 300/500 | val_loss 1.8147 | elapsed 1m46s, phase ETA 1m10s
+[time]     [res500_r0_raw s9] pretrain epoch 350/500 | val_loss 1.9028 | elapsed 2m03s, phase ETA 53s
+[time]     [res500_r0_raw s9] pretrain epoch 400/500 | val_loss 1.8124 | elapsed 2m20s, phase ETA 35s
+[time]     [res500_r0_raw s9] pretrain epoch 450/500 | val_loss 1.8647 | elapsed 2m37s, phase ETA 17s
+[time]     [res500_r0_raw s9] finetune epoch 50/100 | val_loss 1.1057 | elapsed 2.9s, phase ETA 2.9s
+{"arm": "res500_r0_raw", "target": 9, "pre_pre_train": 0.38333333333333336, "ft_ft_val": 0.5344827586206896, "seconds": 181.82755403011106}
+[time]     [res1000_r1_raw s9] pretrain epoch 50/500 | val_loss 1.8257 | elapsed 19s, phase ETA 2m47s
+[time]     [res1000_r1_raw s9] pretrain epoch 100/500 | val_loss 1.9796 | elapsed 36s, phase ETA 2m26s
+[time]     [res1000_r1_raw s9] pretrain epoch 150/500 | val_loss 1.8434 | elapsed 53s, phase ETA 2m04s
+[time]     [res1000_r1_raw s9] pretrain epoch 200/500 | val_loss 1.8774 | elapsed 1m12s, phase ETA 1m48s
+[time]     [res1000_r1_raw s9] pretrain epoch 250/500 | val_loss 1.8373 | elapsed 1m30s, phase ETA 1m30s
+[time]     [res1000_r1_raw s9] pretrain epoch 300/500 | val_loss 1.8740 | elapsed 1m49s, phase ETA 1m12s
+[time]     [res1000_r1_raw s9] pretrain epoch 350/500 | val_loss 2.1468 | elapsed 2m07s, phase ETA 54s
+[time]     [res1000_r1_raw s9] pretrain epoch 400/500 | val_loss 1.9025 | elapsed 2m23s, phase ETA 36s
+[time]     [res1000_r1_raw s9] pretrain epoch 450/500 | val_loss 1.7682 | elapsed 2m41s, phase ETA 18s
+[time]     [res1000_r1_raw s9] finetune epoch 50/100 | val_loss 1.1349 | elapsed 3.0s, phase ETA 3.0s
+{"arm": "res1000_r1_raw", "target": 9, "pre_pre_train": 0.4340277777777778, "ft_ft_val": 0.5344827586206896, "seconds": 186.62875012191944}
+[time]     [res1000_r0_raw s9] pretrain epoch 50/500 | val_loss 2.0897 | elapsed 18s, phase ETA 2m44s
+[time]     [res1000_r0_raw s9] pretrain epoch 100/500 | val_loss 2.2579 | elapsed 37s, phase ETA 2m26s
+[time]     [res1000_r0_raw s9] pretrain epoch 150/500 | val_loss 2.1885 | elapsed 55s, phase ETA 2m08s
+[time]     [res1000_r0_raw s9] pretrain epoch 200/500 | val_loss 2.1533 | elapsed 1m13s, phase ETA 1m50s
+[time]     [res1000_r0_raw s9] pretrain epoch 250/500 | val_loss 2.1915 | elapsed 1m31s, phase ETA 1m31s
+[time]     [res1000_r0_raw s9] pretrain epoch 300/500 | val_loss 2.2659 | elapsed 1m49s, phase ETA 1m13s
+[time]     [res1000_r0_raw s9] pretrain epoch 350/500 | val_loss 2.5380 | elapsed 2m07s, phase ETA 55s
+[time]     [res1000_r0_raw s9] pretrain epoch 400/500 | val_loss 2.1169 | elapsed 2m25s, phase ETA 36s
+[time]     [res1000_r0_raw s9] pretrain epoch 450/500 | val_loss 2.1778 | elapsed 2m43s, phase ETA 18s
+[time]     [res1000_r0_raw s9] finetune epoch 50/100 | val_loss 1.1096 | elapsed 3.0s, phase ETA 3.0s
+{"arm": "res1000_r0_raw", "target": 9, "pre_pre_train": 0.42569444444444443, "ft_ft_val": 0.603448275862069, "seconds": 188.73628999921493}
+[time]     [res2000_r1_raw s9] pretrain epoch 50/500 | val_loss 2.5013 | elapsed 18s, phase ETA 2m45s
+[time]     [res2000_r1_raw s9] pretrain epoch 100/500 | val_loss 2.4815 | elapsed 37s, phase ETA 2m26s
+[time]     [res2000_r1_raw s9] pretrain epoch 150/500 | val_loss 2.6785 | elapsed 55s, phase ETA 2m08s
+[time]     [res2000_r1_raw s9] pretrain epoch 200/500 | val_loss 2.9862 | elapsed 1m13s, phase ETA 1m49s
+[time]     [res2000_r1_raw s9] pretrain epoch 250/500 | val_loss 2.9669 | elapsed 1m31s, phase ETA 1m31s
+[time]     [res2000_r1_raw s9] pretrain epoch 300/500 | val_loss 2.9483 | elapsed 1m49s, phase ETA 1m12s
+[time]     [res2000_r1_raw s9] pretrain epoch 350/500 | val_loss 3.1757 | elapsed 2m05s, phase ETA 54s
+[time]     [res2000_r1_raw s9] pretrain epoch 400/500 | val_loss 3.0819 | elapsed 2m24s, phase ETA 36s
+[time]     [res2000_r1_raw s9] pretrain epoch 450/500 | val_loss 2.9040 | elapsed 2m41s, phase ETA 18s
+[time]     [res2000_r1_raw s9] finetune epoch 50/100 | val_loss 1.2146 | elapsed 2.7s, phase ETA 2.7s
+{"arm": "res2000_r1_raw", "target": 9, "pre_pre_train": 0.4597222222222222, "ft_ft_val": 0.5344827586206896, "seconds": 189.55992827797309}
+[time]     [res2000_r0_raw s9] pretrain epoch 50/500 | val_loss 2.8058 | elapsed 17s, phase ETA 2m33s
+[time]     [res2000_r0_raw s9] pretrain epoch 100/500 | val_loss 2.8783 | elapsed 33s, phase ETA 2m11s
+[time]     [res2000_r0_raw s9] pretrain epoch 150/500 | val_loss 2.8002 | elapsed 49s, phase ETA 1m55s
+[time]     [res2000_r0_raw s9] pretrain epoch 200/500 | val_loss 2.2514 | elapsed 1m06s, phase ETA 1m40s
+[time]     [res2000_r0_raw s9] pretrain epoch 250/500 | val_loss 2.7858 | elapsed 1m25s, phase ETA 1m25s
+[time]     [res2000_r0_raw s9] pretrain epoch 300/500 | val_loss 2.8696 | elapsed 1m48s, phase ETA 1m12s
+[time]     [res2000_r0_raw s9] pretrain epoch 350/500 | val_loss 2.8542 | elapsed 2m11s, phase ETA 56s
+[time]     [res2000_r0_raw s9] pretrain epoch 400/500 | val_loss 2.6912 | elapsed 2m33s, phase ETA 38s
+[time]     [res2000_r0_raw s9] pretrain epoch 450/500 | val_loss 2.9785 | elapsed 2m55s, phase ETA 19s
+[time]     [res2000_r0_raw s9] finetune epoch 50/100 | val_loss 1.1458 | elapsed 4.2s, phase ETA 4.2s
+{"arm": "res2000_r0_raw", "target": 9, "pre_pre_train": 0.41180555555555554, "ft_ft_val": 0.603448275862069, "seconds": 212.67327029281296}
+[time]     [res500_r1_bands s9] pretrain epoch 50/500 | val_loss 1.6555 | elapsed 25s, phase ETA 3m41s
+[time]     [res500_r1_bands s9] pretrain epoch 100/500 | val_loss 1.6819 | elapsed 46s, phase ETA 3m06s
+[time]     [res500_r1_bands s9] pretrain epoch 150/500 | val_loss 1.6316 | elapsed 1m11s, phase ETA 2m45s
+[time]     [res500_r1_bands s9] pretrain epoch 200/500 | val_loss 1.6439 | elapsed 1m35s, phase ETA 2m23s
+[time]     [res500_r1_bands s9] pretrain epoch 250/500 | val_loss 1.7461 | elapsed 2m00s, phase ETA 2m00s
+[time]     [res500_r1_bands s9] pretrain epoch 300/500 | val_loss 1.6967 | elapsed 2m25s, phase ETA 1m36s
+[time]     [res500_r1_bands s9] pretrain epoch 350/500 | val_loss 1.7150 | elapsed 2m49s, phase ETA 1m12s
+[time]     [res500_r1_bands s9] pretrain epoch 400/500 | val_loss 1.7163 | elapsed 3m14s, phase ETA 48s
+[time]     [res500_r1_bands s9] pretrain epoch 450/500 | val_loss 1.7332 | elapsed 3m38s, phase ETA 24s
+[time]     [res500_r1_bands s9] finetune epoch 50/100 | val_loss 0.9006 | elapsed 4.1s, phase ETA 4.1s
+{"arm": "res500_r1_bands", "target": 9, "pre_pre_train": 0.3277777777777778, "ft_ft_val": 0.6379310344827587, "seconds": 251.9109589960426}
+[time]     [res500_r0_bands s9] pretrain epoch 50/500 | val_loss 1.6446 | elapsed 23s, phase ETA 3m25s
+[time]     [res500_r0_bands s9] pretrain epoch 100/500 | val_loss 1.6725 | elapsed 48s, phase ETA 3m11s
+[time]     [res500_r0_bands s9] pretrain epoch 150/500 | val_loss 1.6886 | elapsed 1m13s, phase ETA 2m50s
+[time]     [res500_r0_bands s9] pretrain epoch 200/500 | val_loss 1.6292 | elapsed 1m38s, phase ETA 2m26s
+[time]     [res500_r0_bands s9] pretrain epoch 250/500 | val_loss 1.7258 | elapsed 2m02s, phase ETA 2m02s
+[time]     [res500_r0_bands s9] pretrain epoch 300/500 | val_loss 1.7010 | elapsed 2m21s, phase ETA 1m34s
+[time]     [res500_r0_bands s9] pretrain epoch 350/500 | val_loss 1.7433 | elapsed 2m46s, phase ETA 1m11s
+[time]     [res500_r0_bands s9] pretrain epoch 400/500 | val_loss 1.7002 | elapsed 3m11s, phase ETA 48s
+[time]     [res500_r0_bands s9] pretrain epoch 450/500 | val_loss 1.7141 | elapsed 3m36s, phase ETA 24s
+[time]     [res500_r0_bands s9] finetune epoch 50/100 | val_loss 0.9345 | elapsed 4.1s, phase ETA 4.1s
+{"arm": "res500_r0_bands", "target": 9, "pre_pre_train": 0.3333333333333333, "ft_ft_val": 0.6206896551724138, "seconds": 249.88189464295283}
+[time]     [res1000_r1_bands s9] pretrain epoch 50/500 | val_loss 1.7864 | elapsed 24s, phase ETA 3m35s
+[time]     [res1000_r1_bands s9] pretrain epoch 100/500 | val_loss 1.9935 | elapsed 48s, phase ETA 3m11s
+[time]     [res1000_r1_bands s9] pretrain epoch 150/500 | val_loss 1.9637 | elapsed 1m13s, phase ETA 2m50s
+[time]     [res1000_r1_bands s9] pretrain epoch 200/500 | val_loss 1.9666 | elapsed 1m37s, phase ETA 2m26s
+[time]     [res1000_r1_bands s9] pretrain epoch 250/500 | val_loss 2.0403 | elapsed 2m02s, phase ETA 2m02s
+[time]     [res1000_r1_bands s9] pretrain epoch 300/500 | val_loss 1.9676 | elapsed 2m27s, phase ETA 1m38s
+[time]     [res1000_r1_bands s9] pretrain epoch 350/500 | val_loss 2.2206 | elapsed 2m52s, phase ETA 1m14s
+[time]     [res1000_r1_bands s9] pretrain epoch 400/500 | val_loss 2.0295 | elapsed 3m08s, phase ETA 47s
+[time]     [res1000_r1_bands s9] pretrain epoch 450/500 | val_loss 2.1532 | elapsed 3m32s, phase ETA 24s
+[time]     [res1000_r1_bands s9] finetune epoch 50/100 | val_loss 0.9068 | elapsed 3.9s, phase ETA 3.9s
+{"arm": "res1000_r1_bands", "target": 9, "pre_pre_train": 0.38958333333333334, "ft_ft_val": 0.6551724137931034, "seconds": 247.2602623559069}
+[time]     [res1000_r0_bands s9] pretrain epoch 50/500 | val_loss 1.8016 | elapsed 25s, phase ETA 3m48s
+[time]     [res1000_r0_bands s9] pretrain epoch 100/500 | val_loss 1.9241 | elapsed 50s, phase ETA 3m21s
+[time]     [res1000_r0_bands s9] pretrain epoch 150/500 | val_loss 1.9728 | elapsed 1m14s, phase ETA 2m53s
+[time]     [res1000_r0_bands s9] pretrain epoch 200/500 | val_loss 2.0472 | elapsed 1m33s, phase ETA 2m20s
+[time]     [res1000_r0_bands s9] pretrain epoch 250/500 | val_loss 1.9657 | elapsed 1m58s, phase ETA 1m58s
+[time]     [res1000_r0_bands s9] pretrain epoch 300/500 | val_loss 1.9414 | elapsed 2m14s, phase ETA 1m30s
+[time]     [res1000_r0_bands s9] pretrain epoch 350/500 | val_loss 2.1206 | elapsed 2m37s, phase ETA 1m07s
+[time]     [res1000_r0_bands s9] pretrain epoch 400/500 | val_loss 1.9693 | elapsed 3m04s, phase ETA 46s
+[time]     [res1000_r0_bands s9] pretrain epoch 450/500 | val_loss 2.0730 | elapsed 3m30s, phase ETA 23s
+[time]     [res1000_r0_bands s9] finetune epoch 50/100 | val_loss 0.9135 | elapsed 4.4s, phase ETA 4.4s
+{"arm": "res1000_r0_bands", "target": 9, "pre_pre_train": 0.4111111111111111, "ft_ft_val": 0.6551724137931034, "seconds": 247.9957224240061}
+[time]     [res2000_r1_bands s9] pretrain epoch 50/500 | val_loss 2.1080 | elapsed 26s, phase ETA 3m54s
+[time]     [res2000_r1_bands s9] pretrain epoch 100/500 | val_loss 2.6496 | elapsed 52s, phase ETA 3m30s
+[time]     [res2000_r1_bands s9] pretrain epoch 150/500 | val_loss 2.7021 | elapsed 1m19s, phase ETA 3m04s
+[time]     [res2000_r1_bands s9] pretrain epoch 200/500 | val_loss 2.8563 | elapsed 1m45s, phase ETA 2m37s
+[time]     [res2000_r1_bands s9] pretrain epoch 250/500 | val_loss 2.8869 | elapsed 2m12s, phase ETA 2m12s
+[time]     [res2000_r1_bands s9] pretrain epoch 300/500 | val_loss 2.8032 | elapsed 2m37s, phase ETA 1m45s
+[time]     [res2000_r1_bands s9] pretrain epoch 350/500 | val_loss 2.8102 | elapsed 3m04s, phase ETA 1m19s
+[time]     [res2000_r1_bands s9] pretrain epoch 400/500 | val_loss 2.8697 | elapsed 3m31s, phase ETA 53s
+[time]     [res2000_r1_bands s9] pretrain epoch 450/500 | val_loss 2.7891 | elapsed 3m58s, phase ETA 26s
+[time]     [res2000_r1_bands s9] finetune epoch 50/100 | val_loss 1.0911 | elapsed 4.4s, phase ETA 4.4s
+{"arm": "res2000_r1_bands", "target": 9, "pre_pre_train": 0.4361111111111111, "ft_ft_val": 0.6551724137931034, "seconds": 279.5451467530802}
+[time]     [res2000_r0_bands s9] pretrain epoch 50/500 | val_loss 2.0685 | elapsed 26s, phase ETA 3m51s
+[time]     [res2000_r0_bands s9] pretrain epoch 100/500 | val_loss 2.5051 | elapsed 52s, phase ETA 3m27s
+[time]     [res2000_r0_bands s9] pretrain epoch 150/500 | val_loss 2.3475 | elapsed 1m18s, phase ETA 3m01s
+[time]     [res2000_r0_bands s9] pretrain epoch 200/500 | val_loss 2.5063 | elapsed 1m44s, phase ETA 2m36s
+[time]     [res2000_r0_bands s9] pretrain epoch 250/500 | val_loss 2.4711 | elapsed 2m10s, phase ETA 2m10s
+[time]     [res2000_r0_bands s9] pretrain epoch 300/500 | val_loss 2.3916 | elapsed 2m34s, phase ETA 1m43s
+[time]     [res2000_r0_bands s9] pretrain epoch 350/500 | val_loss 2.5235 | elapsed 2m58s, phase ETA 1m16s
+[time]     [res2000_r0_bands s9] pretrain epoch 400/500 | val_loss 2.5082 | elapsed 3m23s, phase ETA 51s
+[time]     [res2000_r0_bands s9] pretrain epoch 450/500 | val_loss 2.4608 | elapsed 3m48s, phase ETA 25s
+[time]     [res2000_r0_bands s9] finetune epoch 50/100 | val_loss 0.9557 | elapsed 4.3s, phase ETA 4.3s
+{"arm": "res2000_r0_bands", "target": 9, "pre_pre_train": 0.4583333333333333, "ft_ft_val": 0.6551724137931034, "seconds": 268.2656559359748}

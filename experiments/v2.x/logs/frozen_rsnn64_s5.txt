@@ -1,0 +1,13 @@
+<workspace>/.venv/lib/python3.12/site-packages/torch/nn/modules/conv.py:454: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at ../aten/src/ATen/native/Convolution.cpp:1031.)
+  return F.conv2d(input, weight, bias, self.stride,
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 50/500 | val_loss 2.0497 | elapsed 35s, phase ETA 5m14s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 100/500 | val_loss 2.1289 | elapsed 1m10s, phase ETA 4m41s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 150/500 | val_loss 2.2296 | elapsed 1m45s, phase ETA 4m06s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 200/500 | val_loss 2.3544 | elapsed 2m19s, phase ETA 3m28s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 250/500 | val_loss 2.4210 | elapsed 2m53s, phase ETA 2m53s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 300/500 | val_loss 2.6706 | elapsed 3m30s, phase ETA 2m20s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 350/500 | val_loss 2.3606 | elapsed 4m05s, phase ETA 1m45s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 400/500 | val_loss 2.7680 | elapsed 4m40s, phase ETA 1m10s
+[time]     [frozen_rsnn64 s5_r0] pretrain epoch 450/500 | val_loss 2.9410 | elapsed 5m15s, phase ETA 35s
+[time]     [frozen_rsnn64 s5_r0] finetune epoch 50/100 | val_loss 1.2782 | elapsed 5.7s, phase ETA 5.7s
+{"arm": "frozen_rsnn64", "target": 5, "trainable_params": 4932, "pre_target_s1": 0.2361111111111111, "ft_ft_val": 0.41379310344827586, "seconds": 362.03893929021433}

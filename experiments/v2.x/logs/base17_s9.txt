@@ -1,0 +1,11 @@
+[time]     [base17 s9_r0] pretrain epoch 50/500 | val_loss 1.4216 | elapsed 1m53s, phase ETA 17m01s
+[time]     [base17 s9_r0] pretrain epoch 100/500 | val_loss 1.4331 | elapsed 3m42s, phase ETA 14m50s
+[time]     [base17 s9_r0] pretrain epoch 150/500 | val_loss 1.4386 | elapsed 5m32s, phase ETA 12m54s
+[time]     [base17 s9_r0] pretrain epoch 200/500 | val_loss 1.5126 | elapsed 7m21s, phase ETA 11m02s
+[time]     [base17 s9_r0] pretrain epoch 250/500 | val_loss 1.6288 | elapsed 9m10s, phase ETA 9m10s
+[time]     [base17 s9_r0] pretrain epoch 300/500 | val_loss 1.6242 | elapsed 11m02s, phase ETA 7m21s
+[time]     [base17 s9_r0] pretrain epoch 350/500 | val_loss 1.4981 | elapsed 12m53s, phase ETA 5m31s
+[time]     [base17 s9_r0] pretrain epoch 400/500 | val_loss 1.5784 | elapsed 14m44s, phase ETA 3m41s
+[time]     [base17 s9_r0] pretrain epoch 450/500 | val_loss 1.5717 | elapsed 16m33s, phase ETA 1m50s
+[time]     [base17 s9_r0] finetune epoch 50/100 | val_loss 1.2331 | elapsed 18s, phase ETA 18s
+{"arm": "base17", "target": 9, "trainable_params": 752, "pre_target_s1": 0.25, "ft_ft_val": 0.5517241379310345, "seconds": 1141.2171585808974}

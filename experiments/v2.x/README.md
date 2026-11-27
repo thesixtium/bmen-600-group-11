@@ -126,9 +126,48 @@ A difference of about 0.04 or less between two arms is not a finding. Only a run
 | `results/*.csv` | `summary`, `comparisons`, `finetune_cutoffs`, `per_subject_ft_val`, `repeatability` |
 | `results_reservoir/` | One file per reservoir arm and fold |
 | `audit/` | Label-shuffle, state-reset, firing and EEGNet reference results |
+| `logs/` | One log per job: progress lines every 50 epochs, warnings, the result line (section 7) |
 | `filters/` | v2.0: frequency responses and channel weights of the trained EEGNet filters |
 
 Rerun, from the repository root, with the environment of `../requirements.txt` and a GPU: build the data cache once with `python experiments/v1.5/code/screen_common.py`, then `PY=python experiments/v2.x/code/run_v2x.sh`.
+
+## 7. Run record
+
+| Item | Value |
+|---|---|
+| Machine | One laptop, GPU NVIDIA GeForce RTX 4060 Laptop GPU (8 GB) |
+| Software | Python 3.12.14, PyTorch 2.4.0+cu121. Other packages as in `../requirements.txt` |
+| When | 23 November 2026, 13:32, to 24 November 2026, 04:54 (local time) |
+| Jobs at a time | 3 for the main queue. Up to 6 jobs shared the GPU while several queues ran, so job times are longer than for a job alone |
+| Total job time | 64 hours summed over all jobs |
+| Saved per job | Result file, loss per epoch (`results/histories/`), log (`logs/`). No model weights were saved |
+| Audit runs | 25 extra jobs (`audit/`, logs `logs/audit_*.txt`) |
+
+| Arm | Jobs (folds and repeats, reruns included) | Median minutes per job | Hours in total | First job finished | Last job finished |
+|---|---|---|---|---|---|
+| `conv_rsnn64` | 18 | 6.9 | 1.9 | 23 Nov 13:36 | 23 Nov 19:25 |
+| `conv_rnn64` | 18 | 5.4 | 1.8 | 23 Nov 13:50 | 23 Nov 18:43 |
+| `conv_fflif64` | 12 | 5.7 | 1.3 | 23 Nov 14:04 | 23 Nov 18:12 |
+| `conv_rsnn256` | 9 | 6.3 | 0.9 | 23 Nov 14:22 | 23 Nov 14:34 |
+| `frozen_rsnn64` | 35 | 7.5 | 4.2 | 23 Nov 13:46 | 23 Nov 19:50 |
+| `frozen_rnn64` | 9 | 3.6 | 0.5 | 23 Nov 14:07 | 23 Nov 14:24 |
+| `conv_rsnn17` | 9 | 6.1 | 0.9 | 23 Nov 14:31 | 23 Nov 14:56 |
+| `conv_rnn17` | 9 | 3.9 | 0.6 | 23 Nov 14:53 | 23 Nov 15:11 |
+| `base17` | 9 | 18.7 | 2.8 | 23 Nov 14:53 | 23 Nov 15:31 |
+| `sched_rsnn64` | 9 | 5.7 | 0.9 | 23 Nov 15:17 | 23 Nov 15:42 |
+| `ft1000_rsnn64` | 9 | 8.7 | 1.3 | 23 Nov 15:44 | 23 Nov 16:19 |
+| `sched_eegnet` | 9 | 7.5 | 1.1 | 23 Nov 16:25 | 23 Nov 16:57 |
+| `ft1000_eegnet` | 9 | 12.9 | 1.9 | 23 Nov 17:01 | 23 Nov 17:54 |
+| `wide256` | 9 | 51.7 | 7.3 | 23 Nov 16:22 | 23 Nov 18:01 |
+| `wide1024` | 9 | 206.8 | 32.7 | 23 Nov 21:58 | 24 Nov 04:54 |
+| reservoir, 1,000 neurons (bands input, both radii) | 18 | 1.3 | 0.6 | 23 Nov 13:40 | 23 Nov 17:09 |
+| reservoir, 1,000 neurons (raw input, both radii) | 18 | 1.6 | 0.6 | 23 Nov 13:35 | 23 Nov 16:46 |
+| reservoir, 2,000 neurons (bands input, both radii) | 18 | 1.9 | 0.7 | 23 Nov 13:43 | 23 Nov 17:19 |
+| reservoir, 2,000 neurons (raw input, both radii) | 18 | 1.7 | 0.6 | 23 Nov 13:37 | 23 Nov 16:53 |
+| reservoir, 500 neurons (bands input, both radii) | 18 | 1.5 | 0.6 | 23 Nov 13:38 | 23 Nov 17:01 |
+| reservoir, 500 neurons (raw input, both radii) | 18 | 1.5 | 0.6 | 23 Nov 13:34 | 23 Nov 16:39 |
+
+The time of one job covers pretraining (500 epochs) and fine-tuning (100 epochs, or 1,000 for the `ft1000` arms). The v2.1 and v2.2 result files also give `pretrain_seconds` and `finetune_seconds`. Each log shows the validation loss, the elapsed time and the estimated time left every 50 epochs. Logs named `refill_*` are the second runs of folds that were run twice. Local folder paths in the logs are replaced by `<workspace>`.
 
 ## Glossary
 

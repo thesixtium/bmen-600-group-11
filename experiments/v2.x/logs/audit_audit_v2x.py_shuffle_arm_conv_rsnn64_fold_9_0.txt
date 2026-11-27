@@ -1,0 +1,13 @@
+<workspace>/.venv/lib/python3.12/site-packages/torch/nn/modules/conv.py:454: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at ../aten/src/ATen/native/Convolution.cpp:1031.)
+  return F.conv2d(input, weight, bias, self.stride,
+[time]     pretrain epoch 50/500 | val_loss 1.4109 | elapsed 52s, phase ETA 7m52s
+[time]     pretrain epoch 100/500 | val_loss 1.4575 | elapsed 1m44s, phase ETA 6m55s
+[time]     pretrain epoch 150/500 | val_loss 1.4577 | elapsed 2m32s, phase ETA 5m54s
+[time]     pretrain epoch 200/500 | val_loss 1.5270 | elapsed 3m19s, phase ETA 4m59s
+[time]     pretrain epoch 250/500 | val_loss 1.5293 | elapsed 4m08s, phase ETA 4m08s
+[time]     pretrain epoch 300/500 | val_loss 1.5240 | elapsed 4m56s, phase ETA 3m17s
+[time]     pretrain epoch 350/500 | val_loss 1.5425 | elapsed 5m44s, phase ETA 2m27s
+[time]     pretrain epoch 400/500 | val_loss 1.5446 | elapsed 6m32s, phase ETA 1m38s
+[time]     pretrain epoch 450/500 | val_loss 1.5613 | elapsed 7m21s, phase ETA 49s
+[time]     finetune epoch 50/100 | val_loss 1.3869 | elapsed 8.0s, phase ETA 8.0s
+{'test': 'label_shuffle', 'arm': 'conv_rsnn64', 'target': 9, 'ft_val_true_labels': 0.27586206896551724, 'pre_val_true_labels': 0.22106481481481483, 'chance': 0.25, 'binomial_threshold_58': 0.3620689655172414}

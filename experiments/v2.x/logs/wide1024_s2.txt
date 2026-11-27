@@ -1,0 +1,11 @@
+[time]     [wide1024 s2_r0] pretrain epoch 50/500 | val_loss 1.6049 | elapsed 34m18s, phase ETA 5h08m46s
+[time]     [wide1024 s2_r0] pretrain epoch 100/500 | val_loss 2.1266 | elapsed 1h02m23s, phase ETA 4h09m33s
+[time]     [wide1024 s2_r0] pretrain epoch 150/500 | val_loss 2.8061 | elapsed 1h29m59s, phase ETA 3h29m58s
+[time]     [wide1024 s2_r0] pretrain epoch 200/500 | val_loss 3.0237 | elapsed 1h55m20s, phase ETA 2h52m59s
+[time]     [wide1024 s2_r0] pretrain epoch 250/500 | val_loss 3.2428 | elapsed 2h15m22s, phase ETA 2h15m22s
+[time]     [wide1024 s2_r0] pretrain epoch 300/500 | val_loss 3.8189 | elapsed 2h35m25s, phase ETA 1h43m37s
+[time]     [wide1024 s2_r0] pretrain epoch 350/500 | val_loss 3.4541 | elapsed 2h55m28s, phase ETA 1h15m12s
+[time]     [wide1024 s2_r0] pretrain epoch 400/500 | val_loss 3.6834 | elapsed 3h15m31s, phase ETA 48m53s
+[time]     [wide1024 s2_r0] pretrain epoch 450/500 | val_loss 4.2373 | elapsed 3h35m34s, phase ETA 23m57s
+[time]     [wide1024 s2_r0] finetune epoch 50/100 | val_loss 1.4098 | elapsed 3m12s, phase ETA 3m12s
+{"arm": "wide1024", "target": 2, "trainable_params": 1076228, "pre_target_s1": 0.25, "ft_ft_val": 0.25862068965517243, "seconds": 14520.18978404603}
