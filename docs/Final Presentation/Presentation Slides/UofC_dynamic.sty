@@ -1,0 +1,276 @@
+% ====================================================================
+% BEAMER STYLE FILE: University of Calgary Dynamic Presentation Template
+% Theme Name: UofC_dynamic (Widescreen 16:9, Two-Tone Background)
+% --------------------------------------------------------------------
+% DATE CREATED: 26 Nov 2025
+% Made by: Adnan Ferdous Ashrafi
+% Student ID: 30271539
+% --------------------------------------------------------------------
+% DESCRIPTION: 
+% This theme implements a highly customized Beamer layout based on 
+% university of calgary's widescreen 16:9 dynamic powerpoint template:
+%
+% 1. Typography & Layout:
+%    - Font: Times New Roman (Serif) for all text and mathematics.
+%    - Aspect Ratio: 16:9 widescreen.
+%    - Readability: No Hyphenation
+%
+% 2. Color Palette & Elements:
+%    - Primary Color (UofCPrimary): Used for headers, title text, and authors.
+%    - Secondary Color (UofCSecondary): Used for subtitles, date, list bullets, and caption prefixes (Fig. X:, Table Y:).
+%
+% 3. Backgrounds:
+%    - Uses two distinct background images (\bgTitle, \bgContent) for the 
+%      Title/Thank You frames and all content frames, respectively.
+%
+% 4. Custom Frame Types & Elements:
+%    - CustomTitlePage: Left-aligned title/subtitle, custom vertical spacing.
+%    - SplitFrame: Two-column layout separated by a central orange line.
+%    - FullImageFrame: Custom frame for displaying a single image with adjustable width and a colored caption, suppressing the footline.
+%    - ThankYouFrame: Specialized frame using the title background and custom fields for contact info.
+%    - Headers: Headers are boldfaced and vertically spaced for emphasis.
+% ====================================================================
+
+\ProvidesPackage{UofC_dynamic}
+
+% ==============================================================================
+% PACKAGES & FONTS (Constraint 8)
+% ==============================================================================
+\RequirePackage{tikz}
+\RequirePackage{graphicx}
+\RequirePackage{calc}
+
+% Set font to Times New Roman (Serif) for text and math
+\usepackage{carlito}
+\RequirePackage{mathptmx} 
+\RequirePackage{environ} % <--- REQUIRED FIX for the "File ended" error
+\usepackage{url}
+\hyphenpenalty 10000
+\exhyphenpenalty 10000
+% ==============================================================================
+% COLORS (Constraint 6)
+% ==============================================================================
+\definecolor{UofCPrimary}{RGB}{250, 250, 250} % Off White #FAFAFA
+\definecolor{UofCSecondary}{RGB}{255, 163, 0} % Light Orange UofC
+\definecolor{UofCText}{RGB}{33, 36, 39} % Dark Grey UofC
+\definecolor{UofCDarkOrange}{RGB}{255, 103, 31} % Dark Orange UofC
+
+% Set color to components
+\setbeamercolor{structure}{fg=UofCPrimary}
+\setbeamercolor{title}{fg=UofCPrimary}
+\setbeamercolor{frametitle}{fg=UofCPrimary}
+\setbeamercolor{footline}{fg=UofCText}
+\setbeamercolor{item}{fg=UofCDarkOrange}
+\setbeamercolor{subitem}{fg=UofCSecondary}
+\setbeamercolor{subsubitem}{fg=UofCText}
+\setbeamercolor{caption name}{fg=UofCDarkOrange}
+\setbeamertemplate{caption}[numbered]
+
+% --- Ensure filled circle bullet shape ---
+\setbeamertemplate{itemize item}{$\bullet$}
+\setbeamertemplate{itemize subitem}{$\bullet$}
+\setbeamertemplate{itemize subsubitem}{$\bullet$}
+
+% Set frametitles to boldface
+\setbeamerfont{frametitle}{series=\bfseries}
+% =================================================================
+% BACKGROUND IMAGES
+% =================================================================
+% You must have these three images in your folder
+
+\newcommand{\bgTitle}{assets/title_frame_UofC.png} 
+\newcommand{\bgStatement}{assets/statement_frame_UofC.jpg} 
+\newcommand{\bgContent}{assets/conent_frame_UofC.jpg}
+
+% Default background for Content Frames
+\setbeamertemplate{background canvas}{%
+    \includegraphics[width=\paperwidth,height=\paperheight]{\bgContent}%
+}
+
+% =================================================================
+% HEADLINES & FOOTLINES
+% =================================================================
+% Remove navigation symbols
+
+\setbeamertemplate{navigation symbols}{}
+
+% Standard headline for content pages
+\setbeamertemplate{frametitle}{%
+    \vspace*{0.3cm} % 
+    \nointerlineskip%
+    \begin{beamercolorbox}[wd=\paperwidth,sep=0.3cm,leftskip=0.1cm]{frametitle}
+        \usebeamerfont{frametitle}%
+        \parbox{0.9\paperwidth}{\raggedright\insertframetitle\par}%
+    \end{beamercolorbox}%
+}
+
+% Standard footline for content pages
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=1cm plus1fil]{footline}
+    \insertshortauthor \hfill \insertshorttitle \hfill \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}%
+}
+
+% =================================================================
+% Custom layouts
+% =================================================================
+
+% --- 1. Title Page Wrapper ---
+% Usage: \CustomTitlePage
+\newcommand{\CustomTitlePage}{
+    {
+        % Local background change
+        \setbeamertemplate{background canvas}{%
+            \includegraphics[width=\paperwidth,height=\paperheight]{\bgTitle}%
+        }
+        % No headline or footline
+        \setbeamertemplate{headline}{}
+        \setbeamertemplate{footline}{}
+        
+        \begin{frame}[plain]
+            \vspace{2cm} % Initial spacing from top
+            
+            % 1. Main Title (Left Aligned, Primary Color, Large)
+            \parbox{\textwidth}{
+                \raggedright
+                {\Huge \bfseries \textcolor{UofCPrimary}{\inserttitle}}\\[0.5cm]
+            }
+            
+            % 2. Subtitle (Secondary Color) - Checks if subtitle exists
+            \ifx\insertsubtitle\empty\else%
+                \parbox{\textwidth}{
+                    \raggedright
+                    {\Large \textcolor{UofCSecondary}{\insertsubtitle}}\\[0.5cm]
+                }
+            \fi
+            
+            \vspace*{0.5cm} % <--- 3. Spacing before Author block (Adjust as needed)
+
+            % 3. Author Names and Affiliations (Primary Color, Bold)
+            \parbox{\textwidth}{
+                \raggedright
+                {\textcolor{UofCPrimary}{\insertauthor}}\\[0.2cm]
+            }
+
+            % 4. Date (Secondary Color)
+            \parbox{\textwidth}{
+                \raggedright
+                {\large \textcolor{UofCSecondary}{\insertdate}}
+            }
+        \end{frame}
+    }
+}
+
+% --- 3a. Full Page Content Frame ---
+% This is the standard \begin{frame} behavior in Beamer. 
+% No special command needed, just use \begin{frame}.
+
+% --- 3b. Two Column with Orange Line ---
+% We use \NewEnviron to capture the body before the frame starts.
+\NewEnviron{SplitFrame}[1]{%
+    \begin{frame}{#1}
+        \begin{columns}[T]
+            % Open the left column
+            \begin{column}{0.47\textwidth}
+                \BODY   % Insert the content (including \nextcolumn)
+            \end{column}% Close the right column (opened by \nextcolumn)
+        \end{columns}
+    \end{frame}
+}
+
+% The logic here is: 
+% 1. SplitFrame starts the first column.
+% 2. \nextcolumn closes the first, draws the line, and opens the second.
+% 3. SplitFrame closes the second column (via \end{column} implicitly).
+\newcommand{\nextcolumn}{%
+        \end{column}
+        \begin{column}{0.05\textwidth}
+            \centering
+            \tikz\draw[UofCDarkOrange, line width=0.5pt] (0,0) -- (0,0.7\textheight);
+        \end{column}
+        \begin{column}{0.47\textwidth}%
+}
+
+% --- 3c. Full Page Image Only (Modified for Width, Caption, No Footline) ---
+% Usage: \FullImageFrame{<image_path>}{<width>}{<Caption Text>}{<label>}
+\newcommand{\FullImageFrame}[4]{ 
+    {
+        % 3. Ensure no footline/headline for this frame
+        \setbeamertemplate{headline}{}
+        \setbeamertemplate{footline}{} 
+        \setbeamertemplate{background canvas}{}
+        
+        \begin{frame}[plain] % [plain] ensures clean layout
+            \centering
+            \vspace*{0.5cm} % Add some top margin
+            
+            % 1. Image (Set width using #2)
+            % #2 can be specified as a fraction of \textwidth (e.g., 0.8\textwidth)
+            \begin{figure}
+                \centering
+                \includegraphics[width=#2]{#1}
+                \caption{{\footnotesize \bfseries \textcolor{UofCText}{#3}} }
+            % 2. Image path using #3
+            % 3. Image label using #4
+                \label{#4}
+            \end{figure}
+        \end{frame}
+    }
+}
+
+% --- 3d. Thank You Page (Modified to accept Title, Subtitle, and Contact) ---
+% Usage: \ThankYouFrame{Main Title (3 lines max)}{Optional Subtitle}{Contact Info (e.g., Email/Phone)}
+\newcommand{\ThankYouFrame}[3]{ 
+    {
+        \setbeamertemplate{background canvas}{%
+            \includegraphics[width=\paperwidth,height=\paperheight]{\bgTitle}%
+        }
+        \setbeamertemplate{headline}{}
+        \setbeamertemplate{footline}{}
+        
+        \begin{frame}[plain]
+            \raggedright
+            \vspace{2cm} % Space from top
+            
+            % 1. Main Title (Primary Color, wrapping up to 3 lines)
+            \parbox{0.85\textwidth}{
+                \raggedright
+                {\huge \bfseries \textcolor{UofCPrimary}{#1}}
+            }
+            \vspace{0.8cm}
+            
+            % 2. Subtitle (Secondary Color)
+            \parbox{0.85\textwidth}{
+                \raggedright
+                {\Large \textcolor{UofCSecondary}{#2}}
+            }
+            
+            \vspace{1cm} % Separation space
+            
+            % 3. Contact Content (Primary Color)
+            \parbox{0.85\textwidth}{
+                \raggedright
+                {\large \textcolor{UofCPrimary}{#3}}
+            }
+        \end{frame}
+    }
+}
+
+% --- 3e. Special Heading Only Frame (Constraint 3e) ---
+% Usage: \BigHeadingFrame{YOUR TEXT}
+\newcommand{\BigHeadingFrame}[1]{
+    {
+        \setbeamertemplate{background canvas}{%
+            \includegraphics[width=\paperwidth,height=\paperheight]{\bgStatement}%
+        }
+    \begin{frame}
+    
+        % Using minipage ensures the text wraps if it gets too long
+        % instead of shrinking to unreadable sizes.
+        \begin{minipage}{0.9\textwidth}
+            \raggedright
+            \Huge \bfseries \textcolor{UofCPrimary}{#1}
+        \end{minipage}
+    \end{frame}
+    }
+}
